@@ -1,0 +1,34 @@
+install python 2.7
+install pip
+sudo pip install django
+
+python manage.py runserver 8080 
+to run on particular port number
+
+install/setup postgresql
+
+install postgresql adapter: psycopg
+sudo pip install psycopg2 <or> sudo easy_install psycopg2
+(Your system must be able to compile a C Python extension against the libpq library: you will probably need python-dev and libpq-dev packages.
+The pg_config must be available in your path, or alternatively you must specify its full path in the setup.cfg file.)
+
+setup the database
+/metpetdb/settings.py
+engine: django.db.backends.postgresql_psycopg2
+name: mpdb
+user: mpdb
+password: mpdb
+host:
+
+optional - set timezone
+
+create app
+python manage.py startapp webservices
+write models or generate with
+python mysite/manage.py inspectdb > mysite/myapp/models.py
+
+python manage.py sql webservices
+python manage.py validate //to chheck for errors
+
+
+

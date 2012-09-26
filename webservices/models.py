@@ -99,43 +99,11 @@ class Users(models.Model):
     class Meta:
         db_table = u'users'
 
-class SamplesArchive(models.Model):
-    sample_id = models.BigIntegerField()
-    version = models.IntegerField()
-    sesar_number = models.CharField(max_length=9, blank=True)
-    public_data = models.CharField(max_length=1)
-    collection_date = models.DateTimeField(null=True, blank=True)
-    date_precision = models.SmallIntegerField(null=True, blank=True)
-    alias = models.CharField(max_length=20)
-    rock_type = models.ForeignKey(RockType)
-    user = models.ForeignKey(Users)
-    longitude_error = models.FloatField(null=True, blank=True)
-    latitude_error = models.FloatField(null=True, blank=True)
-    country = models.CharField(max_length=100, blank=True)
-    description = models.CharField(max_length=100, blank=True)
-    collector = models.CharField(max_length=50, blank=True)
-    collector = models.ForeignKey(Users, null=True, blank=True)
-    location_text = models.CharField(max_length=50, blank=True)
-    location = models.TextField(blank=True) # This field type is a guess.
-    class Meta:
-        db_table = u'samples_archive'
-
 class SubsampleType(models.Model):
     subsample_type_id = models.SmallIntegerField(primary_key=True)
     subsample_type = models.CharField(max_length=100, unique=True)
     class Meta:
         db_table = u'subsample_type'
-
-class SubsamplesArchive(models.Model):
-    subsample_id = models.BigIntegerField()
-    version = models.IntegerField()
-    sample = models.ForeignKey(SamplesArchive)
-    sample_version = models.BigIntegerField()
-    grid_id = models.BigIntegerField(null=True, blank=True)
-    name = models.CharField(max_length=100)
-    subsample_type = models.ForeignKey(SubsampleType)
-    class Meta:
-        db_table = u'subsamples_archive'
 
 class Samples(models.Model):
     sample_id = models.BigIntegerField(primary_key=True)
@@ -246,41 +214,6 @@ class ElementMineralTypes(models.Model):
     class Meta:
         db_table = u'element_mineral_types'
 
-class ChemicalAnalysesArchive(models.Model):
-    chemical_analysis_id = models.BigIntegerField()
-    version = models.IntegerField()
-    spot_id = models.CharField(max_length=50)
-    subsample = models.ForeignKey(SubsamplesArchive)
-    subsample_version = models.BigIntegerField()
-    point_x = models.SmallIntegerField(null=True, blank=True)
-    point_y = models.SmallIntegerField(null=True, blank=True)
-    image = models.ForeignKey(Images, null=True, blank=True)
-    analysis_method = models.CharField(max_length=50, blank=True)
-    where_done = models.CharField(max_length=50, blank=True)
-    analyst = models.CharField(max_length=50, blank=True)
-    analysis_date = models.DateTimeField(null=True, blank=True)
-    date_precision = models.SmallIntegerField(null=True, blank=True)
-    reference = models.ForeignKey(Reference, null=True, blank=True)
-    description = models.CharField(max_length=1024, blank=True)
-    mineral = models.ForeignKey(Minerals, null=True, blank=True)
-    large_rock = models.CharField(max_length=1)
-    total = models.FloatField(null=True, blank=True)
-    class Meta:
-        db_table = u'chemical_analyses_archive'
-
-class ChemicalAnalysisOxidesArchive(models.Model):
-    chemical_analysis = models.ForeignKey(ChemicalAnalysesArchive)
-    chemical_analysis_version = models.IntegerField()
-    oxide = models.ForeignKey(Oxides)
-    amount = models.FloatField()
-    precision = models.FloatField(null=True, blank=True)
-    precision_type = models.CharField(max_length=3, blank=True)
-    measurement_unit = models.CharField(max_length=4, blank=True)
-    min_amount = models.FloatField(null=True, blank=True)
-    max_amount = models.FloatField(null=True, blank=True)
-    class Meta:
-        db_table = u'chemical_analysis_oxides_archive'
-
 class GeometryColumns(models.Model):
     f_table_catalog = models.CharField(max_length=256)
     f_table_schema = models.CharField(max_length=256)
@@ -303,14 +236,6 @@ class Georeference(models.Model):
     reference_id = models.BigIntegerField(null=True, blank=True)
     class Meta:
         db_table = u'georeference'
-
-class ImageComments(models.Model):
-    comment_id = models.BigIntegerField(primary_key=True)
-    image = models.ForeignKey(Images)
-    comment_text = models.TextField()
-    version = models.IntegerField()
-    class Meta:
-        db_table = u'image_comments'
 
 class Grids(models.Model):
     grid_id = models.BigIntegerField(primary_key=True)
@@ -341,20 +266,6 @@ class ImageOnGrid(models.Model):
     class Meta:
         db_table = u'image_on_grid'
 
-
-class AdminUsers(models.Model):
-    admin_id = models.IntegerField(primary_key=True)
-    user = models.ForeignKey(Users)
-    class Meta:
-        db_table = u'admin_users'
-
-
-
-class ImageReference(models.Model):
-    image = models.ForeignKey(Images)
-    reference = models.ForeignKey(Reference)
-    class Meta:
-        db_table = u'image_reference'
 
 class MetamorphicRegions(models.Model):
     metamorphic_region_id = models.BigIntegerField(primary_key=True)
@@ -447,26 +358,6 @@ class Roles(models.Model):
 
 
 
-class RoleChanges(models.Model):
-    role_changes_id = models.BigIntegerField(primary_key=True)
-    user = models.ForeignKey(Users)
-    sponsor = models.ForeignKey(Users)
-    request_date = models.DateTimeField()
-    finalize_date = models.DateTimeField(null=True, blank=True)
-    role = models.ForeignKey(Roles)
-    granted = models.CharField(max_length=1, blank=True)
-    grant_reason = models.TextField(blank=True)
-    request_reason = models.TextField(blank=True)
-    class Meta:
-        db_table = u'role_changes'
-
-class SampleMetamorphicGradesArchive(models.Model):
-    sample = models.ForeignKey(SamplesArchive)
-    metamorphic_grade_id = models.SmallIntegerField()
-    sample_version = models.IntegerField()
-    class Meta:
-        db_table = u'sample_metamorphic_grades_archive'
-
 class Regions(models.Model):
     region_id = models.SmallIntegerField(primary_key=True)
     name = models.CharField(max_length=100, unique=True)
@@ -544,13 +435,6 @@ class XrayImage(models.Model):
     class Meta:
         db_table = u'xray_image'
 
-class SampleReferenceArchive(models.Model):
-    sample = models.ForeignKey(SamplesArchive)
-    reference = models.ForeignKey(Reference)
-    sample_version = models.IntegerField()
-    class Meta:
-        db_table = u'sample_reference_archive'
-
 class SampleReference(models.Model):
     sample = models.ForeignKey(Samples)
     reference = models.ForeignKey(Reference)
@@ -562,13 +446,6 @@ class SampleRegions(models.Model):
     region = models.ForeignKey(Regions)
     class Meta:
         db_table = u'sample_regions'
-
-class SampleRegionsArchive(models.Model):
-    sample = models.ForeignKey(SamplesArchive)
-    region = models.ForeignKey(Regions)
-    sample_version = models.IntegerField()
-    class Meta:
-        db_table = u'sample_regions_archive'
 
 class ChemicalAnalysisElements(models.Model):
     chemical_analysis = models.ForeignKey(ChemicalAnalyses)
@@ -582,32 +459,11 @@ class ChemicalAnalysisElements(models.Model):
     class Meta:
         db_table = u'chemical_analysis_elements'
 
-class ChemicalAnalysisElementsArchive(models.Model):
-    chemical_analysis = models.ForeignKey(ChemicalAnalysesArchive)
-    chemical_analysis_version = models.IntegerField()
-    element = models.ForeignKey(Elements)
-    amount = models.FloatField()
-    precision = models.FloatField(null=True, blank=True)
-    precision_type = models.CharField(max_length=3, blank=True)
-    measurement_unit = models.CharField(max_length=4, blank=True)
-    min_amount = models.FloatField(null=True, blank=True)
-    max_amount = models.FloatField(null=True, blank=True)
-    class Meta:
-        db_table = u'chemical_analysis_elements_archive'
-
 class MineralRelationships(models.Model):
     parent_mineral = models.ForeignKey(Minerals)
     child_mineral = models.ForeignKey(Minerals)
     class Meta:
         db_table = u'mineral_relationships'
-
-class SampleMineralsArchive(models.Model):
-    mineral = models.ForeignKey(Minerals)
-    sample = models.ForeignKey(SamplesArchive)
-    sample_version = models.IntegerField()
-    amount = models.FloatField(null=True, blank=True)
-    class Meta:
-        db_table = u'sample_minerals_archive'
 
 class SampleMinerals(models.Model):
     mineral = models.ForeignKey(Minerals)

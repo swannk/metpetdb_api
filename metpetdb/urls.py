@@ -5,7 +5,8 @@ from django.conf.urls import patterns, include, url
 #admin.autodiscover()
 
 urlpatterns = patterns('',
-url(r'^webservices/$', 'webservices.views.index'),    
+url(r'^webservices/$', 'webservices.views.index'),
+url(r'^samples/$', 'webservices.views.samples'),    
     # Examples:
     # url(r'^$', 'metpetdb.views.home', name='home'),
     # url(r'^metpetdb/', include('metpetdb.foo.urls')),

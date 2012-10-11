@@ -10,11 +10,11 @@ sudo ./postgresql start
 
 #Update 'pg_hba.conf' file to authenticate connections:
 
- # "local" is for Unix domain socket connections only
+# "local" is for Unix domain socket connections only
  local   all         all                              md5
- # IPv4 local connections:
+# IPv4 local connections:
  host    all         all         192.168.1.32/32         md5
- # IPv6 local connections:
+# IPv6 local connections:
  host    all         all         ::1/128              md5
 
 ******
@@ -62,10 +62,25 @@ optional - set timezone
 #create app
 python manage.py startapp webservices
 
+#add app to settings.py
+/metpetdb/settings.py
+under INSTALLED_APPS
+
+#run migration script on the database
+
 #write models or generate with
 python mysite/manage.py inspectdb > mysite/myapp/models.py
+
+#update models
+- rearrange classes
+- add related_names (if required)
 
 #check SQL and validate
 python manage.py sql webservices
 python manage.py validate
+
+#create views
+#set urls inside metpetdb/urls.py
+
+#setting up Django to use Apache
 

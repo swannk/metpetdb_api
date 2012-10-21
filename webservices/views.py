@@ -2,7 +2,15 @@ from django.http import HttpResponse
 from webservices.models import *
 import json
 def index(request):
-    	return HttpResponse('Hello universe!')
+	c=ChemicalAnalyses.objects.all()
+	i=0
+	str1=""
+	try:
+		for i in range(len(c)):
+			str1=str1+str(c[i].mineral.name)
+	except Exception as e:
+		str1=str1+str(e)
+    	return HttpResponse('Hello universe!'+str1)
 
 def samples(request):
 	samples_data=[]
@@ -99,7 +107,7 @@ def samples(request):
 
 def chemical_analyses(request):
 	chemical_analyses_data=[]
-	chemical_analyses=ChemicalAnalyses.objects.all()
+	chemical_analyses=ChemicalAnalyses.objects.filter(public_data='Y')
 	id=0
 	i=0
 	for chemical_analysis in chemical_analyses:
@@ -120,9 +128,10 @@ def chemical_analyses(request):
 		chemical_analysis_large_rock=chemical_analysis.large_rock
 		
 		#get chemical analysis mineral name
-		
-		#chemical_analysis_mineral_name=chemical_analysis.mineral.name
-
+		try:
+			chemical_analysis_mineral_name=chemical_analysis.mineral.name
+		except Exception as e:
+			print str(e)
 		#get chemical analysis method
 		chemical_analysis_method=chemical_analysis.analysis_method
 

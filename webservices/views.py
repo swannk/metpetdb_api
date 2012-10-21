@@ -2,10 +2,7 @@ from django.http import HttpResponse
 from webservices.models import *
 import json
 def index(request):
-	str1=""
-	for p in Users.objects.raw('SELECT * FROM Users'):
-		str1=str1+unicode(p.country)+"\n"
-    	return HttpResponse(str1)
+    	return HttpResponse('Hello universe!')
 
 def samples(request):
 	samples_data=[]
@@ -99,3 +96,84 @@ def samples(request):
 		samples_data.append(sample_data)
 		
 	return HttpResponse("{\"items\":"+json.dumps(samples_data)+"}")
+
+def chemical_analyses(request):
+	chemical_analyses_data=[]
+	chemical_analyses=ChemicalAnalyses.objects.all()
+	id=0
+	i=0
+	for chemical_analysis in chemical_analyses:
+		chemical_analysis_data={}
+		chemical_analysis_large_rock=""
+		chemical_analysis_mineral_name=""
+		chemical_analysis_owner=""
+		chemical_analysis_rock_type=""
+		chemical_analysis_metamorphic_grade=[]
+		chemical_analysis_method=""
+		chemical_analysis_first_authors=[]
+		chemical_analysis_publication_journal_names=[]
+		chemical_analysis_total_weight=""
+		chemical_analysis_elements=[]
+		chemical_analysis_oxides=[]
+
+		#get chemical analysis large rock
+		chemical_analysis_large_rock=chemical_analysis.large_rock
+		
+		#get chemical analysis mineral name
+		
+		#chemical_analysis_mineral_name=chemical_analysis.mineral.name
+
+		#get chemical analysis method
+		chemical_analysis_method=chemical_analysis.analysis_method
+
+		#get chemical analysis owner
+		chemical_analysis_owner=chemical_analysis.user.name
+
+		#get chemical analysis total weight
+		chemical_analysis_total_weight=chemical_analysis.total
+
+		#get chemical analysis oxides
+		chemicalanalysisoxides=chemical_analysis.chemicalanalysisoxidesdup_set.all()
+		for chemicalanalysisoxide in chemicalanalysisoxides:
+			chemical_analysis_oxides.append(chemicalanalysisoxide.oxide.element.name)
+		
+		#get chemical analysis elements
+		chemicalanalysiselements=chemical_analysis.chemicalanalysiselementsdup_set.all()
+		for chemicalanalysiselement in chemicalanalysiselements:
+			chemical_analysis_elements.append(chemicalanalysiselement.element.name)
+
+		#get chemical analysis rock type
+		chemical_analysis_rock_type=chemical_analysis.subsample.sample.rock_type.rock_type
+		
+		#get chemical analysis metamorphic grade
+		samplemetamorphicgrades=chemical_analysis.subsample.sample.samplemetamorphicgradesdup_set.all()
+		for samplemetamorphicgrade in samplemetamorphicgrades:
+			chemical_analysis_metamorphic_grade.append(samplemetamorphicgrade.metamorphic_grade.name)
+		
+		#get chemical analysis references
+		chemicalreferences=chemical_analysis.subsample.sample.samplereferencedup_set.all()
+		for chemicalreference in chemicalreferences:
+			referencenumber=chemicalreference.reference.name
+			georeferences=Georeference.objects.filter(reference_number=str(referencenumber))
+			for georeference in georeferences:
+				chemical_analysis_first_authors.append(georeference.first_author)
+				chemical_analysis_publication_journal_names.append(georeference.journal_name)
+		
+		id=id+1
+		chemical_analysis_data['label']=id
+		chemical_analysis_data['chemical_analysis_large_rock']=chemical_analysis_large_rock
+		chemical_analysis_data['chemical_analysis_mineral_name']=chemical_analysis_mineral_name
+		chemical_analysis_data['chemical_analysis_method']=chemical_analysis_method
+		chemical_analysis_data['chemical_analysis_owner']=chemical_analysis_owner
+		chemical_analysis_data['chemical_analysis_total_weight']=chemical_analysis_total_weight
+		chemical_analysis_data['chemical_analysis_oxides']=chemical_analysis_oxides
+		chemical_analysis_data['chemical_analysis_elements']=chemical_analysis_elements
+		chemical_analysis_data['chemical_analysis_rock_type']=chemical_analysis_rock_type
+		chemical_analysis_data['chemical_analysis_metamorphic_grade']=chemical_analysis_metamorphic_grade
+		chemical_analysis_data['chemical_analysis_first_authors']=chemical_analysis_first_authors
+		chemical_analysis_data['chemical_analysis_publication_journal_names']=chemical_analysis_publication_journal_names
+		chemical_analyses_data.append(chemical_analysis_data)
+
+	return HttpResponse("{\"items\":"+json.dumps(chemical_analyses_data)+"}")
+
+				

@@ -6,7 +6,8 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('',
 url(r'^webservices/$', 'webservices.views.index'),
-url(r'^samples/sample.json$', 'webservices.views.samples'),    
+url(r'^webservices/samples$', 'webservices.views.samples'),
+url(r'^webservices/chemicalanalyses$', 'webservices.views.chemical_analyses'),    
     # Examples:
     # url(r'^$', 'metpetdb.views.home', name='home'),
     # url(r'^metpetdb/', include('metpetdb.foo.urls')),

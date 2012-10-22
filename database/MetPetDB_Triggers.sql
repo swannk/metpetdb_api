@@ -1,5 +1,28 @@
--- element_mineral_types
 DROP TRIGGER element_mineral_types_sync_trg ON element_mineral_types;
+DROP FUNCTION element_mineral_types_sync();
+
+DROP TRIGGER chemical_analysis_elements_sync_trg ON chemical_analysis_elements;
+DROP FUNCTION chemical_analysis_elements_sync();
+
+DROP TRIGGER chemical_analysis_oxides_sync_trg ON chemical_analysis_oxides;
+DROP FUNCTION chemical_analysis_oxides_sync();
+
+DROP TRIGGER sample_metamorphic_grades_sync_trg ON sample_metamorphic_grades;
+DROP FUNCTION sample_metamorphic_grades_sync();
+
+DROP TRIGGER sample_metamorphic_regions_sync_trg ON sample_metamorphic_regions;
+DROP FUNCTION sample_metamorphic_regions_sync();
+
+DROP TRIGGER sample_minerals_sync_trg ON sample_minerals;
+DROP FUNCTION sample_minerals_sync();
+
+DROP TRIGGER sample_reference_sync_trg ON sample_reference;
+DROP FUNCTION sample_reference_sync();
+
+DROP TRIGGER sample_regions_sync_trg ON sample_regions;
+DROP FUNCTION sample_regions_sync();
+
+-- element_mineral_types
 
 CREATE OR REPLACE FUNCTION element_mineral_types_sync() RETURNS trigger AS $$
 BEGIN
@@ -14,8 +37,6 @@ AFTER INSERT OR UPDATE ON element_mineral_types
 FOR EACH ROW EXECUTE PROCEDURE element_mineral_types_sync();
 
 -- chemical_analysis_elements
-DROP TRIGGER chemical_analysis_elements_sync_trg ON chemical_analysis_elements;
-
 
 CREATE OR REPLACE FUNCTION chemical_analysis_elements_sync() RETURNS trigger AS $$
 BEGIN
@@ -30,8 +51,6 @@ AFTER INSERT OR UPDATE ON chemical_analysis_elements
 FOR EACH ROW EXECUTE PROCEDURE chemical_analysis_elements_sync();
 
 -- chemical_analysis_oxides
-DROP TRIGGER chemical_analysis_oxides_sync_trg ON chemical_analysis_oxides;
-
 CREATE OR REPLACE FUNCTION chemical_analysis_oxides_sync() RETURNS trigger AS $$
 BEGIN
     INSERT INTO chemical_analysis_oxides_dup(chemical_analysis_id,oxide_id,amount,precision, precision_type,measurement_unit,min_amount,max_amount,id)
@@ -45,8 +64,6 @@ AFTER INSERT OR UPDATE ON chemical_analysis_oxides
 FOR EACH ROW EXECUTE PROCEDURE chemical_analysis_oxides_sync();
 
 -- sample_metamorphic_grades
-DROP TRIGGER sample_metamorphic_grades_sync_trg ON sample_metamorphic_grades;
-
 CREATE OR REPLACE FUNCTION sample_metamorphic_grades_sync() RETURNS trigger AS $$
 BEGIN
     INSERT INTO sample_metamorphic_grades_dup(sample_id,metamorphic_grade_id,id)
@@ -60,8 +77,6 @@ AFTER INSERT OR UPDATE ON sample_metamorphic_grades
 FOR EACH ROW EXECUTE PROCEDURE sample_metamorphic_grades_sync();
 
 -- sample_metamorphic_regions
-DROP TRIGGER sample_metamorphic_regions_sync_trg ON sample_metamorphic_regions;
-
 CREATE OR REPLACE FUNCTION sample_metamorphic_regions_sync() RETURNS trigger AS $$
 BEGIN
     INSERT INTO sample_metamorphic_regions_dup(sample_id,metamorphic_region_id,id)
@@ -75,8 +90,6 @@ AFTER INSERT OR UPDATE ON sample_metamorphic_regions
 FOR EACH ROW EXECUTE PROCEDURE sample_metamorphic_regions_sync();
 
 -- sample_minerals
-DROP TRIGGER sample_minerals_sync_trg ON sample_minerals;
-
 CREATE OR REPLACE FUNCTION sample_minerals_sync() RETURNS trigger AS $$
 BEGIN
     INSERT INTO sample_minerals_dup(mineral_id, sample_id, amount,id)
@@ -90,8 +103,6 @@ AFTER INSERT OR UPDATE ON sample_minerals
 FOR EACH ROW EXECUTE PROCEDURE sample_minerals_sync();
 
 -- sample_reference
-DROP TRIGGER sample_reference_sync_trg ON sample_reference;
-
 CREATE OR REPLACE FUNCTION sample_reference_sync() RETURNS trigger AS $$
 BEGIN
     INSERT INTO sample_reference_dup(sample_id,reference_id,id)
@@ -105,8 +116,6 @@ AFTER INSERT OR UPDATE ON sample_reference
 FOR EACH ROW EXECUTE PROCEDURE sample_reference_sync();
 
 -- sample_regions
-DROP TRIGGER sample_regions_sync_trg ON sample_regions;
-
 CREATE OR REPLACE FUNCTION sample_regions_sync() RETURNS trigger AS $$
 BEGIN
     INSERT INTO sample_regions_dup(sample_id,region_id,id)
@@ -118,3 +127,9 @@ $$ LANGUAGE 'plpgsql';
 CREATE TRIGGER sample_regions_sync_trg
 AFTER INSERT OR UPDATE ON sample_regions
 FOR EACH ROW EXECUTE PROCEDURE sample_regions_sync();
+
+
+-- grant access rights
+grant trigger on table sample_regions to metpetdb_dev;
+
+alter function sample_regions_sync() owner to metpetdb_dev;

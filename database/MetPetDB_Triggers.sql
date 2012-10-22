@@ -129,7 +129,21 @@ AFTER INSERT OR UPDATE ON sample_regions
 FOR EACH ROW EXECUTE PROCEDURE sample_regions_sync();
 
 
--- grant access rights
-grant trigger on table sample_regions to metpetdb_dev;
+GRANT TRIGGER ON TABLE element_mineral_types to metpetdb_dev;
+GRANT TRIGGER ON TABLE chemical_analysis_elements to metpetdb_dev;
+GRANT TRIGGER ON TABLE chemical_analysis_oxides to metpetdb_dev;
+GRANT TRIGGER ON TABLE sample_metamorphic_grades to metpetdb_dev;
+GRANT TRIGGER ON TABLE sample_metamorphic_regions to metpetdb_dev;
+GRANT TRIGGER ON TABLE sample_minerals to metpetdb_dev;
+GRANT TRIGGER ON TABLE sample_reference to metpetdb_dev;
+GRANT TRIGGER ON TABLE sample_regions to metpetdb_dev;
 
-alter function sample_regions_sync() owner to metpetdb_dev;
+
+ALTER FUNCTION element_mineral_types_sync() OWNER TO metpetdb_dev;
+ALTER FUNCTION chemical_analysis_elements_sync() OWNER TO metpetdb_dev;
+ALTER FUNCTION chemical_analysis_oxides_sync() OWNER TO metpetdb_dev;
+ALTER FUNCTION sample_metamorphic_grades_sync() OWNER TO metpetdb_dev;
+ALTER FUNCTION sample_metamorphic_regions_sync() OWNER TO metpetdb_dev;
+ALTER FUNCTION sample_minerals_sync() OWNER TO metpetdb_dev;
+ALTER FUNCTION sample_reference_sync() OWNER TO metpetdb_dev;
+ALTER FUNCTION sample_regions_sync() OWNER TO metpetdb_dev;

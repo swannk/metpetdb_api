@@ -1,4 +1,3 @@
-
 -- Uncomment the following if you want to run this from the beginning
 -- 
 drop table element_mineral_types_dup;
@@ -11,6 +10,8 @@ drop table sample_metamorphic_regions_dup;
 drop table sample_minerals_dup;
 drop table sample_reference_dup;
 drop table sample_regions_dup;
+
+drop sequence element_mineral_types_dup_seq ;
 
 -- element_mineral_types
 create table element_mineral_types_dup as (select * from element_mineral_types);
@@ -101,3 +102,9 @@ alter table sample_regions_dup add primary key (id);
 alter table sample_regions_dup add foreign key (region_id) references regions (region_id) match simple on update no action on delete no action;
 alter table sample_regions_dup add foreign key (sample_id) references samples (sample_id) match simple on update no action on delete no action;
 
+
+-- grant statements tables
+alter table  sample_regions_dup owner to metpetdb_dev ;
+
+-- grant statements for sequences
+grant all PRIVILEGES on sample_regions_dup_seq to metpetdb_dev;

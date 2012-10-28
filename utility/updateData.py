@@ -16,11 +16,10 @@ def getChemicalAnalyses(filePath):
 
 
 if __name__=="__main__":
-	if sys.argv[1]!='':
+	try:
 		filePath=sys.argv[1]
-	else:
+		getSamples(filePath)
+        	getChemicalAnalyses(filePath)
+	except:
 		print "Please enter filePath. Eg: /home/user/projectfolder/"
-		sys.exit()
-        getSamples(filePath)
-        getChemicalAnalyses(filePath)
 

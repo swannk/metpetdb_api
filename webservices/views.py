@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from webservices.models import *
 import json
+import sys
+sys.stdout = sys.stderr
 def index(request):
 	c=ChemicalAnalyses.objects.all()
 	i=0

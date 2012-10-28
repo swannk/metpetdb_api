@@ -15,7 +15,6 @@ def index(request):
 def samples(request):
 	samples_data=[]
 	samples=Samples.objects.filter(public_data='Y')
-	id=0
 	i=0
 	for sample in samples:
 		#if i==3:
@@ -88,8 +87,7 @@ def samples(request):
 				sample_reference_first_authors.append(georeference.first_author)
 				sample_reference_journal_names.append(georeference.journal_name)
 		
-		id=id+1
-		sample_data["label"]=id
+		sample_data["label"]=sample.sample_id
 		sample_data["sample_number"]=sample_number
 		sample_data["sample_metamorphic_regions"]=sample_metamorphic_regions
 		sample_data["sample_country"]=sample_country
@@ -123,6 +121,12 @@ def chemical_analyses(request):
 		chemical_analysis_total_weight=""
 		chemical_analysis_elements=[]
 		chemical_analysis_oxides=[]
+		chemical_analysis_latlon=""
+		
+		#get lat lon from location
+                sample_location_x=Samples.objects.raw('select sample_id,st_X(location) as geo from samples where sample_id='+str(chemical_analysis.subsample.sample.sample_id))[0].geo
+                sample_location_y=Samples.objects.raw('select sample_id,st_Y(location) as geo from samples where sample_id='+str(chemical_analysis.subsample.sample.sample_id))[0].geo
+                chemical_analysis_latlon=str(sample_location_y)+","+str(sample_location_x)
 
 		#get chemical analysis large rock
 		chemical_analysis_large_rock=chemical_analysis.large_rock
@@ -168,8 +172,8 @@ def chemical_analyses(request):
 				chemical_analysis_first_authors.append(georeference.first_author)
 				chemical_analysis_publication_journal_names.append(georeference.journal_name)
 		
-		id=id+1
-		chemical_analysis_data['label']=id
+		chemical_analysis_data['label']=chemical_analysis.subsample.sample.sample_id
+		chemical_analysis_data['chemical_analysis_latlon']=chemical_analysis_latlon
 		chemical_analysis_data['chemical_analysis_large_rock']=chemical_analysis_large_rock
 		chemical_analysis_data['chemical_analysis_mineral_name']=chemical_analysis_mineral_name
 		chemical_analysis_data['chemical_analysis_method']=chemical_analysis_method

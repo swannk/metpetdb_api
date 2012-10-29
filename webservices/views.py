@@ -4,24 +4,13 @@ import json
 import sys
 sys.stdout = sys.stderr
 def index(request):
-	c=ChemicalAnalyses.objects.all()
-	i=0
-	str1=""
-	try:
-		for i in range(len(c)):
-			str1=str1+str(c[i].mineral.name)
-	except Exception as e:
-		str1=str1+str(e)
-    	return HttpResponse('Hello universe!'+str1)
+    	return HttpResponse('Hello universe!')
 
 def samples(request):
 	samples_data=[]
 	samples=Samples.objects.filter(public_data='Y')
 	i=0
 	for sample in samples:
-		#if i==3:
-		#	break
-		#i=i+1
 		#initialize the variables
 		sample_data={}
 		sample_latlon=""

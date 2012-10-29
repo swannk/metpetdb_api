@@ -18,8 +18,27 @@
 <tr><td colspan='2'>
 <div ex:role="view"
            ex:viewClass="Map"
-           ex:latlng=".sample_latlon"
-           ex:colorKey=".sample_owner">
+           ex:latlng=".chemical_analysis_latlon"
+           ex:colorKey=".chemical_analysis_owner">
+		   <div ex:role="lens" style="display: none;" class="map-lens">
+                    
+                    <table border="1">
+                     
+					<tr><td>Sample ID</td><td><a ex:href-subcontent="http://metpetdb.rpi.edu/metpetweb/#sample/{{.label}}"><i ex:content=".label"></i></a></td></tr>
+					<tr><td>Mineral</td><td><i ex:content=".chemical_analysis_mineral_name"></i></td></tr>
+					<tr><td>Analysis Method</td><td><i ex:content=".chemical_analysis_method"></i></td></tr>
+					<tr><td>Large Rock</td><td><i ex:content=".chemical_analysis_large_rock"></i></td></tr>
+					<tr><td>Owner</td><td><i ex:content=".chemical_analysis_owner"></i></td></tr>
+					<tr><td>Total Weight</td><td><i ex:content=".chemical_analysis_total_weight"></i></td></tr>
+					<tr><td>Oxides</td><td><i ex:content=".chemical_analysis_oxides"></i></td></tr>
+					<tr><td>Elements</td><td><i ex:content=".chemical_analysis_elements"></i></td></tr>
+					<tr><td>Rock Type</td><td><i ex:content=".chemical_analysis_rock_type"></i></td></tr>
+					<tr><td>Metamorphic Grade</td><td><i ex:content=".chemical_analysis_metamorphic_grade"></i></td></tr>
+					<tr><td>Author</td><td><i ex:content=".chemical_analysis_first_authors"></i></td></tr>
+					<tr><td>Journal</td><td><i ex:content=".chemical_analysis_publication_journal_names"></i></td></tr>
+					<tr><td>Latitude,Longitude</td><td><i ex:content=".chemical_analysis_latlon"></i></td></tr>
+                   </table>
+                </div>
        </div>
 </td><tr valign="top">
         

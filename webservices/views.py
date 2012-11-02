@@ -78,8 +78,8 @@ def samples(request):
 				sample_reference_first_authors.append(georeference.first_author)
 				sample_reference_journal_names.append(georeference.journal_name)
 		
-		sample_data["label"]=sample.sample_id
-		sample_data["sample_number"]=sample_number
+		sample_data["sample_id"]=sample.sample_id
+		sample_data["label"]=sample_number
 		sample_data["sample_metamorphic_regions"]=sample_metamorphic_regions
 		sample_data["sample_country"]=sample_country
 		sample_data["sample_owner"]=sample_owner
@@ -163,7 +163,8 @@ def chemical_analyses(request):
 				chemical_analysis_first_authors.append(georeference.first_author)
 				chemical_analysis_publication_journal_names.append(georeference.journal_name)
 		
-		chemical_analysis_data['label']=chemical_analysis.subsample.sample.sample_id
+		chemical_analysis_data['sample_id']=chemical_analysis.subsample.sample.sample_id
+		chemical_analysis_data['label']=chemical_analysis.subsample.sample.number
 		chemical_analysis_data['chemical_analysis_latlon']=chemical_analysis_latlon
 		chemical_analysis_data['chemical_analysis_large_rock']=chemical_analysis_large_rock
 		chemical_analysis_data['chemical_analysis_mineral_name']=chemical_analysis_mineral_name

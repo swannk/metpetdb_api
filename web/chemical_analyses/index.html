@@ -10,7 +10,32 @@
 <script src="http://static.simile.mit.edu/exhibit/extensions-2.0/map/map-extension.js?gmapkey=AIzaSyBLDF_B-pF4IIf3W-qVgQW8oZpo4W7URXA"
            type="text/javascript"></script>
     
-   
+   <style>
+      p, a, tr, td, div, small, h1, h2, h3, h4, h5, h6 { font-family: Arial; 
+      }
+      .exhibit-tabularView-columnHeader {
+        border:none;
+        text-align: left;
+      }
+      .exhibit-tabularView-body {
+        border-collapse: collapse;
+        border-spacing: 0;
+        border-color: #F9F9F9;
+      }
+      .exhibit-tabularView-body tbody tr td {
+        border:none;
+        border-top: 1px solid #DDDDDD;
+        line-height: 25px;
+        vertical-align: middle;
+      }
+      .exhibit-tabularView-body tbody tr:nth-child(odd) td {
+        background-color: #F9F9F9;
+      } 
+      .exhibit-tabularView-columnHeader-sorted {
+        border:none;
+        text-align: left;
+      }
+    </style>
 </head> 
 <body>
     <h1>Chemical Analyses</h1>
@@ -24,7 +49,7 @@
                     
                     <table border="1">
                      
-					<tr><td>Sample ID</td><td><a ex:href-subcontent="http://metpetdb.rpi.edu/metpetweb/#sample/{{.label}}"><i ex:content=".label"></i></a></td></tr>
+					<tr><td>Sample Number</td><td><a ex:href-subcontent="http://metpetdb.rpi.edu/metpetweb/#sample/{{.sample_id}}" target="_blank"><i ex:content=".label"></i></a></td></tr>
 					<tr><td>Mineral</td><td><i ex:content=".chemical_analysis_mineral_name"></i></td></tr>
 					<tr><td>Analysis Method</td><td><i ex:content=".chemical_analysis_method"></i></td></tr>
 					<tr><td>Large Rock</td><td><i ex:content=".chemical_analysis_large_rock"></i></td></tr>
@@ -59,9 +84,9 @@
 			<div ex:role="facet" ex:expression=".chemical_analysis_rock_type" ex:facetLabel="Rock Type"></div>
 			<div ex:role="facet" ex:expression=".chemical_analysis_mineral_name" ex:facetLabel="Mineral"></div>
 			<div ex:role="facet" ex:expression=".chemical_analysis_metamorphic_grade" ex:facetLabel="Metamorphic Grade"></div>
-			<div ex:role="facet" ex:expression=".chemical_analysis_large_rock" ex:facetLabel="Large Rock"></div>
+			
 			<div ex:role="facet" ex:expression=".chemical_analysis_owner" ex:facetLabel="Owner"></div>
-			<div ex:role="facet" ex:expression=".chemical_analysis_total_weight" ex:facetLabel="Weight"></div>
+			
 			<div ex:role="facet" ex:expression=".chemical_analysis_first_authors" ex:facetLabel="Author"></div>
 			<div ex:role="facet" ex:expression=".chemical_analysis_publication_journal_names" ex:facetLabel="Journal"></div>
             </td>   

@@ -306,8 +306,12 @@ class Georeference(models.Model):
     full_text = models.TextField()
     reference_number = models.TextField(blank=True)
     reference_id = models.BigIntegerField(null=True, blank=True)
+    journal_name_2 = models.TextField(blank=True)
+    doi = models.TextField(blank=True)
+    publication_year = models.TextField(blank=True)
     class Meta:
         db_table = u'georeference'
+
 
 class ImageComments(models.Model):
     comment_id = models.BigIntegerField(primary_key=True)

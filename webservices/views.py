@@ -3,6 +3,18 @@ from webservices.models import *
 import json
 import sys
 sys.stdout = sys.stderr
+def formatOxide(species):
+        retStr=""
+        i=0
+        while(i<len(species)):
+                if species[i].isdigit():
+                        retStr+='<sub>'+species[i]+'</sub>'
+                else:
+                        retStr+=species[i]
+                i+=1
+        return retStr
+
+
 def index(request):
     	return HttpResponse('Hello universe!')
 
@@ -143,7 +155,7 @@ def chemical_analyses(request):
 		#get chemical analysis oxides
 		chemicalanalysisoxides=chemical_analysis.chemicalanalysisoxidesdup_set.all()
 		for chemicalanalysisoxide in chemicalanalysisoxides:
-			chemical_analysis_oxides.append(chemicalanalysisoxide.oxide.species)
+			chemical_analysis_oxides.append(formatOxide(str(chemicalanalysisoxide.oxide.species)))
 		
 		#get chemical analysis elements
 		chemicalanalysiselements=chemical_analysis.chemicalanalysiselementsdup_set.all()

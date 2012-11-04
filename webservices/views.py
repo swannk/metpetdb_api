@@ -143,7 +143,7 @@ def chemical_analyses(request):
 		#get chemical analysis oxides
 		chemicalanalysisoxides=chemical_analysis.chemicalanalysisoxidesdup_set.all()
 		for chemicalanalysisoxide in chemicalanalysisoxides:
-			chemical_analysis_oxides.append(chemicalanalysisoxide.oxide.element.name)
+			chemical_analysis_oxides.append(chemicalanalysisoxide.oxide.species)
 		
 		#get chemical analysis elements
 		chemicalanalysiselements=chemical_analysis.chemicalanalysiselementsdup_set.all()

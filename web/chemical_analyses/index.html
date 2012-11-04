@@ -52,7 +52,6 @@
 					<tr><td>Sample Number</td><td><a ex:href-subcontent="http://metpetdb.rpi.edu/metpetweb/#sample/{{.sample_id}}" target="_blank"><i ex:content=".label"></i></a></td></tr>
 					<tr><td>Mineral</td><td><i ex:content=".chemical_analysis_mineral_name"></i></td></tr>
 					<tr><td>Analysis Method</td><td><i ex:content=".chemical_analysis_method"></i></td></tr>
-					<tr><td>Large Rock</td><td><i ex:content=".chemical_analysis_large_rock"></i></td></tr>
 					<tr><td>Owner</td><td><i ex:content=".chemical_analysis_owner"></i></td></tr>
 					<tr><td>Total Weight</td><td><i ex:content=".chemical_analysis_total_weight"></i></td></tr>
 					<tr><td>Oxides</td><td><i ex:content=".chemical_analysis_oxides"></i></td></tr>
@@ -61,6 +60,7 @@
 					<tr><td>Metamorphic Grade</td><td><i ex:content=".chemical_analysis_metamorphic_grade"></i></td></tr>
 					<tr><td>Author</td><td><i ex:content=".chemical_analysis_first_authors"></i></td></tr>
 					<tr><td>Journal</td><td><i ex:content=".chemical_analysis_publication_journal_names"></i></td></tr>
+					<tr><td>Publication Year</td><td><i ex:content=".chemical_analysis_publication_years"></i></td></tr>
 					<tr><td>Latitude,Longitude</td><td><i ex:content=".chemical_analysis_latlon"></i></td></tr>
                    </table>
                 </div>
@@ -84,12 +84,10 @@
 			<div ex:role="facet" ex:expression=".chemical_analysis_rock_type" ex:facetLabel="Rock Type"></div>
 			<div ex:role="facet" ex:expression=".chemical_analysis_mineral_name" ex:facetLabel="Mineral"></div>
 			<div ex:role="facet" ex:expression=".chemical_analysis_metamorphic_grade" ex:facetLabel="Metamorphic Grade"></div>
-			
 			<div ex:role="facet" ex:expression=".chemical_analysis_owner" ex:facetLabel="Owner"></div>
-			
 			<div ex:role="facet" ex:expression=".chemical_analysis_first_authors" ex:facetLabel="Author"></div>
 			<div ex:role="facet" ex:expression=".chemical_analysis_publication_journal_names" ex:facetLabel="Journal"></div>
-<div ex:role="facet" ex:expression=".chemical_analysis_publication_year" ex:facetLabel="Publication Year"></div>
+<div ex:role="facet" ex:expression=".chemical_analysis_publication_years" ex:facetLabel="Publication Year"></div>
             </td>   
         </tr>
 

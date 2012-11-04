@@ -24,7 +24,7 @@ def samples(request):
 		sample_regions=[]
 		sample_reference_first_authors=[]
 		sample_reference_journal_names=[]
-		sample_reference_publication_year=[]
+		sample_reference_publication_years=[]
 		
 		#get sample metamorphic regions
 		samplemetamorphicregions=sample.samplemetamorphicregionsdup_set.all()
@@ -78,7 +78,7 @@ def samples(request):
 			for georeference in georeferences:
 				sample_reference_first_authors.append(georeference.first_author)
 				sample_reference_journal_names.append(georeference.journal_name_2)
-				sample_reference_publication_year.append(georeference.publication_year)
+				sample_reference_publication_years.append(georeference.publication_year)
 		
 		sample_data["sample_id"]=sample.sample_id
 		sample_data["label"]=sample_number
@@ -89,9 +89,9 @@ def samples(request):
 		sample_data["sample_metamorphic_grades"]=sample_metamorphic_grades
 		sample_data["sample_minerals"]=sample_minerals
 		sample_data["sample_regions"]=sample_regions
-		sample_data["sample_reference_first_author"]=sample_reference_first_authors
-		sample_data["sample_reference_journal_name"]=sample_reference_journal_names
-		sample_data['sample_reference_publication_year']=sample_reference_publication_year
+		sample_data["sample_reference_first_authors"]=sample_reference_first_authors
+		sample_data["sample_reference_journal_names"]=sample_reference_journal_names
+		sample_data['sample_reference_publication_years']=sample_reference_publication_years
 		sample_data["sample_latlon"]=sample_latlon
 		samples_data.append(sample_data)
 		
@@ -112,7 +112,7 @@ def chemical_analyses(request):
 		chemical_analysis_method=""
 		chemical_analysis_first_authors=[]
 		chemical_analysis_publication_journal_names=[]
-		chemical_analysis_publication_year=[]
+		chemical_analysis_publication_years=[]
 		chemical_analysis_total_weight=""
 		chemical_analysis_elements=[]
 		chemical_analysis_oxides=[]
@@ -166,7 +166,7 @@ def chemical_analyses(request):
 			for georeference in georeferences:
 				chemical_analysis_first_authors.append(georeference.first_author)
 				chemical_analysis_publication_journal_names.append(georeference.journal_name_2)
-				chemical_analysis_publication_year.append(georeference.publication_year)
+				chemical_analysis_publication_years.append(georeference.publication_year)
 
 		chemical_analysis_data['sample_id']=chemical_analysis.subsample.sample.sample_id
 		chemical_analysis_data['label']=chemical_analysis.subsample.sample.number
@@ -182,7 +182,7 @@ def chemical_analyses(request):
 		chemical_analysis_data['chemical_analysis_metamorphic_grade']=chemical_analysis_metamorphic_grade
 		chemical_analysis_data['chemical_analysis_first_authors']=chemical_analysis_first_authors
 		chemical_analysis_data['chemical_analysis_publication_journal_names']=chemical_analysis_publication_journal_names
-		chemical_analysis_data['chemical_analysis_publication_year']=chemical_analysis_publication_year
+		chemical_analysis_data['chemical_analysis_publication_years']=chemical_analysis_publication_years
 		chemical_analyses_data.append(chemical_analysis_data)
 
 	return HttpResponse("{\"items\":"+json.dumps(chemical_analyses_data)+"}")

@@ -2,6 +2,8 @@ from django.http import HttpResponse
 from webservices.models import *
 import json
 import sys
+from django.db import connection as con
+
 sys.stdout = sys.stderr
 def formatOxide(species):
         retStr=""
@@ -16,7 +18,11 @@ def formatOxide(species):
 
 
 def index(request):
-    	return HttpResponse('Hello universe!')
+	#from django.db import connection
+	cursor=con.cursor()
+	cursor.execute('select count(chemical_analysis_id) from chemical_analyses where subsample_id=254')
+	row=cursor.fetchone()
+    	return HttpResponse(row)
 
 def samples(request):
 	samples_data=[]
@@ -37,6 +43,11 @@ def samples(request):
 		sample_reference_first_authors=[]
 		sample_reference_journal_names=[]
 		sample_reference_publication_years=[]
+		sample_number_link=""
+		sample_id=""
+
+		#get sample id
+		sample_id=sample.sample_id
 		
 		#get sample metamorphic regions
 		samplemetamorphicregions=sample.samplemetamorphicregionsdup_set.all()
@@ -91,9 +102,13 @@ def samples(request):
 				sample_reference_first_authors.append(georeference.first_author)
 				sample_reference_journal_names.append(georeference.journal_name_2)
 				sample_reference_publication_years.append(georeference.publication_year)
+	
+		#url to metpetdb
+                sample_link='http://metpetdb.rpi.edu/metpetweb/#sample/'+str(sample_id)
 		
-		sample_data["sample_id"]=sample.sample_id
+		sample_data["sample_id"]=sample_id
 		sample_data["label"]=sample_number
+		sample_data['sample_link']=sample_link
 		sample_data["sample_metamorphic_regions"]=sample_metamorphic_regions
 		sample_data["sample_country"]=sample_country
 		sample_data["sample_owner"]=sample_owner
@@ -110,17 +125,21 @@ def samples(request):
 	return HttpResponse("{\"items\":"+json.dumps(samples_data)+"}")
 
 def chemical_analyses(request):
+	from django.db import connection
 	chemical_analyses_data=[]
 	chemical_analyses=ChemicalAnalyses.objects.filter(public_data='Y')
 	id=0
 	i=0
 	for chemical_analysis in chemical_analyses:
 		chemical_analysis_data={}
+		chemical_analysis_id=""
 		chemical_analysis_large_rock=""
-		chemical_analysis_mineral_name=""
+		chemical_analysis_count=""
+		chemical_analysis_mineral_name=[]
 		chemical_analysis_owner=""
 		chemical_analysis_rock_type=""
 		chemical_analysis_metamorphic_grade=[]
+		chemical_analysis_metamorphic_regions=[]
 		chemical_analysis_method=""
 		chemical_analysis_first_authors=[]
 		chemical_analysis_publication_journal_names=[]
@@ -129,20 +148,40 @@ def chemical_analyses(request):
 		chemical_analysis_elements=[]
 		chemical_analysis_oxides=[]
 		chemical_analysis_latlon=""
+		chemical_analysis_sample_number=""
+		chemical_analysis_sample_id=""
+
+		#get chemical analysis id
+		chemical_analysis_id=chemical_analysis.chemical_analysis_id
+
+		#get chemical analysis sample id
+                chemical_analysis_sample_id=chemical_analysis.subsample.sample.sample_id
+
+		#get chemical analyses count
+	        cursor=con.cursor()
+        	cursor.execute('select count(chemical_analysis_id) from chemical_analyses where subsample_id='+str(chemical_analysis_sample_id))
+        	row=cursor.fetchone()
+		chemical_analysis_count=row[0]
 		
 		#get lat lon from location
-                sample_location_x=Samples.objects.raw('select sample_id,st_X(location) as geo from samples where sample_id='+str(chemical_analysis.subsample.sample.sample_id))[0].geo
-                sample_location_y=Samples.objects.raw('select sample_id,st_Y(location) as geo from samples where sample_id='+str(chemical_analysis.subsample.sample.sample_id))[0].geo
+                sample_location_x=Samples.objects.raw('select sample_id,st_X(location) as geo from samples where sample_id='+str(chemical_analysis_sample_id))[0].geo
+                sample_location_y=Samples.objects.raw('select sample_id,st_Y(location) as geo from samples where sample_id='+str(chemical_analysis_sample_id))[0].geo
                 chemical_analysis_latlon=str(sample_location_y)+","+str(sample_location_x)
 
 		#get chemical analysis large rock
 		chemical_analysis_large_rock=chemical_analysis.large_rock
 		
-		#get chemical analysis mineral name
+		'''#get chemical analysis mineral name
 		try:
 			chemical_analysis_mineral_name=chemical_analysis.mineral.name
 		except Exception as e:
-			print str(e)
+			chemical_analysis_mineral_name='Bulk rock'''
+
+		#get sample minerals
+		sampleminerals=SampleMineralsDup.objects.filter(sample_id=chemical_analysis_sample_id)
+		for samplemineral in sampleminerals:
+			chemical_analysis_mineral_name.append(samplemineral.mineral.name)
+
 		#get chemical analysis method
 		chemical_analysis_method=chemical_analysis.analysis_method
 
@@ -169,7 +208,11 @@ def chemical_analyses(request):
 		samplemetamorphicgrades=chemical_analysis.subsample.sample.samplemetamorphicgradesdup_set.all()
 		for samplemetamorphicgrade in samplemetamorphicgrades:
 			chemical_analysis_metamorphic_grade.append(samplemetamorphicgrade.metamorphic_grade.name)
-		
+		#get chemical analysis metamorphic regions
+                samplemetamorphicregions=chemical_analysis.subsample.sample.samplemetamorphicregionsdup_set.all()
+                for samplemetamorphicregion in samplemetamorphicregions:
+                        chemical_analysis_metamorphic_regions.append(samplemetamorphicregion.metamorphic_region.name)
+			
 		#get chemical analysis references
 		chemicalreferences=chemical_analysis.subsample.sample.samplereferencedup_set.all()
 		for chemicalreference in chemicalreferences:
@@ -179,9 +222,18 @@ def chemical_analyses(request):
 				chemical_analysis_first_authors.append(georeference.first_author)
 				chemical_analysis_publication_journal_names.append(georeference.journal_name_2)
 				chemical_analysis_publication_years.append(georeference.publication_year)
+		
+		#get chemical analysis sample number
+		chemical_analysis_sample_number=chemical_analysis.subsample.sample.number
 
-		chemical_analysis_data['sample_id']=chemical_analysis.subsample.sample.sample_id
-		chemical_analysis_data['label']=chemical_analysis.subsample.sample.number
+		#url to metpetdb
+		chemical_analysis_link="http://metpetdb.rpi.edu/metpetweb/#sample/"+str(chemical_analysis_sample_id)
+
+		chemical_analysis_data['chemical_analysis_id']=chemical_analysis_id
+		chemical_analysis_data['sample_id']=chemical_analysis_sample_id
+		chemical_analysis_data['label']=chemical_analysis_sample_number
+		chemical_analysis_data['chemical_analysis_link']=chemical_analysis_link
+		chemical_analysis_data['chemical_analysis_count']=chemical_analysis_count
 		chemical_analysis_data['chemical_analysis_latlon']=chemical_analysis_latlon
 		chemical_analysis_data['chemical_analysis_large_rock']=chemical_analysis_large_rock
 		chemical_analysis_data['chemical_analysis_mineral_name']=chemical_analysis_mineral_name
@@ -192,6 +244,7 @@ def chemical_analyses(request):
 		chemical_analysis_data['chemical_analysis_elements']=chemical_analysis_elements
 		chemical_analysis_data['chemical_analysis_rock_type']=chemical_analysis_rock_type
 		chemical_analysis_data['chemical_analysis_metamorphic_grade']=chemical_analysis_metamorphic_grade
+		chemical_analysis_data['chemical_analysis_metamorphic_regions']=chemical_analysis_metamorphic_regions
 		chemical_analysis_data['chemical_analysis_first_authors']=chemical_analysis_first_authors
 		chemical_analysis_data['chemical_analysis_publication_journal_names']=chemical_analysis_publication_journal_names
 		chemical_analysis_data['chemical_analysis_publication_years']=chemical_analysis_publication_years

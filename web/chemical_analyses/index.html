@@ -44,23 +44,29 @@
 <div ex:role="view"
            ex:viewClass="Map"
            ex:latlng=".chemical_analysis_latlon"
+		   ex:type="satellite"
            ex:colorKey=".chemical_analysis_owner">
 		   <div ex:role="lens" style="display: none;" class="map-lens">
                     
                     <table border="1">
                      
-					<tr><td>Sample Number</td><td><a ex:href-subcontent="http://metpetdb.rpi.edu/metpetweb/#sample/{{.sample_id}}" target="_blank"><i ex:content=".label"></i></a></td></tr>
-					<tr><td>Mineral</td><td><i ex:content=".chemical_analysis_mineral_name"></i></td></tr>
-					<tr><td>Analysis Method</td><td><i ex:content=".chemical_analysis_method"></i></td></tr>
+					<tr><td>Sample Number</td><td><a ex:href-content=".chemical_analysis_link" target="_blank"><i ex:content=".label"></i></a></td></tr>
+					<tr><td>Rock Type</td><td><i ex:content=".chemical_analysis_rock_type"></i></td></tr>
+					<tr><td>Mineral</td><td><i ex:content="if(contains('',.chemical_analysis_mineral_name), 'Bulk Rock', .chemical_analysis_mineral_name)"></i></td></tr>
 					<tr><td>Owner</td><td><i ex:content=".chemical_analysis_owner"></i></td></tr>
+					<tr><td># Chemical Analysis</td><td><i ex:content="count(.chemical_analysis_id)"></i></td></tr>
+					<!--
+					<tr><td>Analysis Method</td><td><i ex:content=".chemical_analysis_method"></i></td></tr>
+					
 					<tr><td>Oxides</td><td><i ex:content=".chemical_analysis_oxides"></i></td></tr>
 					<tr><td>Elements</td><td><i ex:content=".chemical_analysis_elements"></i></td></tr>
-					<tr><td>Rock Type</td><td><i ex:content=".chemical_analysis_rock_type"></i></td></tr>
+					
+					<tr><td>Metamorphic Region</td><td><i ex:content=".chemical_analysis_metamorphic_regions"></i></td></tr>
 					<tr><td>Metamorphic Grade</td><td><i ex:content=".chemical_analysis_metamorphic_grade"></i></td></tr>
 					<tr><td>Author</td><td><i ex:content=".chemical_analysis_first_authors"></i></td></tr>
 					<tr><td>Journal</td><td><i ex:content=".chemical_analysis_publication_journal_names"></i></td></tr>
 					<tr><td>Publication Year</td><td><i ex:content=".chemical_analysis_publication_years"></i></td></tr>
-					<tr><td>Latitude,Longitude</td><td><i ex:content=".chemical_analysis_latlon"></i></td></tr>
+					-->
                    </table>
                 </div>
        </div>
@@ -69,20 +75,34 @@
             <td ex:role="viewPanel">
                  <div ex:role="exhibit-view"
      ex:viewClass="Exhibit.TabularView"
-     ex:columns=".chemical_analysis_method, .chemical_analysis_oxides, .chemical_analysis_rock_type,.chemical_analysis_mineral_name, .chemical_analysis_metamorphic_grade, .chemical_analysis_owner"
-     ex:columnLabels="Method,Oxides ,Rock Type, Minerals, Metamorphic Grade, Owner"
-     ex:columnFormats="list,list, list, list, list, list"
+     ex:columns=".label, .chemical_analysis_rock_type,.chemical_analysis_mineral_name,.chemical_analysis_owner,count(.chemical_analysis_id)"
+     ex:columnLabels="Sample Number ,Rock Type, Minerals, Owner,# Chemical Analysis"
+     ex:columnFormats="list,list, list, list, list"
      ex:sortColumn="1"
      ex:sortAscending="false">
+	 <table style="display: none;">
+                            <tr>
+                                <td><a ex:href-content=".chemical_analysis_link" target="_blank"><span ex:content=".label"></span></a></td>
+								
+								 
+                                <td><span ex:content=".chemical_analysis_rock_type"></span></td>
+								
+                                <td><span ex:content=".chemical_analysis_mineral_name"></span></td>
+								<td><span ex:content=".chemical_analysis_owner"></span></td>
+                                <td><span ex:content="count(.chemical_analysis_id)"></span></td>
+								
+								</tr>
+	</table>
  </div>
             </td>
         <td width="25%">
-			<div ex:role="facet" ex:expression=".chemical_analysis_method" ex:facetLabel="Method"></div>
+			<div ex:role="facet" ex:expression="if(contains('',.chemical_analysis_mineral_name), 'Bulk Rock', .chemical_analysis_mineral_name)" ex:facetLabel="Material"></div>
+			<div ex:role="facet" ex:expression=".chemical_analysis_rock_type" ex:facetLabel="Rock Type"></div>
+			<div ex:role="facet" ex:expression=".chemical_analysis_metamorphic_regions" ex:facetLabel="Metamorphic Region"></div>
+<div ex:role="facet" ex:expression=".chemical_analysis_metamorphic_grade" ex:facetLabel="Metamorphic Grade"></div>
+<div ex:role="facet" ex:expression=".chemical_analysis_method" ex:facetLabel="Method"></div>
 			<div ex:role="facet" ex:expression=".chemical_analysis_oxides" ex:facetLabel="Oxides"></div>
 			<div ex:role="facet" ex:expression=".chemical_analysis_elements" ex:facetLabel="Elements"></div>
-			<div ex:role="facet" ex:expression=".chemical_analysis_rock_type" ex:facetLabel="Rock Type"></div>
-			<div ex:role="facet" ex:expression=".chemical_analysis_mineral_name" ex:facetLabel="Mineral"></div>
-			<div ex:role="facet" ex:expression=".chemical_analysis_metamorphic_grade" ex:facetLabel="Metamorphic Grade"></div>
 			<div ex:role="facet" ex:expression=".chemical_analysis_owner" ex:facetLabel="Owner"></div>
 			<div ex:role="facet" ex:expression=".chemical_analysis_first_authors" ex:facetLabel="Author"></div>
 			<div ex:role="facet" ex:expression=".chemical_analysis_publication_journal_names" ex:facetLabel="Journal"></div>

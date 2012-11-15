@@ -135,7 +135,7 @@ def chemical_analyses(request):
 		chemical_analysis_id=""
 		chemical_analysis_large_rock=""
 		chemical_analysis_count=""
-		chemical_analysis_mineral_name=[]
+		chemical_analysis_mineral_name=""
 		chemical_analysis_owner=""
 		chemical_analysis_rock_type=""
 		chemical_analysis_metamorphic_grade=[]
@@ -171,16 +171,13 @@ def chemical_analyses(request):
 		#get chemical analysis large rock
 		chemical_analysis_large_rock=chemical_analysis.large_rock
 		
-		'''#get chemical analysis mineral name
-		try:
+		#get chemical analysis mineral name
+		if chemical_analysis_large_rock=='Y' or chemical_analysis.mineral==None:
+			chemical_analysis_mineral_name='Bulk Rock'
+		elif chemical_analysis_large_rock=='N' and chemical_analysis.mineral!=None:
 			chemical_analysis_mineral_name=chemical_analysis.mineral.name
-		except Exception as e:
-			chemical_analysis_mineral_name='Bulk rock'''
-
-		#get sample minerals
-		sampleminerals=SampleMineralsDup.objects.filter(sample_id=chemical_analysis_sample_id)
-		for samplemineral in sampleminerals:
-			chemical_analysis_mineral_name.append(samplemineral.mineral.name)
+		else:
+			chemical_analysis_mineral_name=''
 
 		#get chemical analysis method
 		chemical_analysis_method=chemical_analysis.analysis_method

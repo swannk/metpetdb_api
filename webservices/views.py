@@ -26,7 +26,7 @@ def index(request):
 
 def samples(request):
 	samples_data=[]
-	samples=Samples.objects.filter(public_data='Y')
+	samples=Samples.objects.filter(public_data='Y')|Samples.objects.filter(user_id='139')
 	i=0
 	for sample in samples:
 		#initialize the variables
@@ -127,7 +127,7 @@ def samples(request):
 def chemical_analyses(request):
 	from django.db import connection
 	chemical_analyses_data=[]
-	chemical_analyses=ChemicalAnalyses.objects.filter(public_data='Y')
+	chemical_analyses=ChemicalAnalyses.objects.filter(public_data='Y')|ChemicalAnalyses.objects.filter(user_id='139')
 	id=0
 	i=0
 	for chemical_analysis in chemical_analyses:

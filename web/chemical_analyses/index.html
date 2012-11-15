@@ -52,9 +52,9 @@
                      
 					<tr><td>Sample Number</td><td><a ex:href-content=".chemical_analysis_link" target="_blank"><i ex:content=".label"></i></a></td></tr>
 					<tr><td>Rock Type</td><td><i ex:content=".chemical_analysis_rock_type"></i></td></tr>
-					<tr><td>Mineral</td><td><i ex:content="if(contains('',.chemical_analysis_mineral_name), 'Bulk Rock', .chemical_analysis_mineral_name)"></i></td></tr>
+					<tr><td>Mineral</td><td><i ex:content=".chemical_analysis_mineral_name"></i></td></tr>
 					<tr><td>Owner</td><td><i ex:content=".chemical_analysis_owner"></i></td></tr>
-					<tr><td># Chemical Analysis</td><td><i ex:content="count(.chemical_analysis_id)"></i></td></tr>
+					<tr><td># Chemical Analysis</td><td><i ex:content="count(!.chemical_analysis_id)"></i></td></tr>
 					<!--
 					<tr><td>Analysis Method</td><td><i ex:content=".chemical_analysis_method"></i></td></tr>
 					
@@ -76,7 +76,7 @@
                  <div ex:role="exhibit-view"
      ex:viewClass="Exhibit.TabularView"
      ex:columns=".label, .chemical_analysis_rock_type,.chemical_analysis_mineral_name,.chemical_analysis_owner,count(.chemical_analysis_id)"
-     ex:columnLabels="Sample Number ,Rock Type, Minerals, Owner,# Chemical Analysis"
+     ex:columnLabels="Sample Number ,Sample Rock Type, Sample Minerals, Owner,# Chemical Analysis"
      ex:columnFormats="list,list, list, list, list"
      ex:sortColumn="1"
      ex:sortAscending="false">
@@ -90,6 +90,7 @@
                                 <td><span ex:content=".chemical_analysis_mineral_name"></span></td>
 								<td><span ex:content=".chemical_analysis_owner"></span></td>
                                 <td><span ex:content="count(.chemical_analysis_id)"></span></td>
+								<td><span ex:content=".chemical_analysis_count"></span></td>
 								
 								</tr>
 	</table>

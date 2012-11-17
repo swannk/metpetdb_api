@@ -52,9 +52,10 @@
                      
 					<tr><td>Sample Number</td><td><a ex:href-content=".chemical_analysis_link" target="_blank"><i ex:content=".label"></i></a></td></tr>
 					<tr><td>Sample Rock Type</td><td><i ex:content=".chemical_analysis_rock_type"></i></td></tr>
+					<tr><td>#Analyses</td><td><i ex:content="count(.chemical_analysis_method)"></i></td></tr>
 					<tr><td>Sample Minerals</td><td><i ex:content=".chemical_analysis_mineral_name"></i></td></tr>
 					<tr><td>Owner</td><td><i ex:content=".chemical_analysis_owner"></i></td></tr>
-					<tr><td># Chemical Analysis</td><td><i ex:content="count(.chemical_analysis_method)"></i></td></tr>
+					
 					<!--
 					<tr><td>Analysis Method</td><td><i ex:content=".chemical_analysis_method"></i></td></tr>
 					
@@ -75,8 +76,8 @@
             <td ex:role="viewPanel">
                  <div ex:role="exhibit-view"
      ex:viewClass="Exhibit.TabularView"
-     ex:columns=".label, .chemical_analysis_rock_type,.chemical_analysis_mineral_name,.chemical_analysis_owner,count(.chemical_analysis_method)"
-     ex:columnLabels="Sample Number ,Sample Rock Type, Sample Minerals, Owner,# Chemical Analysis"
+     ex:columns=".label, .chemical_analysis_rock_type,count(.chemical_analysis_method),.chemical_analysis_mineral_name,.chemical_analysis_owner"
+     ex:columnLabels="Sample Number ,Sample Rock Type, #Analyses, Sample Minerals, Owner"
      ex:columnFormats="list,list, list, list, list"
      ex:sortColumn="1"
      ex:sortAscending="false">
@@ -86,10 +87,10 @@
 								
 								 
                                 <td><span ex:content=".chemical_analysis_rock_type"></span></td>
-								
+								<td><span ex:content="count(.chemical_analysis_method)"></span></td>
                                 <td><span ex:content=".chemical_analysis_mineral_name"></span></td>
 								<td><span ex:content=".chemical_analysis_owner"></span></td>
-                                <td><span ex:content="count(.chemical_analysis_method)"></span></td>
+                                
 								
 								
 								</tr>

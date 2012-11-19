@@ -177,7 +177,7 @@ def chemical_analyses(request):
 		elif chemical_analysis_large_rock=='N' and chemical_analysis.mineral!=None:
 			chemical_analysis_mineral_name=chemical_analysis.mineral.name
 		elif chemical_analysis_large_rock=='N' and chemical_analysis.mineral==None:
-			chemical_analysis_mineral_name=''
+			chemical_analysis_mineral_name=None
 
 		#get chemical analysis method
 		chemical_analysis_method=chemical_analysis.analysis_method

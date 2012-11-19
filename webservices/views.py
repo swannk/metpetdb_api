@@ -172,11 +172,11 @@ def chemical_analyses(request):
 		chemical_analysis_large_rock=chemical_analysis.large_rock
 		
 		#get chemical analysis mineral name
-		if chemical_analysis_large_rock=='Y' or chemical_analysis.mineral==None:
+		if chemical_analysis_large_rock=='Y' and chemical_analysis.mineral==None:
 			chemical_analysis_mineral_name='Bulk Rock'
 		elif chemical_analysis_large_rock=='N' and chemical_analysis.mineral!=None:
 			chemical_analysis_mineral_name=chemical_analysis.mineral.name
-		else:
+		elif chemical_analysis_large_rock=='N' and chemical_analysis.mineral==None:
 			chemical_analysis_mineral_name=''
 
 		#get chemical analysis method

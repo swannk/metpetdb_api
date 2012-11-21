@@ -12,7 +12,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'mpdb_test',                      # Or path to database file if using sqlite3.
+        'NAME': 'mpdb_stable',                      # Or path to database file if using sqlite3.
         'USER': 'metpetdb_md5',                      # Not used with sqlite3.
         'PASSWORD': 'Dz6azO4P',                  # Not used with sqlite3.
         'HOST': 'samana.cs.rpi.edu',                      # Set to empty string for localhost. Not used with sqlite3.

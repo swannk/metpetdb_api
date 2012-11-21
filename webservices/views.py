@@ -153,6 +153,7 @@ def chemical_analyses(request):
 		chemical_analysis_latlon=""
 		chemical_analysis_sample_number=""
 		chemical_analysis_sample_id=""
+		sample_minerals=[]
 
 		#get chemical analysis id
 		chemical_analysis_id=chemical_analysis.chemical_analysis_id
@@ -226,6 +227,12 @@ def chemical_analyses(request):
 		#get chemical analysis sample number
 		chemical_analysis_sample_number=chemical_analysis.subsample.sample.number
 
+		#get sample minerals
+		sampleminerals=SampleMineralsDup.objects.raw('select * from sample_minerals_dup where sample_id='+str(chemical_analysis_sample_id))
+		for samplemineral in sampleminerals:
+                        sample_minerals.append(samplemineral.mineral.name)
+
+
 		#url to metpetdb
 		chemical_analysis_link="http://metpetdb.rpi.edu/metpetweb/#sample/"+str(chemical_analysis_sample_id)
 
@@ -248,6 +255,7 @@ def chemical_analyses(request):
 		chemical_analysis_data['chemical_analysis_first_authors']=chemical_analysis_first_authors
 		chemical_analysis_data['chemical_analysis_publication_journal_names']=chemical_analysis_publication_journal_names
 		chemical_analysis_data['chemical_analysis_publication_years']=chemical_analysis_publication_years
+		chemical_analysis_data['chemical_analysis_sample_minerals']=sample_minerals
 		chemical_analyses_data.append(chemical_analysis_data)
 
 	return HttpResponse("{\"items\":"+json.dumps(chemical_analyses_data)+"}")

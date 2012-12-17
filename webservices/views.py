@@ -340,7 +340,7 @@ def getSampleResultsJSON(query):
 def metpetdb(request):
 	formattype=request.GET.get('format','json')
 
-	returntype=request.GET.get('returntype','all')
+	returntype=request.GET.get('returntype','sampleresults')
 	
 	rocktype_id=request.GET.get('rocktype_id','')
 	

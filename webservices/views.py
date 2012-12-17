@@ -3,7 +3,7 @@ from webservices.models import *
 import json
 import sys
 from django.db import connection as con
-
+from webservices.sampleQueryV2 import *
 sys.stdout = sys.stderr
 def formatOxide(species):
         retStr=""

@@ -7,7 +7,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 urlpatterns = patterns('',
 url(r'^webservices/$', 'webservices.views.index'),
 url(r'^webservices/samples$', 'webservices.views.samples'),
-url(r'^webservices/chemicalanalyses$', 'webservices.views.chemical_analyses'),    
+url(r'^webservices/chemicalanalyses$', 'webservices.views.chemical_analyses'), 
+url(r'^api/metpetdb/$','webservice.views.metpetdb'   
     # Examples:
     # url(r'^$', 'metpetdb.views.home', name='home'),
     # url(r'^metpetdb/', include('metpetdb.foo.urls')),

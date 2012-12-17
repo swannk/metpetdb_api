@@ -338,7 +338,9 @@ def getSampleResultsJSON(query):
 	return htmlData
 
 def metpetdb(request):
-	facet=request.GET.get('facet','')
+	formattype=request.GET.get('format','json')
+
+	returntype=request.GET.get('returntype','all')
 	
 	rocktype_id=request.GET.get('rocktype_id','')
 	
@@ -390,21 +392,21 @@ def metpetdb(request):
 		metamorphic_grade_id_list=[]
 
 	samples=SampleQuery(rock_type=rocktype_id_list,country=country_list,owner_id=owner_id_list,mineral_id=mineral_id_list,region_id=region_id_list,metamorphic_grade_id=metamorphic_grade_id_list, metamorphic_region_id=metamorphic_region_id_list)
-	if facet=='rocktype':
+	if returntype=='rocktype_facet':
 		return HttpResponse(getJSON(samples.rock_type_facet()))
-	elif facet=='country':
+	elif returntype=='country_facet':
 		return HttpResponse(getJSON(samples.country_facet()))
-	elif facet=='mineral':
+	elif returntype=='mineral_facet':
 		return HttpResponse(getJSON(samples.mineral_facet()))
-	elif facet=='region':
+	elif returntype=='region_facet':
 		return HttpResponse(getJSON(samples.region_facet()))
-	elif facet=='owner':
+	elif returntype=='owner_facet':
 		return HttpResponse(getJSON(samples.owner_facet()))
-	elif facet=='metamorphicgrade':
+	elif returntype=='metamorphicgrade_facet':
 		return HttpResponse(getJSON(samples.metamorphic_grade_facet()))
-	elif facet=='metamorphicregion':
+	elif returntype=='metamorphicregion_facet':
 		return HttpResponse(getJSON(samples.metamorphic_region_facet()))
-	elif facet=='map':
+	elif returntype=='map':
 		return HttpResponse(getMapJSON(str(samples)))
 	else:
 		return HttpResponse(getSampleResultsJSON(str(samples)))

@@ -260,4 +260,153 @@ def chemical_analyses(request):
 
 	return HttpResponse("{\"items\":"+json.dumps(chemical_analyses_data)+"}")
 
-				
+'''S2S web sevice code'''	
+def getJSON(query):
+	cursor=con.cursor()
+	cursor.execute(query)
+	data=cursor.fetchall()
+	jsonData=[]
+	for row in data:
+		jsonValues={}
+		jsonValues['id']=str(row[0])
+		jsonValues['label']=str(row[1])
+		jsonValues['count']=str(row[2])
+		jsonData.append(jsonValues)
+	return json.dumps(jsonData)
+
+def getMapJSON(query):
+	cursor=con.cursor()
+	cursor.execute(query)
+	data=cursor.fetchall()
+	resultSetSize=len(data)
+	jsonData=[]
+	str1=''
+	i=0
+	while i<resultSetSize:
+		jsonValues={}
+		if ((i+1)!=resultSetSize) and (data[i][0]==data[i+1][0] and data[i][1]==data[i+1][1] and data[i][2]==data[i+1][2] and data[i][3]==data[i+1][3]):
+			jsonValues['id']=str(data[i][0]) 
+			jsonValues['sample_number']=str(data[i][1])
+			jsonValues['rock_type']=str(data[i][2])
+			jsonValues['owner']=str(data[i][3])
+			jsonValues['lat']=str(data[i][5])
+			jsonValues['lon']=str(data[i][6])
+
+			sample_mineral_list=''
+			while data[i][0]==data[i+1][0] and data[i][1]==data[i+1][1] and data[i][2]==data[i+1][2] and data[i][3]==data[i+1][3]:
+				sample_mineral_list=sample_mineral_list+str(data[i][4])+','
+				i=i+1
+			sample_mineral_list=sample_mineral_list[:len(sample_mineral_list)-1]
+			jsonValues['sample_minerals']=sample_mineral_list
+			jsonData.append(jsonValues)
+		else:
+			sample_mineral_list=''
+			jsonValues['id']=str(data[i][0]) 
+			jsonValues['sample_number']=str(data[i][1])
+			jsonValues['rock_type']=str(data[i][2])
+			sample_mineral_list=str(data[i][4])
+			jsonValues['sample_minerals']=sample_mineral_list
+			jsonValues['lat']=str(data[i][5])
+			jsonValues['lon']=str(data[i][6])
+			jsonData.append(jsonValues)
+		i=i+1
+	return json.dumps(jsonData)
+
+def getSampleResultsJSON(query):
+	cursor=con.cursor()
+	cursor.execute(query)
+	data=cursor.fetchall()
+	resultSetSize=len(data)
+	htmlData="<table id='gridData'><thead><tr><th>Sample Number</th><th>Rock Type</th><th>Sample Minerals</th><th>Owner</th></tr></thead><tbody>"
+	str1=''
+	i=0
+	while i<resultSetSize:
+		
+		if ((i+1)!=resultSetSize) and (data[i][0]==data[i+1][0] and data[i][1]==data[i+1][1] and data[i][2]==data[i+1][2] and data[i][3]==data[i+1][3]):
+			htmlData=htmlData+"<tr><td><a href='http://metpetdb.rpi.edu/metpetweb/#sample/"+str(data[i][0])+"'>"+str(data[i][1])+"</a></td><td>"+str(data[i][2])+"</td>"
+			sample_mineral_list=''
+			while ((i+1)!=resultSetSize) and (data[i][0]==data[i+1][0] and data[i][1]==data[i+1][1] and data[i][2]==data[i+1][2] and data[i][3]==data[i+1][3]):
+				sample_mineral_list=sample_mineral_list+str(data[i][4])+','
+				i=i+1
+			sample_mineral_list=sample_mineral_list[:len(sample_mineral_list)-1]
+			htmlData=htmlData+'<td>'+str(sample_mineral_list)+'</td><td>'+str(data[i][3])+'</td></tr>'
+			
+		else:
+			htmlData=htmlData+"<tr><td><a href='http://metpetdb.rpi.edu/metpetweb/#sample/"+str(data[i][0])+"'>"+str(data[i][1])+"</a></td><td>"+str(data[i][2])+"</td><td>"+str(data[i][4])+"</td><td>"+str(data[i][3])+"</td></tr>"
+		i=i+1
+	htmlData=htmlData+'</tbody></table>'
+	return htmlData
+
+def metpetdb(request):
+	facet=request.GET.get('facet','')
+	
+	rocktype_id=request.GET.get('rocktype_id','')
+	
+	country=request.GET.get('country','')
+	
+	owner_id=request.GET.get('owner_id','')
+	
+	mineral_id=request.GET.get('mineral_id','')
+	
+	region_id=request.GET.get('region_id','')
+
+	metamorphic_grade_id=request.GET.get('metamorphic_grade_id','')
+	
+	metamorphic_region_id=request.GET.get('metamorphic_region_id','')
+	
+	if rocktype_id!='':
+		rocktype_id_list=rocktype_id.split(',')
+	else:
+		rocktype_id_list=[]
+
+	if mineral_id!='':
+		mineral_id_list=mineral_id.split(',')
+	else:
+		mineral_id_list=[]
+	
+	if owner_id!='':
+		owner_id_list=owner_id.split(',')
+	else:
+		owner_id_list=[]
+	
+	if country!='':
+		country_list=country.split(',')
+	else:
+		country_list=[]
+
+	if region_id!='':
+		region_id_list=region_id.split(',')
+	else:
+		region_id_list=[]
+	
+	if metamorphic_region_id!='':
+		metamorphic_region_id_list=metamorphic_region_id.split(',')
+	else:
+		metamorphic_region_id_list=[]
+
+	if metamorphic_grade_id!='':
+		metamorphic_grade_id_list=metamorphic_grade_id.split(',')
+	else:
+		metamorphic_grade_id_list=[]
+
+	samples=SampleQuery(rock_type=rocktype_id_list,country=country_list,owner_id=owner_id_list,mineral_id=mineral_id_list,region_id=region_id_list,metamorphic_grade_id=metamorphic_grade_id_list, metamorphic_region_id=metamorphic_region_id_list)
+	if facet=='rocktype':
+		return HttpResponse(getJSON(samples.rock_type_facet()))
+	elif facet=='country':
+		return HttpResponse(getJSON(samples.country_facet()))
+	elif facet=='mineral':
+		return HttpResponse(getJSON(samples.mineral_facet()))
+	elif facet=='region':
+		return HttpResponse(getJSON(samples.region_facet()))
+	elif facet=='owner':
+		return HttpResponse(getJSON(samples.owner_facet()))
+	elif facet=='metamorphicgrade':
+		return HttpResponse(getJSON(samples.metamorphic_grade_facet()))
+	elif facet=='metamorphicregion':
+		return HttpResponse(getJSON(samples.metamorphic_region_facet()))
+	elif facet=='map':
+		return HttpResponse(getMapJSON(str(samples)))
+	else:
+		return HttpResponse(getSampleResultsJSON(str(samples)))
+	
+			

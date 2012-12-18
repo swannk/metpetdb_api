@@ -52,7 +52,6 @@
 var map;
 var markerArray=new Array();
 
-var jsonStr="[{'lon': '-71.85521698', 'sample_number': '71-78B:1983-018415', 'lat': '44.0474815369', 'owner': 'PUBLICATION', 'sample_minerals': 'Biotite,Garnet,Graphite,Ilmenite,Muscovite,Plagioclase,Quartz,Sillimanite', 'id': '261', 'rock_type': 'Schist'}]"
 
 var infowindow = null;
     $(document).ready(function () { initialize();  });
@@ -68,7 +67,6 @@ var infowindow = null;
         }
 
         map = new google.maps.Map(document.getElementById("myMap"), myOptions);
-		drawMap(jsonStr);
 }
 function drawMap(jsonStr){
 		clearMarkers();

@@ -134,7 +134,7 @@ class SampleQuery(object):
 
         """
 
-        query_str = "WHERE True "
+        query_str = "WHERE public_data='Y' "
         if self.conditions_set:
             query_str += self.get_selection('rock_type_id', self.rock_type_selections)
             query_str += self.get_selection('country', self.country_selections)

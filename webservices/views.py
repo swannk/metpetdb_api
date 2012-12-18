@@ -267,10 +267,13 @@ def getJSON(query):
 	data=cursor.fetchall()
 	jsonData=[]
 	for row in data:
+		dataId=unicode(row[0])
+		dataLabel=unicode(row[1]).replace('-1','Missing value')
+		dataCount=unicode(row[2])
 		jsonValues={}
-		jsonValues['id']=unicode(row[0])
-		jsonValues['label']=unicode(row[1])
-		jsonValues['count']=unicode(row[2])
+		jsonValues['id']=dataId
+		jsonValues['label']=dataLabel
+		jsonValues['count']=dataCount
 		jsonData.append(jsonValues)
 	return json.dumps(jsonData)
 

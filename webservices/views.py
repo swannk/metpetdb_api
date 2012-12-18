@@ -268,7 +268,7 @@ def getJSON(query):
 	jsonData=[]
 	for row in data:
 		dataId=unicode(row[0])
-		dataLabel=unicode(row[1]).replace('-1','Missing value')
+		dataLabel=unicode(row[1]).replace('','Missing value')
 		dataCount=unicode(row[2])
 		jsonValues={}
 		jsonValues['id']=dataId

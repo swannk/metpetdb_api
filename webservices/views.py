@@ -268,9 +268,9 @@ def getJSON(query):
 	jsonData=[]
 	for row in data:
 		jsonValues={}
-		jsonValues['id']=str(row[0])
-		jsonValues['label']=str(row[1])
-		jsonValues['count']=str(row[2])
+		jsonValues['id']=row[0]
+		jsonValues['label']=row[1]
+		jsonValues['count']=row[2]
 		jsonData.append(jsonValues)
 	return json.dumps(jsonData)
 
@@ -294,7 +294,7 @@ def getMapJSON(query):
 
 			sample_mineral_list=''
 			while data[i][0]==data[i+1][0] and data[i][1]==data[i+1][1] and data[i][2]==data[i+1][2] and data[i][3]==data[i+1][3]:
-				sample_mineral_list=sample_mineral_list+str(data[i][4])+','
+				sample_mineral_list=sample_mineral_list+unicode(data[i][4])+','
 				i=i+1
 			sample_mineral_list=sample_mineral_list[:len(sample_mineral_list)-1]
 			jsonValues['sample_minerals']=sample_mineral_list

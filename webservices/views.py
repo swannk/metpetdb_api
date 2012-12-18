@@ -268,9 +268,9 @@ def getJSON(query):
 	jsonData=[]
 	for row in data:
 		jsonValues={}
-		jsonValues['id']=row[0]
-		jsonValues['label']=row[1]
-		jsonValues['count']=row[2]
+		jsonValues['id']=unicode(row[0])
+		jsonValues['label']=unicode(row[1])
+		jsonValues['count']=unicode(row[2])
 		jsonData.append(jsonValues)
 	return json.dumps(jsonData)
 
@@ -285,12 +285,12 @@ def getMapJSON(query):
 	while i<resultSetSize:
 		jsonValues={}
 		if ((i+1)!=resultSetSize) and (data[i][0]==data[i+1][0] and data[i][1]==data[i+1][1] and data[i][2]==data[i+1][2] and data[i][3]==data[i+1][3]):
-			jsonValues['id']=data[i][0] 
-			jsonValues['sample_number']=data[i][1]
-			jsonValues['rock_type']=data[i][2]
-			jsonValues['owner']=data[i][3]
-			jsonValues['lat']=data[i][5]
-			jsonValues['lon']=data[i][6]
+			jsonValues['id']=unicode(data[i][0]) 
+			jsonValues['sample_number']=unicode(data[i][1])
+			jsonValues['rock_type']=unicode(data[i][2])
+			jsonValues['owner']=unicode(data[i][3])
+			jsonValues['lat']=unicode(data[i][5])
+			jsonValues['lon']=unicode(data[i][6])
 
 			sample_mineral_list=''
 			while data[i][0]==data[i+1][0] and data[i][1]==data[i+1][1] and data[i][2]==data[i+1][2] and data[i][3]==data[i+1][3]:
@@ -301,13 +301,13 @@ def getMapJSON(query):
 			jsonData.append(jsonValues)
 		else:
 			sample_mineral_list=''
-			jsonValues['id']=data[i][0]
-			jsonValues['sample_number']=data[i][1]
-			jsonValues['rock_type']=data[i][2]
-			sample_mineral_list=data[i][4]
+			jsonValues['id']=unicode(data[i][0])
+			jsonValues['sample_number']=unicode(data[i][1])
+			jsonValues['rock_type']=unicode(data[i][2])
+			sample_mineral_list=unicode(data[i][4])
 			jsonValues['sample_minerals']=sample_mineral_list
-			jsonValues['lat']=data[i][5]
-			jsonValues['lon']=data[i][6]
+			jsonValues['lat']=unicode(data[i][5])
+			jsonValues['lon']=unicode(data[i][6])
 			jsonData.append(jsonValues)
 		i=i+1
 	return json.dumps(jsonData)

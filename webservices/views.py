@@ -5,7 +5,10 @@ import sys
 from django.db import connection as con
 from webservices.SampleQuery import *
 from webservices.utility import *
+#direct stdout to stderr so that it is logged by the webserver
 sys.stdout = sys.stderr
+
+#Function to format oxides by subscripting digits
 def formatOxide(species):
         retStr=""
         i=0

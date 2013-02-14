@@ -72,12 +72,7 @@ def getSampleResults(query):
 
                 if ((i+1)!=resultSetSize) and (data[i][0]==data[i+1][0] and data[i][1]==data[i+1][1] and data[i][2]==data[i+1][2] and data[i][3]==data[i+1][3]):
                         htmlData=htmlData+"<tr><td><a href='http://metpetdb.rpi.edu/metpetweb/#sample/"+unicode(data[i][0])+"'>"+unicode(data[i][1])+"</a></td><td>"+unicode(data[i][2])+"</td>"
-                        sample_mineral_list=''
-                        while ((i+1)!=resultSetSize) and (data[i][0]==data[i+1][0] and data[i][1]==data[i+1][1] and data[i][2]==data[i+1][2] and data[i][3]==data[i+1][3]):
-                                sample_mineral_list=sample_mineral_list+unicode(data[i][4])+','
-                                i=i+1
-                        sample_mineral_list=sample_mineral_list[:len(sample_mineral_list)-1]
-                        htmlData=htmlData+'<td>'+unicode(sample_mineral_list)+'</td><td>'+unicode(data[i][3])+'</td></tr>'
+                        
 
                 else:
                         htmlData=htmlData+"<tr><td><a href='http://metpetdb.rpi.edu/metpetweb/#sample/"+unicode(data[i][0])+"'>"+unicode(data[i][1])+"</a></td><td>"+unicode(data[i][2])+"</td><td>"+unicode(data[i][4])+"</td><td>"+unicode(data[i][3])+"</td></tr>"

@@ -173,7 +173,7 @@ class SampleQuery(object):
     def __str__ ( self ) :
         query_str =\
             "SELECT DISTINCT sample_id, sample_number " \
-            ", rock_type_name, owner_name, sample_mineral_name "\
+            ", rock_type_name, owner_name, mineral_info "\
             ", latitude, longitude " \
             "FROM  " + self.VIEW_NAME + " " + self.get_where() + \
             "ORDER BY sample_id, sample_number, rock_type_name, owner_name "
@@ -182,14 +182,14 @@ class SampleQuery(object):
 
 
 if __name__ == '__main__':
-    '''q = SampleQuery()
+    q = SampleQuery()
 
-    print str(q)'''
+    print str(q)
 
     p = SampleQuery(rock_type=[1,2], country=[3,4], owner_id=[4,5,-1], \
-                       mineral_id = [-1], region_id = [], publication_id = [1,2,3] ) 
+                      mineral_id = [-1], region_id = [], publication_id = [1,2,3] ) 
 
-    '''print str(p)
+    print str(p)
 
     r = SampleQuery(mineral_id = [-1] ) 
 
@@ -204,5 +204,10 @@ if __name__ == '__main__':
     print p.rock_type_facet()
     print p.country_facet()
     print p.mineral_facet()
-    print p.region_facet()'''
+    print p.region_facet()
     print p.publication_facet()
+
+
+   
+
+  

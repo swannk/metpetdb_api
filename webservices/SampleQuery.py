@@ -26,10 +26,23 @@ class SampleQuery(object):
         self.metamorphic_region_id_selections = metamorphic_region_id
         self.publication_id_selections = publication_id
         self.VIEW_NAME = 'full_sample_results'
+        self.SHORT_VIEW_NAME = 'basic_sample_results'
         if len (rock_type + country + owner_id + mineral_id + region_id) == 0:
             self.conditions_set = False
         else:
             self.conditions_set = True
+
+    def get_view_name( self ):
+        if not self.conditions_set:
+            return self.SHORT_VIEW_NAME
+        elif (len(self.mineral_id_selections) + \
+                  len(self.region_id_selections) + \
+                  len(self.metamorphic_grade_id_selections) + \
+                  len(self.metamorphic_region_id_selections) + \
+                  len(self.publication_id_selections)) == 0:
+            return self.SHORT_VIEW_NAME
+        else:
+            return self.VIEW_NAME
 
     def set_rock_type( self, rock_type_list ):
         """ Specify a list of rock_type_ids as input, -1 for null values. """
@@ -125,7 +138,7 @@ class SampleQuery(object):
 
     def publication_facet( self ) :
         """ Return all publication info in a single facet. """
-        return self.get_facet( "publication_id, georeference, journal, publication_year, author" )
+        return self.get_facet( "publication_id, author" )
 
 
     def get_selection ( self, field, value_set ) :
@@ -175,7 +188,7 @@ class SampleQuery(object):
             "SELECT DISTINCT sample_id, sample_number " \
             ", rock_type_name, owner_name, mineral_info "\
             ", latitude, longitude " \
-            "FROM  " + self.VIEW_NAME + " " + self.get_where() + \
+            "FROM  " + self.get_view_name() + " " + self.get_where() + \
             "ORDER BY sample_id, sample_number, rock_type_name, owner_name "
         return query_str
 
@@ -186,8 +199,8 @@ if __name__ == '__main__':
 
     print str(q)
 
-    p = SampleQuery(rock_type=[1,2], country=[3,4], owner_id=[4,5,-1], \
-                      mineral_id = [-1], region_id = [], publication_id = [1,2,3] ) 
+    p = SampleQuery(rock_type=[1,2], country=["'United States'"], owner_id=[4,5,-1], \
+                       mineral_id = [-1], region_id = [], publication_id = [1,2,3] ) 
 
     print str(p)
 
@@ -207,7 +220,14 @@ if __name__ == '__main__':
     print p.region_facet()
     print p.publication_facet()
 
+    print "********"
+    print p.metamorphic_region_facet()
 
+    print "*********"
+    print p.metamorphic_grade_facet()
+
+    print "*********"
+    print p.publication_facet()
    
 
   

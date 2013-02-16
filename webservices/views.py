@@ -282,6 +282,8 @@ def metpetdb(request):
 	
 	metamorphic_region_id=request.GET.get('metamorphic_region_id','')
 	
+	publication_id= request.GET.get('publication_id','')
+	
 	if rocktype_id!='':
 		rocktype_id_list=rocktype_id.split(',')
 	else:

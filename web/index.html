@@ -86,7 +86,7 @@ var descText;
          
             var siteLatLng = new google.maps.LatLng(obj[i].lat, obj[i].lon);
 			titleText= "<a href='http://metpetdb.rpi.edu/metpetweb/#sample/"+obj[i].id+"'>"+obj[i].sample_number+"</a>";
-			descText="<table><tr><td><strong>Rock Type</strong></td><td>"+obj[i].rock_type+"</td></tr><tr><td><strong>Owner</strong></td><td>"+obj[i].owner+"</td></tr>";
+			descText="<table><tr><td><strong>Rock Type</strong></td><td>"+obj[i].rock_type+"</td></tr><tr><td><strong>Owner</strong></td><td>"+obj[i].owner+"</td></tr><tr><td><strong> Sample</strong></td><td><a href='http://metpetdb.rpi.edu/metpetweb/#sample/"+obj[i].id+"' target= '_blank'>"+obj[i].sample_number+"</a></td></tr>"
             var marker = new google.maps.Marker({
                 position: siteLatLng,
                 map: map,

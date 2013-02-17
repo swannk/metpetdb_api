@@ -36,21 +36,17 @@ def getAllJSON(query):
                         jsonValues['sample_number']=unicode(data[i][1])
                         jsonValues['rock_type']=unicode(data[i][2])
                         jsonValues['owner']=unicode(data[i][3])
+                        jsonValues['sample_minerals']=unicode(data[i][4])
                         jsonValues['lat']=unicode(data[i][5])
                         jsonValues['lon']=unicode(data[i][6])
 
-                        sample_mineral_list=''
-                        while data[i][0]==data[i+1][0] and data[i][1]==data[i+1][1] and data[i][2]==data[i+1][2] and data[i][3]==data[i+1][3]:
-                                sample_mineral_list=sample_mineral_list+unicode(data[i][4])+','
-                                i=i+1
-                        sample_mineral_list=sample_mineral_list[:len(sample_mineral_list)-1]
-                        jsonValues['sample_minerals']=sample_mineral_list
                         jsonData.append(jsonValues)
                 else:
                         sample_mineral_list=''
                         jsonValues['id']=unicode(data[i][0])
                         jsonValues['sample_number']=unicode(data[i][1])
                         jsonValues['rock_type']=unicode(data[i][2])
+                        jsonValues['owner']=unicode(data[i][3])
                         sample_mineral_list=unicode(data[i][4])
                         jsonValues['sample_minerals']=sample_mineral_list
                         jsonValues['lat']=unicode(data[i][5])

@@ -112,6 +112,9 @@ var descText;
         <script type="text/javascript" charset="utf-8">
             function makeGrid() {
                 jQuery('#gridData').dataTable();
+                //Links open in new tab
+                jQuery("table#gridData tbody tr.even td.sorting_1 a").attr("target","_blank");
+                jQuery("table#gridData tbody tr.odd td.sorting_1 a").attr("target","_blank");
             }
         </script>
         <script src="http://aquarius.tw.rpi.edu/s2s/metpetdb/init.js" type="text/javascript"></script>

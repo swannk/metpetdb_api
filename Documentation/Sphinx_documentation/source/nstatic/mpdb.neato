@@ -1,0 +1,160 @@
+digraph g {
+node [ fontsize = "10", shape = record ];
+edge [];
+
+"admin_users" [shape = record, label = "{<col0> \N| admin_id:  integer\luser_id:  integer\l}" ];
+
+"chemical_analyses" [shape = record, label = "{<col0> \N| chemical_analysis_id:  bigint\lversion:  integer\lsubsample_id:  bigint\lpublic_data:  character(1)\lreference_x:  double precision\lreference_y:  double precision\lstage_x:  double precision\lstage_y:  double precision\limage_id:  bigint\lanalysis_method:  character varying(50)\lwhere_done:  character varying(50)\lanalyst:  character varying(50)\lanalysis_date:  timestamp without time zone\ldate_precision:  smallint\lreference_id:  bigint\ldescription:  character varying(1024)\lmineral_id:  smallint\luser_id:  integer\llarge_rock:  character(1)\ltotal:  double precision\lspot_id:  bigint\l}" ];
+
+"chemical_analysis_elements" [shape = record, label = "{<col0> \N| chemical_analysis_id:  bigint\lelement_id:  smallint\lamount:  double precision\lprecision:  double precision\lprecision_type:  character varying(3)\lmeasurement_unit:  character varying(4)\lmin_amount:  double precision\lmax_amount:  double precision\l}" ];
+
+"chemical_analysis_oxides" [shape = record, label = "{<col0> \N| chemical_analysis_id:  bigint\loxide_id:  smallint\lamount:  double precision\lprecision:  double precision\lprecision_type:  character varying(3)\lmeasurement_unit:  character varying(4)\lmin_amount:  double precision\lmax_amount:  double precision\l}" ];
+
+"element_mineral_types" [shape = record, label = "{<col0> \N| element_id:  smallint\lmineral_type_id:  smallint\l}" ];
+
+"elements" [shape = record, label = "{<col0> \N| element_id:  smallint\lname:  character varying(100)\lalternate_name:  character varying(100)\lsymbol:  character varying(4)\latomic_number:  integer\lweight:  real\lorder_id:  integer\l}" ];
+
+"geometry_columns" [shape = record, label = "{<col0> \N| f_table_catalog:  character varying(256)\lf_table_schema:  character varying(256)\lf_table_name:  character varying(256)\lf_geometry_column:  character varying(256)\lcoord_dimension:  integer\lsrid:  integer\ltype:  character varying(30)\l}" ];
+
+"georeference" [shape = record, label = "{<col0> \N| georef_id:  bigint\ltitle:  text\lfirst_author:  text\lsecond_authors:  text\ljournal_name:  text\lfull_text:  text\lreference_number:  text\lreference_id:  bigint\ljournal_name_2:  text\ldoi:  text\lpublication_year:  text\l}" ];
+
+"grids" [shape = record, label = "{<col0> \N| grid_id:  bigint\lversion:  integer\lsubsample_id:  bigint\lwidth:  smallint\lheight:  smallint\lpublic_data:  character(1)\l}" ];
+
+"image_comments" [shape = record, label = "{<col0> \N| comment_id:  bigint\limage_id:  bigint\lcomment_text:  text\lversion:  integer\l}" ];
+
+"image_format" [shape = record, label = "{<col0> \N| image_format_id:  smallint\lname:  character varying(100)\l}" ];
+
+"image_on_grid" [shape = record, label = "{<col0> \N| image_on_grid_id:  bigint\lgrid_id:  bigint\limage_id:  bigint\ltop_left_x:  double precision\ltop_left_y:  double precision\lz_order:  smallint\lopacity:  smallint\lresize_ratio:  real\lwidth:  smallint\lheight:  smallint\lchecksum:  character(50)\lchecksum_64x64:  character(50)\lchecksum_half:  character(50)\llocked:  character(1)\langle:  double precision\l}" ];
+
+"image_reference" [shape = record, label = "{<col0> \N| image_id:  bigint\lreference_id:  bigint\l}" ];
+
+"image_type" [shape = record, label = "{<col0> \N| image_type_id:  smallint\limage_type:  character varying(100)\labbreviation:  character varying(10)\lcomments:  character varying(250)\l}" ];
+
+"images" [shape = record, label = "{<col0> \N| image_id:  bigint\lchecksum:  character(50)\lversion:  integer\lsample_id:  bigint\lsubsample_id:  bigint\limage_format_id:  smallint\limage_type_id:  smallint\lwidth:  smallint\lheight:  smallint\lcollector:  character varying(50)\ldescription:  character varying(1024)\lscale:  smallint\luser_id:  integer\lpublic_data:  character(1)\lchecksum_64x64:  character(50)\lchecksum_half:  character(50)\lfilename:  character varying(256)\lchecksum_mobile:  character(50)\l}" ];
+
+"metamorphic_grades" [shape = record, label = "{<col0> \N| metamorphic_grade_id:  smallint\lname:  character varying(100)\l}" ];
+
+"metamorphic_regions" [shape = record, label = "{<col0> \N| metamorphic_region_id:  bigint\lname:  character varying(50)\lshape:  geometry\ldescription:  text\llabel_location:  geometry\l}" ];
+
+"mineral_relationships" [shape = record, label = "{<col0> \N| parent_mineral_id:  smallint\lchild_mineral_id:  smallint\l}" ];
+
+"mineral_types" [shape = record, label = "{<col0> \N| mineral_type_id:  smallint\lname:  character varying(50)\l}" ];
+
+"minerals" [shape = record, label = "{<col0> \N| mineral_id:  smallint\lreal_mineral_id:  smallint\lname:  character varying(100)\l}" ];
+
+"oxide_mineral_types" [shape = record, label = "{<col0> \N| oxide_id:  smallint\lmineral_type_id:  smallint\l}" ];
+
+"oxides" [shape = record, label = "{<col0> \N| oxide_id:  smallint\lelement_id:  smallint\loxidation_state:  smallint\lspecies:  character varying(20)\lweight:  double precision\lcations_per_oxide:  smallint\lconversion_factor:  double precision\lorder_id:  integer\l}" ];
+
+"project_invites" [shape = record, label = "{<col0> \N| invite_id:  integer\lproject_id:  integer\luser_id:  integer\laction_timestamp:  timestamp without time zone\lstatus:  character varying(32)\l}" ];
+
+"project_members" [shape = record, label = "{<col0> \N| project_id:  integer\luser_id:  integer\l}" ];
+
+"project_samples" [shape = record, label = "{<col0> \N| project_id:  integer\lsample_id:  bigint\l}" ];
+
+"projects" [shape = record, label = "{<col0> \N| project_id:  integer\lversion:  integer\luser_id:  integer\lname:  character varying(50)\ldescription:  character varying(300)\lisactive:  character(1)\l}" ];
+
+"reference" [shape = record, label = "{<col0> \N| reference_id:  bigint\lname:  character varying(100)\l}" ];
+
+"regions" [shape = record, label = "{<col0> \N| region_id:  smallint\lname:  character varying(100)\l}" ];
+
+"rock_type" [shape = record, label = "{<col0> \N| rock_type_id:  smallint\lrock_type:  character varying(100)\l}" ];
+
+"role_changes" [shape = record, label = "{<col0> \N| role_changes_id:  bigint\luser_id:  bigint\lsponsor_id:  bigint\lrequest_date:  timestamp without time zone\lfinalize_date:  timestamp without time zone\lrole_id:  smallint\lgranted:  character(1)\lgrant_reason:  text\lrequest_reason:  text\l}" ];
+
+"roles" [shape = record, label = "{<col0> \N| role_id:  smallint\lrole_name:  character varying(50)\lrank:  smallint\l}" ];
+
+"sample_aliases" [shape = record, label = "{<col0> \N| sample_alias_id:  bigint\lsample_id:  bigint\lalias:  character varying(35)\l}" ];
+
+"sample_comments" [shape = record, label = "{<col0> \N| comment_id:  bigint\lsample_id:  bigint\luser_id:  bigint\lcomment_text:  text\ldate_added:  timestamp without time zone\l}" ];
+
+"sample_metamorphic_grades" [shape = record, label = "{<col0> \N| sample_id:  bigint\lmetamorphic_grade_id:  smallint\l}" ];
+
+"sample_metamorphic_regions" [shape = record, label = "{<col0> \N| sample_id:  bigint\lmetamorphic_region_id:  smallint\l}" ];
+
+"sample_minerals" [shape = record, label = "{<col0> \N| mineral_id:  smallint\lsample_id:  bigint\lamount:  character varying(30)\l}" ];
+
+"sample_reference" [shape = record, label = "{<col0> \N| sample_id:  bigint\lreference_id:  bigint\l}" ];
+
+"sample_regions" [shape = record, label = "{<col0> \N| sample_id:  bigint\lregion_id:  smallint\l}" ];
+
+"samples" [shape = record, label = "{<col0> \N| sample_id:  bigint\lversion:  integer\lsesar_number:  character(9)\lpublic_data:  character(1)\lcollection_date:  timestamp without time zone\ldate_precision:  smallint\lnumber:  character varying(35)\lrock_type_id:  smallint\luser_id:  integer\llocation_error:  real\lcountry:  character varying(100)\ldescription:  text\lcollector:  character varying(50)\lcollector_id:  integer\llocation_text:  character varying(50)\llocation:  geometry\l}" ];
+
+"spatial_ref_sys" [shape = record, label = "{<col0> \N| srid:  integer\lauth_name:  character varying(256)\lauth_srid:  integer\lsrtext:  character varying(2048)\lproj4text:  character varying(2048)\l}" ];
+
+"subsample_type" [shape = record, label = "{<col0> \N| subsample_type_id:  smallint\lsubsample_type:  character varying(100)\l}" ];
+
+"subsamples" [shape = record, label = "{<col0> \N| subsample_id:  bigint\lversion:  integer\lpublic_data:  character(1)\lsample_id:  bigint\luser_id:  integer\lgrid_id:  bigint\lname:  character varying(100)\lsubsample_type_id:  smallint\l}" ];
+
+"uploaded_files" [shape = record, label = "{<col0> \N| uploaded_file_id:  bigint\lhash:  character(50)\lfilename:  character varying(255)\ltime:  timestamp without time zone\luser_id:  integer\l}" ];
+
+"users" [shape = record, label = "{<col0> \N| user_id:  integer\lversion:  integer\lname:  character varying(100)\lemail:  character varying(255)\lpassword:  bytea\laddress:  character varying(200)\lcity:  character varying(50)\lprovince:  character varying(100)\lcountry:  character varying(100)\lpostal_code:  character varying(15)\linstitution:  character varying(300)\lreference_email:  character varying(255)\lconfirmation_code:  character(32)\lenabled:  character(1)\lrole_id:  smallint\lcontributor_code:  character(32)\lcontributor_enabled:  character(1)\lprofessional_url:  character varying(255)\lresearch_interests:  character varying(1024)\lrequest_contributor:  character(1)\l}" ];
+
+"users_roles" [shape = record, label = "{<col0> \N| user_id:  integer\lrole_id:  smallint\l}" ];
+
+"xray_image" [shape = record, label = "{<col0> \N| image_id:  bigint\lelement:  character varying(256)\ldwelltime:  smallint\lcurrent:  smallint\lvoltage:  smallint\l}" ];
+
+
+"admin_users" -> "users" [label="admin_users_fk_user"];
+"chemical_analyses" -> "subsamples" [label="chemical_analyses_fk_subsamples"];
+"chemical_analyses" -> "images" [label="chemical_analyses_fk_images"];
+"chemical_analyses" -> "reference" [label="chemical_analyses_fk_reference"];
+"chemical_analyses" -> "minerals" [label="chemical_analyses_fk_mineral"];
+"chemical_analyses" -> "users" [label="chemical_analyses_fk_user"];
+"chemical_analysis_elements" -> "chemical_analyses" [label="analysis_elements_fk_chemical_analyses"];
+"chemical_analysis_elements" -> "elements" [label="analysis_elements_fk_elements"];
+"chemical_analysis_oxides" -> "chemical_analyses" [label="analysis_oxides_fk_chemical_analyses"];
+"chemical_analysis_oxides" -> "oxides" [label="analysis_oxides_fk_oxides"];
+"element_mineral_types" -> "elements" [label="element_mineral_types_fk_element"];
+"element_mineral_types" -> "mineral_types" [label="element_mineral_types_fk_mineral_type"];
+"grids" -> "subsamples" [label="grids_fk"];
+"image_comments" -> "images" [label="image_comments_fk_image"];
+"image_on_grid" -> "grids" [label="image_on_grid_fk_grids"];
+"image_on_grid" -> "images" [label="image_on_grid_fk_images"];
+"image_reference" -> "images" [label="image_reference_fk_image"];
+"image_reference" -> "reference" [label="image_reference_fk_reference"];
+"images" -> "samples" [label="images_fk_sample"];
+"images" -> "subsamples" [label="images_fk_subsample"];
+"images" -> "image_format" [label="images_fk_image_format"];
+"images" -> "image_type" [label="images_fk_image_type"];
+"images" -> "users" [label="images_fk_user"];
+"mineral_relationships" -> "minerals" [label="mineral_relationships_parent_fk"];
+"mineral_relationships" -> "minerals" [label="mineral_relationships_child_fk"];
+"minerals" -> "minerals" [label="minerals_fk_real_mineral_id"];
+"oxide_mineral_types" -> "oxides" [label="oxide_mineral_types_fk_oxide"];
+"oxide_mineral_types" -> "mineral_types" [label="oxide_mineral_types_fk_mineral_type"];
+"oxides" -> "elements" [label="oxides_fk"];
+"project_invites" -> "projects" [label="project_invites_fk_proj"];
+"project_invites" -> "users" [label="project_invites_fk_user"];
+"project_members" -> "projects" [label="project_members_fk_proj"];
+"project_members" -> "users" [label="project_members_fk_user"];
+"project_samples" -> "projects" [label="project_samples_fk_proj"];
+"project_samples" -> "samples" [label="project_samples_fk_samp"];
+"projects" -> "users" [label="projects_fk_user"];
+"role_changes" -> "users" [label="role_changes_fk_user"];
+"role_changes" -> "users" [label="role_changes_fk_sponsor"];
+"role_changes" -> "roles" [label="role_changes_fk_role"];
+"sample_aliases" -> "samples" [label="sample_id_fk_sample"];
+"sample_comments" -> "samples" [label="sample_comments_fk_sample"];
+"sample_comments" -> "users" [label="sample_comments_fk_user"];
+"sample_metamorphic_grades" -> "samples" [label="samples_metgrade_fk_samples"];
+"sample_metamorphic_grades" -> "metamorphic_grades" [label="samples_metgrade_fk_metgrade"];
+"sample_metamorphic_regions" -> "samples" [label="samples_metregion_fk_samples"];
+"sample_metamorphic_regions" -> "metamorphic_regions" [label="samples_metregion_fk_metregion"];
+"sample_minerals" -> "minerals" [label="mineral_samples_fk_min"];
+"sample_minerals" -> "samples" [label="mineral_samples_fk_samp"];
+"sample_reference" -> "samples" [label="sample_reference_fk_sample"];
+"sample_reference" -> "reference" [label="sample_reference_fk_reference"];
+"sample_regions" -> "samples" [label="sample_regions_fk_sample"];
+"sample_regions" -> "regions" [label="sample_region_fk_region"];
+"samples" -> "rock_type" [label="samples_fk_rock_type"];
+"samples" -> "users" [label="samples_fk_user"];
+"samples" -> "users" [label="samples_fk_collector"];
+"subsamples" -> "samples" [label="subsamples_fk_sample"];
+"subsamples" -> "users" [label="subsamples_fk_user"];
+"subsamples" -> "subsample_type" [label="subsamples_fk_subsample_type"];
+"uploaded_files" -> "users" [label="uploaded_files_fk_user"];
+"xray_image" -> "images" [label="xray_image_fk_image"];
+}
+
+

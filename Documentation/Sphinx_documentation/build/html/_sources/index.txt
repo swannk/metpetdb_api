@@ -15,6 +15,7 @@ Contents:
  
    Introduction.rst
    Table_Description.rst
+   imagemap.rst
    Notes.rst
 
 

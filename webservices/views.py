@@ -27,26 +27,6 @@ def formatOxide(species):
 
 def index(request):
     	return HttpResponse("Hello Universe!")
-        
-def sample(request, sample_id):
-    sampleObj = SampleObject(sample_id)
-    return HttpResponse(sampleObj.json())
-    
-def subsample(request, subsample_id):
-    subsampleObj = SubsampleObject(subsample_id)
-    return HttpResponse(subsampleObj.json())
-    
-def subsamples(request, sample_id):
-    subsampleTableObj = SubsampleTableObject(sample_id)
-    return HttpResponse(subsampleTableObj.json())
-
-def chemicalanalysis(request, chemical_analysis_id):
-    chemicalAnalysisObj = ChemicalAnalysisObject(chemical_analysis_id)
-    return HttpResponse(chemicalAnalysisObj.json())
-    
-def chemicalanalyses(request, subsample_id):
-    chemicalAnalysisTableObj = ChemicalAnalysisTableObject(subsample_id)
-    return HttpResponse(chemicalAnalysisTableObj.json())
 
 def samples(request):
 	samples_data=[]

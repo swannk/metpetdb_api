@@ -17,42 +17,74 @@ class SubsampleObject(_DbObject):
 class _SubsampleGetQuery(_DbGetQuery):
     def __init__(self):
         self.oneQuery = (
-            "SELECT "
-                "subsamples.subsample_id AS id, "
-                "subsamples.public_data AS public, "
-                "subsamples.name, "
-                "subsample_type.subsample_type AS type, "
-                "users.name AS owner, "
-                "("
-                    "SELECT "
-                        "COUNT(*) " 
-                    "FROM "
-                        "subsamples, "
-                        "images "
-                    "WHERE "
-                        "subsamples.subsample_id = %(subsample_id)s AND "
-                        "images.subsample_id = subsamples.subsample_id"
-                ") AS image_count, "
-                "("
-                    "SELECT "
-                        "COUNT(*) "
-                    "FROM "
-                        "subsamples, "
-                        "chemical_analyses "
-                    "WHERE "
-                        "subsamples.subsample_id = %(subsample_id)s AND "
-                        "chemical_analyses.subsample_id = subsamples.subsample_id"
-                ") AS chemical_analysis_count "
-            "FROM "
-                "users, "
-                "subsamples, "
-                "subsample_type "
-            "WHERE "
-                "subsamples.subsample_type_id = subsample_type.subsample_type_id AND "
-                "users.user_id = subsamples.user_id AND "
-                "subsamples.subsample_id = %(subsample_id)s"
+                "SELECT "
+                    "subsamples.subsample_id AS id, "
+                    "subsamples.name, "
+                    "subsamples.public_data AS public, "
+                    "subsample_type.subsample_type AS type, "
+                    "users.name AS owner_name, "
+                    "COUNT(chemical_analyses.chemical_analysis_id) AS chemical_analysis_count, "
+                    "("
+                        "SELECT "
+                            "COUNT(*) "
+                        "FROM "
+                            "images "
+                        "WHERE "
+                            "images.subsample_id = subsamples.subsample_id"
+                    ") AS image_count "
+                "FROM (( "
+                    "subsamples "
+                    "LEFT OUTER JOIN users "
+                    "ON subsamples.user_id = users.user_id ) "
+                    "LEFT OUTER JOIN subsample_type "
+                    "ON subsamples.subsample_type_id = subsample_type.subsample_type_id ) "
+                    "LEFT OUTER JOIN chemical_analyses "
+                    "ON subsamples.subsample_id = chemical_analyses.subsample_id "
+                "WHERE "
+                    "subsamples.subsample_id = %(subsample_id)s "
+                "GROUP BY "
+                    "subsamples.subsample_id, "
+                    "subsamples.name, "
+                    "subsamples.public_data, "
+                    "subsample_type.subsample_type, "
+                    "users.name"
             )
+
+        
+# This is displayed on the side of the subsamples page view
+class SubsampleImagesTableObject(_DbObject):
+    def __init__(self, subsample_id = None):
+        self.getQuery = _SubsampleImagesTableGetQuery();
+        
+        if id:
+            self._get({"subsample_id": subsample_id})
             
+    def get(self, id):
+        return self._get({"subsample_id": subsample_id})
+
+    def exists(self):
+        return "*" in self.attributes and len(self.attributes["*"]) > 0
+
+        
+class _SubsampleImagesTableGetQuery(_DbGetQuery):
+    def __init__(self):
+        self.manyQueries = {
+            "*": (
+                "SELECT "
+                    "images.filename, "
+                    "images.checksum_64x64, "
+                    "images.height, "
+                    "images.width, "
+                    "image_type.image_type "
+                "FROM images, "
+                    "image_type "
+                "WHERE "
+                    "images.image_type_id = image_type.image_type_id AND "
+                    "subsample_id = %(subsample_id)s"
+                )
+            }
+
+
 # This is displayed on bottom of samples page view
 class SubsampleTableObject(_DbObject):
     def __init__(self, sample_id = None):
@@ -77,34 +109,31 @@ class _SubsampleTableGetQuery(_DbGetQuery):
                     "subsamples.name, "
                     "subsamples.public_data AS public, "
                     "subsample_type.subsample_type AS type, "
-                    "("
-                        "SELECT "
-                            "COUNT(*) " 
-                        "FROM "
-                            "subsamples, "
-                            "images "
-                        "WHERE "
-                            "subsamples.sample_id = %(sample_id)s AND "
-                            "images.subsample_id = subsamples.subsample_id"
-                    ") AS image_count, "
+                    "users.name AS owner_name, "
+                    "COUNT(chemical_analyses.chemical_analysis_id) AS chemical_analysis_count, "
                     "("
                         "SELECT "
                             "COUNT(*) "
                         "FROM "
-                            "subsamples, "
-                            "chemical_analyses "
+                            "images "
                         "WHERE "
-                            "chemical_analyses.subsample_id = subsamples.subsample_id AND "
-                            "subsamples.sample_id = %(sample_id)s"
-                    ") AS chemical_analysis_count, "
-                    "users.name AS owner_name "
-                "FROM "
-                    "users, "
-                    "subsamples, "
-                    "subsample_type "
+                            "images.subsample_id = subsamples.subsample_id"
+                    ") AS image_count "
+                "FROM (( "
+                    "subsamples "
+                    "LEFT OUTER JOIN users "
+                    "ON subsamples.user_id = users.user_id ) "
+                    "LEFT OUTER JOIN subsample_type "
+                    "ON subsamples.subsample_type_id = subsample_type.subsample_type_id ) "
+                    "LEFT OUTER JOIN chemical_analyses "
+                    "ON subsamples.subsample_id = chemical_analyses.subsample_id "
                 "WHERE "
-                    "subsamples.subsample_type_id = subsample_type.subsample_type_id AND "
-                    "users.user_id = subsamples.user_id AND "
-                    "subsamples.sample_id = %(sample_id)s"
+                    "subsamples.sample_id = %(sample_id)s "
+                "GROUP BY "
+                    "subsamples.subsample_id, "
+                    "subsamples.name, "
+                    "subsamples.public_data, "
+                    "subsample_type.subsample_type, "
+                    "users.name"
                 )
             }

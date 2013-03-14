@@ -81,6 +81,7 @@ border-bottom: 1px solid white;
 {
     width:100%;
     margin-top: 0px;
+    margin-bottom: 20px;
     vertical-align: top;
 }
 
@@ -97,6 +98,7 @@ border-bottom: 1px solid white;
 #gridData_wrapper
 {
     margin-left: 15px;
+    margin-bottom: 30px;
     
 }
 

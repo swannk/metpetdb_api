@@ -2,16 +2,189 @@ from django.http import HttpResponse
 from webservices.models import *
 import json
 import sys
+from django.shortcuts import render
 from django.db import connection as con
 from webservices.SampleQuery import *
 from webservices.utility import *
 from webservices.sample import SampleObject
-from webservices.subsample import SubsampleObject, SubsampleTableObject
+from webservices.subsample import SubsampleObject, SubsampleTableObject, SubsampleImagesTableObject
 from webservices.chemicalanalysis import ChemicalAnalysisObject, ChemicalAnalysisTableObject
 
 #direct stdout to stderr so that it is logged by the webserver
 sys.stdout = sys.stderr
 
+
+#Main interface view
+def index(request):
+	return render(request, 'homepage.html')
+
+#Request to serve search.html
+def search(request):
+	return render(request, 'search.html')
+
+#just a list of samples
+def samplelist(request):
+	cursor=con.cursor()
+	cursor.execute("SELECT DISTINCT sample_id, number FROM samples ORDER BY sample_id, number")
+	samplelist=cursor.fetchall()
+	
+	for sample in samplelist:
+		print sample[1]
+	return render(request,'samplelist.html', {'samples':samplelist},)
+
+# view function renders sampleview.html/json data depending on the request
+def sample(request, sample_id):
+	path= request.path
+	path= path.split("/")
+
+	sampleobj = SampleObject(sample_id)
+
+	if sampleobj.exists():
+			subsamples=SubsampleTableObject(sample_id)
+
+			if path[-1]=="json":
+				return HttpResponse(sampleobj.json())
+			else:
+				return render(request, 'sampleview.html',{'sample':sampleobj, 'subsamples':subsamples.attributes['*'],}) 
+
+	else:
+
+		return HttpResponse("Sample does not Exist")
+
+
+# view function renders subsampleview.html/json data depending on the request
+def subsample(request, subsample_id):
+	path= request.path
+	path= path.split("/")
+
+	subsampleobj =SubsampleObject(subsample_id)
+	#subsample_test=SubsampleObject(1447)
+	#print subsample_test.attributes
+
+	if subsampleobj.exists():
+
+		subsampleimgobj=SubsampleImagesTableObject(subsample_id)
+		#imgobjtest=SubsampleImagesTableObject(1454)
+		#print imgobjtest.attributes['*']
+
+		chemanalyses=ChemicalAnalysisTableObject(subsample_id)
+		#chem_test=ChemicalAnalysisTableObject(1447)
+		#print chem_test.attributes['*']
+
+		if path[-1]=="json":
+			return HttpResponse(subsampleobj.json())
+		else:
+			return render(request, 'subsampleview.html',{'subsample':subsampleobj, 'chemanalyses':chemanalyses.attributes['*'], 'images':subsampleimgobj.attributes['*'],}) 
+
+	else: 
+		
+		return HttpResponse("Subsample does not exist")		
+
+
+# view function renders chemanalysisview.html/json data depending on the request
+def chemicalanalysis(request, chemical_analysis_id):
+	path= request.path
+	path= path.split("/")
+
+	chemanalysisobj =ChemicalAnalysisObject(chemical_analysis_id)
+	#chem=ChemicalAnalysisObject(5275)
+	#print chem.attributes
+	if chemanalysisobj.exists():	
+		if path[-1]=="json":
+			return HttpResponse(chemanalysisobj.json())
+		else:
+			return render(request, 'chemicalanalysisview.html',{'chemicalanalysis':chemanalysisobj,}) 
+	else:
+		return HttpResponse("Chemical Analysis does not exist")
+
+'''S2S webservice view'''
+#Main faceted serach view
+def metpetdb(request):
+	formattype=request.GET.get('format','json')
+
+	returntype=request.GET.get('returntype','sampleresults')
+	
+	rocktype_id=request.GET.get('rocktype_id','')
+	
+	country=request.GET.get('country','')
+	
+	owner_id=request.GET.get('owner_id','')
+	
+	mineral_id=request.GET.get('mineral_id','')
+	
+	region_id=request.GET.get('region_id','')
+
+	metamorphic_grade_id=request.GET.get('metamorphic_grade_id','')
+	
+	metamorphic_region_id=request.GET.get('metamorphic_region_id','')
+	
+	publication_id= request.GET.get('publication_id','')
+	
+	if rocktype_id!='':
+		rocktype_id_list=rocktype_id.split(',')
+	else:
+		rocktype_id_list=[]
+
+	if mineral_id!='':
+		mineral_id_list=mineral_id.split(',')
+	else:
+		mineral_id_list=[]
+	
+	if owner_id!='':
+		owner_id_list=owner_id.split(',')
+	else:
+		owner_id_list=[]
+	
+	if country!='':
+		country_list=country.split(',')
+	else:
+		country_list=[]
+
+	if region_id!='':
+		region_id_list=region_id.split(',')
+	else:
+		region_id_list=[]
+	
+	if metamorphic_region_id!='':
+		metamorphic_region_id_list=metamorphic_region_id.split(',')
+	else:
+		metamorphic_region_id_list=[]
+
+	if metamorphic_grade_id!='':
+		metamorphic_grade_id_list=metamorphic_grade_id.split(',')
+	else:
+		metamorphic_grade_id_list=[]
+	
+	if publication_id!='':
+		publication_id_list=publication_id.split(',')
+	else:
+		publication_id_list=[]
+
+	
+	samples=SampleQuery(rock_type=rocktype_id_list,country=country_list,owner_id=owner_id_list,mineral_id=mineral_id_list,region_id=region_id_list,metamorphic_grade_id=metamorphic_grade_id_list, metamorphic_region_id=metamorphic_region_id_list, publication_id=publication_id_list)
+	#sample_test = SampleQuery(rock_type=[3,], country=[], owner_id=[139,], mineral_id=[3,], region_id=[52,], metamorphic_grade_id=[17,], metamorphic_region_id=[], publication_id=[])
+	if returntype=='rocktype_facet':
+		return HttpResponse(getFacetJSON(samples.rock_type_facet()))
+	elif returntype=='country_facet':
+		return HttpResponse(getFacetJSON(samples.country_facet()))
+	elif returntype=='mineral_facet':
+		return HttpResponse(getFacetJSON(samples.mineral_facet()))
+	elif returntype=='region_facet':
+		return HttpResponse(getFacetJSON(samples.region_facet()))
+	elif returntype=='owner_facet':
+		return HttpResponse(getFacetJSON(samples.owner_facet()))
+	elif returntype=='metamorphicgrade_facet':
+		return HttpResponse(getFacetJSON(samples.metamorphic_grade_facet()))
+	elif returntype=='metamorphicregion_facet':
+		return HttpResponse(getFacetJSON(samples.metamorphic_region_facet()))
+	elif returntype== 'publication_facet':
+		return HttpResponse(getFacetJSON(samples.publication_facet()))
+	elif returntype=='map':
+		return HttpResponse(getAllJSON(str(samples)))
+	else:
+		return HttpResponse(getSampleResults(str(samples)))
+
+#Not sure if below is used for anything right now
 #Function to format oxides by subscripting digits
 def formatOxide(species):
         retStr=""
@@ -23,30 +196,6 @@ def formatOxide(species):
                         retStr+=species[i]
                 i+=1
         return retStr
-
-
-def index(request):
-    	return HttpResponse("Hello Universe!")
-        
-def sample(request, sample_id):
-    sampleObj = SampleObject(sample_id)
-    return HttpResponse(sampleObj.json())
-    
-def subsample(request, subsample_id):
-    subsampleObj = SubsampleObject(subsample_id)
-    return HttpResponse(subsampleObj.json())
-    
-def subsamples(request, sample_id):
-    subsampleTableObj = SubsampleTableObject(sample_id)
-    return HttpResponse(subsampleTableObj.json())
-
-def chemicalanalysis(request, chemical_analysis_id):
-    chemicalAnalysisObj = ChemicalAnalysisObject(chemical_analysis_id)
-    return HttpResponse(chemicalAnalysisObj.json())
-    
-def chemicalanalyses(request, subsample_id):
-    chemicalAnalysisTableObj = ChemicalAnalysisTableObject(subsample_id)
-    return HttpResponse(chemicalAnalysisTableObj.json())
 
 def samples(request):
 	samples_data=[]
@@ -284,90 +433,7 @@ def chemical_analyses(request):
 
 	return HttpResponse("{\"items\":"+json.dumps(chemical_analyses_data)+"}")
 
-'''S2S web sevice code'''
 
-#main web service view	
-def metpetdb(request):
-	formattype=request.GET.get('format','json')
 
-	returntype=request.GET.get('returntype','sampleresults')
-	
-	rocktype_id=request.GET.get('rocktype_id','')
-	
-	country=request.GET.get('country','')
-	
-	owner_id=request.GET.get('owner_id','')
-	
-	mineral_id=request.GET.get('mineral_id','')
-	
-	region_id=request.GET.get('region_id','')
-
-	metamorphic_grade_id=request.GET.get('metamorphic_grade_id','')
-	
-	metamorphic_region_id=request.GET.get('metamorphic_region_id','')
-	
-	publication_id= request.GET.get('publication_id','')
-	
-	if rocktype_id!='':
-		rocktype_id_list=rocktype_id.split(',')
-	else:
-		rocktype_id_list=[]
-
-	if mineral_id!='':
-		mineral_id_list=mineral_id.split(',')
-	else:
-		mineral_id_list=[]
-	
-	if owner_id!='':
-		owner_id_list=owner_id.split(',')
-	else:
-		owner_id_list=[]
-	
-	if country!='':
-		country_list=country.split(',')
-	else:
-		country_list=[]
-
-	if region_id!='':
-		region_id_list=region_id.split(',')
-	else:
-		region_id_list=[]
-	
-	if metamorphic_region_id!='':
-		metamorphic_region_id_list=metamorphic_region_id.split(',')
-	else:
-		metamorphic_region_id_list=[]
-
-	if metamorphic_grade_id!='':
-		metamorphic_grade_id_list=metamorphic_grade_id.split(',')
-	else:
-		metamorphic_grade_id_list=[]
-	
-	if publication_id!='':
-		publication_id_list=publication_id.split(',')
-	else:
-		publication_id_list=[]
-
-	samples=SampleQuery(rock_type=rocktype_id_list,country=country_list,owner_id=owner_id_list,mineral_id=mineral_id_list,region_id=region_id_list,metamorphic_grade_id=metamorphic_grade_id_list, metamorphic_region_id=metamorphic_region_id_list, publication_id=publication_id_list)
-	if returntype=='rocktype_facet':
-		return HttpResponse(getFacetJSON(samples.rock_type_facet()))
-	elif returntype=='country_facet':
-		return HttpResponse(getFacetJSON(samples.country_facet()))
-	elif returntype=='mineral_facet':
-		return HttpResponse(getFacetJSON(samples.mineral_facet()))
-	elif returntype=='region_facet':
-		return HttpResponse(getFacetJSON(samples.region_facet()))
-	elif returntype=='owner_facet':
-		return HttpResponse(getFacetJSON(samples.owner_facet()))
-	elif returntype=='metamorphicgrade_facet':
-		return HttpResponse(getFacetJSON(samples.metamorphic_grade_facet()))
-	elif returntype=='metamorphicregion_facet':
-		return HttpResponse(getFacetJSON(samples.metamorphic_region_facet()))
-	elif returntype== 'publication_facet':
-		return HttpResponse(getFacetJSON(samples.publication_facet()))
-	elif returntype=='map':
-		return HttpResponse(getAllJSON(str(samples)))
-	else:
-		return HttpResponse(getSampleResults(str(samples)))
 	
 			

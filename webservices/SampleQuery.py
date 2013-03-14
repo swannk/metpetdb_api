@@ -199,7 +199,11 @@ if __name__ == '__main__':
 
     print str(q)
 
-    p = SampleQuery(rock_type=[1,2], country=["'United States'"], owner_id=[4,5,-1], \
+    p = SampleQuery(rock_type=[3,], owner_id=[139], mineral_id=[3,], region_id=[52,], metamorphic_grade_id=[17,])
+
+    print str(p)
+
+    '''p = SampleQuery(rock_type=[1,2], country=["'United States'"], owner_id=[4,5,-1], \
                        mineral_id = [-1], region_id = [], publication_id = [1,2,3] ) 
 
     print str(p)
@@ -227,7 +231,7 @@ if __name__ == '__main__':
     print p.metamorphic_grade_facet()
 
     print "*********"
-    print p.publication_facet()
+    print p.publication_facet()'''
    
 
   

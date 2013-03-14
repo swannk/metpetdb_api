@@ -1,0 +1,23 @@
+{%extends "base.html"%}
+
+{%block main%}
+
+<table id="samplelist" class="table">
+	<thead>
+		<tr>
+			<th>Sample ID</th>
+			<th>Sample Number</th>
+	</thead>
+	<tbody>
+		{% for sample in samples %}
+		<tr><!---- change the urls to named urls + generic views, below url is not clean---->
+			<td td class="sample_value">{{sample.0}}</td>
+			<td class="sample_label"><a href="http://127.0.0.1:8000/webservices/sample/{{sample.0}}" {{sample.0}} target="_blank">{{sample.1}}</a></td>
+		</tr>
+		{%endfor%}
+	</tbody>
+	</thead>
+</table>
+
+{%endblock%}
+

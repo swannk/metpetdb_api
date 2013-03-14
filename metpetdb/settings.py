@@ -14,8 +14,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'metpetdb',                      # Or path to database file if using sqlite3.
         'USER': 'metpetdb',                      # Not used with sqlite3.
-        'PASSWORD': 'dFwPITbImGSos3',                  # Not used with sqlite3.
-        'HOST': 'garnet.cs.rpi.edu',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PASSWORD': 'metpetdb',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
@@ -64,7 +64,7 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-'/home/sball/metpetdb-py/web/',
+    '/home/tej/metpetdb-py/web/',
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -103,7 +103,7 @@ ROOT_URLCONF = 'metpetdb.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'metpetdb.wsgi.application'
 
-TEMPLATE_DIRS = (
+TEMPLATE_DIRS = ( '/home/tej/metpetdb-py/web/webservices', 
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -120,7 +120,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'django_nose',
+    #'django_nose',
     'webservices',  
 )
 

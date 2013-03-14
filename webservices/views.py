@@ -197,6 +197,13 @@ def formatOxide(species):
                 i+=1
         return retStr
 
+<<<<<<< HEAD
+=======
+
+def index(request):
+    	return HttpResponse("Hello Universe!")
+
+>>>>>>> 9be63222eea3d888a2d21bfd480b20bfa03a0f96
 def samples(request):
 	samples_data=[]
 	samples=Samples.objects.filter(public_data='Y')|Samples.objects.filter(user_id='139')

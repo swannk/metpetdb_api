@@ -5,7 +5,7 @@ from django.views.generic.simple import direct_to_template
 #from django.contrib import admin
 #admin.autodiscover()
 
-<<<<<<< HEAD
+
 urlpatterns = patterns('', 
 url(r'^webservices/sample/(\d+)/json/$','webservices.views.sample'),
 url(r'^webservices/sample/(\d+)/$','webservices.views.sample'),
@@ -13,18 +13,6 @@ url(r'^webservices/subsample/(\d+)/json/$','webservices.views.subsample'),
 url(r'^webservices/subsample/(\d+)/$','webservices.views.subsample'), 
 url(r'^webservices/chemicalanalysis/(\d+)/json$', 'webservices.views.chemicalanalysis'), 
 url(r'^webservices/chemicalanalysis/(\d+)/$', 'webservices.views.chemicalanalysis'), 
-=======
-urlpatterns = patterns('',
-url(r'^webservices/$', 'webservices.views.index'),
-url(r'^webservices/samples$', 'webservices.views.samples'),
-url(r'^webservices/chemicalanalyses$', 'webservices.views.chemical_analyses'), 
-url(r'^api/sample/(\d+)/$','webservices.api.sample'), 
-url(r'^api/subsample/(\d+)/$','webservices.api.subsample'), 
-url(r'^api/subsample/(\d+)/images/$','webservices.api.subsample_images'), 
-url(r'^api/subsamples/(\d+)/$','webservices.api.subsamples'), 
-url(r'^api/chemicalanalysis/(\d+)/$', 'webservices.api.chemical_analysis'), 
-url(r'^api/chemicalanalyses/(\d+)/$', 'webservices.api.chemical_analyses'), 
->>>>>>> 9be63222eea3d888a2d21bfd480b20bfa03a0f96
 url(r'^api/metpetdb/$','webservices.views.metpetdb'), 
 #sample list url
 url(r'^webservices/samplelist/$', 'webservices.views.samplelist', name='samplelist'),

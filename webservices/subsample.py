@@ -73,10 +73,7 @@ class _SubsampleImagesTableGetQuery(_DbGetQuery):
                 "SELECT "
                     "images.filename, "
                     "images.checksum_64x64, "
-<<<<<<< HEAD
                     "images.checksum_half, "
-=======
->>>>>>> 9be63222eea3d888a2d21bfd480b20bfa03a0f96
                     "images.height, "
                     "images.width, "
                     "image_type.image_type "

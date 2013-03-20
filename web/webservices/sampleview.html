@@ -132,7 +132,7 @@
 			{%for subsample in subsamples%}
 			<tr>
 				<!-- The link to subsample needs to be updated to named URL+ generic views type -->
-				<td id="img-popup"><a href="http://127.0.0.1:8000/webservices/subsample/{{subsample.id}}/" target="_blank">{{subsample.name}}</td>
+				<td id="img-popup"><a href="{% url subsample subsample.id %}" target="_blank">{{subsample.name}}</td>
 				<td>{{subsample.public}}</td>
 				<td>{{subsample.type}}</td>
 				<td>{{subsample.image_count}}</td>

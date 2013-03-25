@@ -1,0 +1,11 @@
+[
+ {"table_name":"sample_regions", 
+  "values": [
+	{"sample_id": "1", "region_id": "1"},
+	{"sample_id": "1", "region_id": "2"},
+	{"sample_id": "1", "region_id": "3"}
+
+
+	]}
+]
+

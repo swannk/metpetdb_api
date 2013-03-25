@@ -1,4 +1,7 @@
-# Django settings for metpetdb project.
+import os
+
+PROJECT_DIR = os.path.dirname(__file__)
+FIXTURES_DIR = os.path.join(PROJECT_DIR, '..', 'fixtures')
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -122,9 +125,10 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'django_nose',
     'webservices',  
+    'fixtures',  
 )
 
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+TEST_RUNNER = 'fixtures.util.CustomTestSuiteRunner'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

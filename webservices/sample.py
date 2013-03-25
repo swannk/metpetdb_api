@@ -122,6 +122,7 @@ class _SampleGetQuery(_DbGetQuery):
                 "SELECT "
                     "images.filename, "
                     "images.checksum_64x64, "
+                    "images.checksum_half, " 
                     "images.height, "
                     "images.width, "
                     "image_type.image_type "
@@ -132,4 +133,3 @@ class _SampleGetQuery(_DbGetQuery):
                     "sample_id = %(sample_id)s"
                 )
             }
-

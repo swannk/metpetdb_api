@@ -1,0 +1,23 @@
+{%extends "base.html"%}
+
+{%block main%}
+
+<table id="samplelist" class="table">
+	<thead>
+		<tr>
+			<th>Sample ID</th>
+			<th>Sample Number</th>
+	</thead>
+	<tbody>
+		{% for sample in samples %}
+		<tr>
+			<td td class="sample_value">{{sample.0}}</td>
+			<td class="sample_label"><a href="{% url sample sample.0 %}" target="_blank" >{{sample.1}}</a></td>
+		</tr>
+		{%endfor%}
+	</tbody>
+	</thead>
+</table>
+
+{%endblock%}
+

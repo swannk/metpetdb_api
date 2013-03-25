@@ -186,10 +186,10 @@ class SampleQuery(object):
     def __str__ ( self ) :
         query_str =\
             "SELECT DISTINCT sample_id, sample_number " \
-            ", rock_type_name, owner_name "\
+            ", rock_type_name, owner_name, mineral_info "\
             ", latitude, longitude " \
             "FROM  " + self.get_view_name() + " " + self.get_where() + \
-            "ORDER BY sample_id, sample_number, rock_type_name, owner_name LIMIT 10"
+            "ORDER BY sample_id, sample_number, rock_type_name, owner_name"
         return query_str
 
 

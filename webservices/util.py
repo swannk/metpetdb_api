@@ -2,12 +2,12 @@ import json
 import datetime
 
 class CustomJSONEncoder(json.JSONEncoder):
-   """ http://stackoverflow.com/questions/455580/ """
-   def default(self, obj):
-       if isinstance(obj, datetime.datetime):
-           return obj.isoformat()
-       else:
-           return super(CustomJSONEncoder, self).default(obj)
+    """ http://stackoverflow.com/questions/455580/ """
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return obj.isoformat()
+        else:
+            return super(CustomJSONEncoder, self).default(obj)
            
 def dictfetchall(cursor):
     """ Returns all rows from a cursor as a list of dictionaries

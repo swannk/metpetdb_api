@@ -48,14 +48,16 @@ class UtilTest(FastFixtureTestCase):
         self.assertEqual(expected_regions, regions)
 
 
-    def test_dictfetchall_regions_3805(self):
+    def test_dictfetchall_regions_1(self):
         expected_regions = [
-            {"name": "New Mexico"},
-            {"name": "Sangre De Cristo Mts"},
-            {"name": "Trampas Ridge"}
+            {"name": "region1"},
+            {"name": "region2"},
+            {"name": "region3"}
         ]
 
-        cursor = self._query_regions({"sample_id": 3805})
+
+
+        cursor = self._query_regions({"sample_id": 1})
         self.assertEqual(cursor.rowcount, 3)
 
         regions = self.dictfetchall(cursor)
@@ -73,21 +75,21 @@ class UtilTest(FastFixtureTestCase):
 
         self.assertEqual(expected_region, region)
 
-    def test_dictfetchone_regions_3805(self):
+
+    def test_dictfetchone_regions_1(self):
         expected_regions = [
-            {"name": "New Mexico"},
-            {"name": "Sangre De Cristo Mts"},
-            {"name": "Trampas Ridge"}
+            {"name": "region1"},
+            {"name": "region2"},
+            {"name": "region3"}
         ]
 
-        cursor = self._query_regions({"sample_id": 3805})
+        cursor = self._query_regions({"sample_id": 1})
         self.assertEqual(cursor.rowcount, 3)
 
         for i in range(cursor.rowcount):
             region = self.dictfetchone(cursor)
             self.assertIn(region, expected_regions)
             expected_regions = [expected_region for expected_region in expected_regions if expected_region != region]
-
 
     # helper functions
 
@@ -131,64 +133,58 @@ class SampleTest(FastFixtureTestCase):
         sample.get(-1)
         self.assertFalse(sample.exists())
 
-        sample.get("3805")
+        sample.get("1")
         self.assertTrue(sample.exists())
 
-    def test_sample_attributes_3805(self):
+    def test_sample_attributes_1(self):
+        import datetime
+
         sample = self.SampleObject()
 
-        self.assertTrue(sample.get("3805"))
+        self.assertTrue(sample.get("1"))
 
         expected_sample_attributes = {
-            "id":3805,
-            "number":"test001",
-            "owner_name":"Sibel Adali",
-            "collector_name":null,
-            "collection_date":"2006-08-01T19:00:00",
-            "location_text":"RPI",
-            "longitude":-105.643730163574,
-            "latitude":36.002140045166,
-            "country":"USA",
-            "public_data":false,
-            "subsamples_count":1,
-            "description":"Ortega Quartzite",
-            "metamorphic_grade_name":"Amphibolite facies",
-            "rock_type_name":"Quartzite",
-            "minerals":[
-                {"name":"Amphibole"},
-                {"name":"Oxides"},
-                {"name":"Quartz"},
-                {"name":"Biotite"},
-                {"name":"Garnet"}
+            "id": 1L,
+            "number": u"A",
+            "owner_name": u"B",
+            "description": u"D1",
+            "collector_name": u"A",
+            "collection_date": datetime.datetime(1984, 10, 27, 0, 0), 
+            "location_text": u"A",
+            "longitude": 5.0,
+            "latitude": 10.0,
+            "country": u"A",
+            "public_data": True,
+            "subsamples_count": 3L,
+            "metamorphic_grade_name": u"mg1",
+            "rock_type_name": u"Rock1",
+            "minerals": [
+                {"name": u"mineral"}
             ],
-            "images":[
-            {
-                "image_type":"Back-Scattered Electron Image",
-                "width":983,
-                "checksum_64x64":"0408bbc03ba29b52e3eecb9c703455d7fd4abdea1b60208b04",
-                "height":654
-            },
-            {
-                "image_type":"Back-Scattered Electron Image",
-                "width":64,
-                "checksum_64x64":"04e70ea8dcb19107b04a9343b77f2e3f758416749e356dd6c3",
-                "height":55
-            }
+            "images": [
+                {
+                    'image_type': u'ONE',
+                    'checksum_64x64': u'A                                                 ',
+                    'height': 10,
+                    'width': 5,
+                    'checksum_half': u'A                                                 ',
+                    'filename': u'fileA'
+                }
             ],
-            "metamorphic_regions":[
-                {"name":"Southern Sangre De Cristo Range"},
-                {"name":"Santa Fe Range"},
-                {"name":"Proterozoic New Mexico"}
+            "metamorphic_regions": [
+                {"name": u"mr1"},
+                {"name": u"mr4"}
             ],
-            "regions":[
-                {"name":"Sangre De Cristo Mts"},
-                {"name":"New Mexico"},
-                {"name":"Trampas Ridge"}
+            "regions": [
+                {"name": u"region1"},
+                {"name": u"region2"},
+                {"name": u"region3"}
             ],
-            "references":[],
-            "aliases":[]
+            "references": [
+                {"name": u"R1"}
+            ],
+            "aliases": [
+                {"name": u"aliasA"}
+            ]
         }
-
         self.assertEquals(expected_sample_attributes, sample.attributes)
-
-

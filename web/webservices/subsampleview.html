@@ -55,7 +55,7 @@
 				<tbody>
 					{%for image in images%}
 					<tr id="thumb_row"><!-- images pointing to the file locations in the server, cant change this to generic as of now-->
-						<td><a href="http://metpetdb.rpi.edu/metpetweb/image/?checksum={{image.checksum_half}}"{{image.checksum_half}} rel="lightbox"><img src="http://metpetdb.rpi.edu/metpetweb/image/?checksum={{image.checksum_64x64}}"{{image.checksum_64x64}}></a></td>
+						<td><a href="http://metpetdb.rpi.edu/metpetweb/image/?checksum={{image.checksum_half}}" rel="lightbox"><img src="http://metpetdb.rpi.edu/metpetweb/image/?checksum={{image.checksum_64x64}}"></a></td>
 						<td>{{image.filename}}</td>
 						<td>{{image.image_type}}</td>
 						<td>{{image.collector}}</td>
@@ -108,8 +108,9 @@
 
 				$(document).ready(function() {
 				    $('#chemtable_canvas').dataTable();
-				    $('#subsampleviewimg_canvas').dataTable();
-				    $('#thumb_row td a').lightBox();
+				    $('#subsampleviewimg_canvas').dataTable({
+				    	'fnDrawCallback': function() {$('#thumb_row td a').lightBox()}
+				    });
 				} );
 			</script>	
 			

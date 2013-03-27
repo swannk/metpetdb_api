@@ -123,6 +123,7 @@ class _SampleGetQuery(_DbGetQuery):
                     "images.filename, "
                     "images.checksum_64x64, "
                     "images.checksum_half, " 
+                    "images.checksum, "
                     "images.height, "
                     "images.width, "
                     "image_type.image_type "

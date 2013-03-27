@@ -102,8 +102,8 @@
 				{% for image in sample.attributes.images%}
 				<tr id="thumb_row"> 
 					<td><!-- URLs pointing to the current petdb server where image files are located, cant make this generic -->
-						<a href="http://metpetdb.rpi.edu/metpetweb/image/?checksum={{image.checksum_half}}" {{image.checksum_half}}>
-							<img src="http://metpetdb.rpi.edu/metpetweb/image/?checksum={{image.checksum_64x64}}" {{image.checksum_64x64}}/>
+						<a href="http://metpetdb.rpi.edu/metpetweb/image/?checksum={{image.checksum}}">
+							<img src="http://metpetdb.rpi.edu/metpetweb/image/?checksum={{image.checksum_64x64}}"/>
 						</a>
 					</td>
 					<td>{{image.image_type}}</td>

@@ -33,23 +33,23 @@ def samplelist(request):
 	return render(request,'samplelist.html', {'samples':samplelist},)
 
 # view function renders sampleview.html/json data depending on the request
-def sample(request, sample_id):
+def sample(request, sample_id, format_type=''):
 	path= request.path
 	path= path.split("/")
 
 	sampleobj = SampleObject(sample_id)
 
-	if sampleobj.exists():
-			subsamples=SubsampleTableObject(sample_id)
+	
+	subsamples=SubsampleTableObject(sample_id)
 
-			if path[-1]=="json":
-				return HttpResponse(sampleobj.json())
-			else:
-				return render(request, 'sampleview.html',{'sample':sampleobj, 'subsamples':subsamples.attributes['*'],}) 
+	if format_type=="json":
+		return HttpResponse(sampleobj.json())
 
-	else:
+	return render(request, 'sampleview.html',{'sample':sampleobj, 'subsamples':subsamples.attributes['*'],}) 
 
-		return HttpResponse("Sample does not Exist")
+#	else:
+
+#		return HttpResponse("Sample does not Exist")
 
 
 # view function renders subsampleview.html/json data depending on the request
@@ -164,25 +164,25 @@ def metpetdb(request):
 	samples=SampleQuery(rock_type=rocktype_id_list,country=country_list,owner_id=owner_id_list,mineral_id=mineral_id_list,region_id=region_id_list,metamorphic_grade_id=metamorphic_grade_id_list, metamorphic_region_id=metamorphic_region_id_list, publication_id=publication_id_list)
 	#sample_test = SampleQuery(rock_type=[3,], country=[], owner_id=[139,], mineral_id=[3,], region_id=[52,], metamorphic_grade_id=[17,], metamorphic_region_id=[], publication_id=[])
 	if returntype=='rocktype_facet':
-		return HttpResponse(getFacetJSON(samples.rock_type_facet()))
+		return HttpResponse(getFacetJSON(samples.rock_type_facet()), content_type="application/json")
 	elif returntype=='country_facet':
-		return HttpResponse(getFacetJSON(samples.country_facet()))
+		return HttpResponse(getFacetJSON(samples.country_facet()), content_type="application/json")
 	elif returntype=='mineral_facet':
-		return HttpResponse(getFacetJSON(samples.mineral_facet()))
+		return HttpResponse(getFacetJSON(samples.mineral_facet()), content_type="application/json")
 	elif returntype=='region_facet':
-		return HttpResponse(getFacetJSON(samples.region_facet()))
+		return HttpResponse(getFacetJSON(samples.region_facet()), content_type="application/json")
 	elif returntype=='owner_facet':
-		return HttpResponse(getFacetJSON(samples.owner_facet()))
+		return HttpResponse(getFacetJSON(samples.owner_facet()), content_type="application/json")
 	elif returntype=='metamorphicgrade_facet':
-		return HttpResponse(getFacetJSON(samples.metamorphic_grade_facet()))
+		return HttpResponse(getFacetJSON(samples.metamorphic_grade_facet()), content_type="application/json")
 	elif returntype=='metamorphicregion_facet':
-		return HttpResponse(getFacetJSON(samples.metamorphic_region_facet()))
+		return HttpResponse(getFacetJSON(samples.metamorphic_region_facet()), content_type="application/json")
 	elif returntype== 'publication_facet':
-		return HttpResponse(getFacetJSON(samples.publication_facet()))
+		return HttpResponse(getFacetJSON(samples.publication_facet()), content_type="application/json")
 	elif returntype=='map':
-		return HttpResponse(getAllJSON(str(samples)))
+		return HttpResponse(getAllJSON(str(samples)), content_type="application/json")
 	else:
-		return HttpResponse(getSampleResults(str(samples)))
+		return HttpResponse(getSampleResults(str(samples)), content_type="application/json")
 
 #Not sure if below is used for anything right now
 #Function to format oxides by subscripting digits

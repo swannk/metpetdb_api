@@ -1,0 +1,14 @@
+[
+ {"table_name":"sample_metamorphic_grades", 
+  "values": [
+	{"sample_id": "1", "metamorphic_grade_id": "1"},
+	{"sample_id": "2", "metamorphic_grade_id": "2"},
+	{"sample_id": "3", "metamorphic_grade_id": "3"},
+	{"sample_id": "1", "metamorphic_grade_id": "4"},
+	{"sample_id": "2", "metamorphic_grade_id": "5"},
+	{"sample_id": "3", "metamorphic_grade_id": "6"}
+	]}
+]
+
+  
+

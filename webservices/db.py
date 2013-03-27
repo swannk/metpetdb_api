@@ -29,8 +29,6 @@ class _DbGetQuery(object):
         cursor = con.cursor()
 
         if self.oneQuery:
-            print self.oneQuery
-            print conditions
             cursor.execute(self.oneQuery, conditions)
             data = dictfetchone(cursor)
         

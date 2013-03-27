@@ -189,7 +189,7 @@ class SampleQuery(object):
             ", rock_type_name, owner_name, mineral_info "\
             ", latitude, longitude " \
             "FROM  " + self.get_view_name() + " " + self.get_where() + \
-            "ORDER BY sample_id, sample_number, rock_type_name, owner_name "
+            "ORDER BY sample_id, sample_number, rock_type_name, owner_name"
         return query_str
 
 

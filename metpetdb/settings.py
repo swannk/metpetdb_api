@@ -1,4 +1,8 @@
-# Django settings for metpetdb project.
+import os
+
+PROJECT_DIR = os.path.dirname(__file__)
+PROJECT_DIR = os.path.join(PROJECT_DIR, '..')
+FIXTURES_DIR = os.path.join(PROJECT_DIR, 'fixtures')
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -15,7 +19,7 @@ DATABASES = {
         'NAME': 'metpetdb',                      # Or path to database file if using sqlite3.
         'USER': 'metpetdb',                      # Not used with sqlite3.
         'PASSWORD': 'metpetdb',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
@@ -56,7 +60,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = '/home/tej/metpetdb-py/webservices/static/'
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'webservices', 'static')
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -64,7 +68,7 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    '/home/tej/metpetdb-py/web/',
+    os.path.join(PROJECT_DIR, 'web'),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -103,7 +107,8 @@ ROOT_URLCONF = 'metpetdb.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'metpetdb.wsgi.application'
 
-TEMPLATE_DIRS = ( '/home/tej/metpetdb-py/web/webservices', 
+TEMPLATE_DIRS = (
+    os.path.join(PROJECT_DIR, 'web', 'webservices'),
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -120,11 +125,12 @@ INSTALLED_APPS = (
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    #'django_nose',
+    'django_nose',
     'webservices',  
+    'fixtures',  
 )
 
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+TEST_RUNNER = 'fixtures.util.CustomTestSuiteRunner'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

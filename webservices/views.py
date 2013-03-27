@@ -1,5 +1,4 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from webservices.models import *
 import json
 import sys
 from django.shortcuts import render

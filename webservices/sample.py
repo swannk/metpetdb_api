@@ -4,13 +4,13 @@ from webservices.db import _DbObject, _DbGetQuery
 class SampleObject(_DbObject):
     def __init__(self, id = None):
         self.getQuery = _SampleGetQuery();
-        
+       
         if id:
             self._get({"sample_id": id})
-            
+           
     def get(self, id):
         return self._get({"sample_id": id})
-            
+           
     def exists(self):
         return "id" in self.attributes
 
@@ -18,14 +18,14 @@ class _SamplePermissionsQuery(_DbGetQuery):
     def __init__(self):
         self.oneQuery = ()
 
-        
+       
 class _SampleGetQuery(_DbGetQuery):
     def __init__(self):
         self.oneQuery = (
             "SELECT "
                 "samples.sample_id AS id, "
                 "samples.number, "
-                "samples.collection_date, "    
+                "samples.collection_date, "   
                 "CASE WHEN samples.public_data = 'Y' THEN TRUE ELSE FALSE END AS public_data, "
                 "samples.country, "
                 "samples.description, "
@@ -35,9 +35,8 @@ class _SampleGetQuery(_DbGetQuery):
                 "owner.name AS owner_name, "
                 "collector.name AS collector_name, "
                 "rock_type.rock_type AS rock_type_name, "
-                "metamorphic_grades.name AS metamorphic_grade_name, "
                 "COUNT(subsamples.subsample_id) AS subsamples_count "
-            "FROM (((((( "
+            "FROM (((( "
                 "samples "
                 "LEFT OUTER JOIN subsamples "
                 "ON samples.sample_id = subsamples.sample_id ) "
@@ -47,10 +46,6 @@ class _SampleGetQuery(_DbGetQuery):
                 "ON samples.collector_id = collector.user_id ) "
                 "LEFT OUTER JOIN rock_type "
                 "ON samples.rock_type_id = rock_type.rock_type_id ) "
-                "LEFT OUTER JOIN sample_metamorphic_grades "
-                "ON samples.sample_id = sample_metamorphic_grades.sample_id ) "
-                "LEFT OUTER JOIN metamorphic_grades "
-                "ON sample_metamorphic_grades.metamorphic_grade_id = metamorphic_grades.metamorphic_grade_id ) "
             "WHERE "
                 "samples.sample_id = %(sample_id)s "
             "GROUP BY "
@@ -65,10 +60,9 @@ class _SampleGetQuery(_DbGetQuery):
                 "st_x(samples.location), "
                 "owner.name, "
                 "collector.name, "
-                "rock_type.rock_type, "
-                "metamorphic_grades.name"
+                "rock_type.rock_type "
             )
-                        
+                       
         self.manyQueries = {
             "aliases": (
                 "SELECT "
@@ -108,6 +102,16 @@ class _SampleGetQuery(_DbGetQuery):
                     "metamorphic_regions.metamorphic_region_id = sample_metamorphic_regions.metamorphic_region_id AND "
                     "sample_metamorphic_regions.sample_id = %(sample_id)s"
                 ),
+            "metamorphic_grades": (
+                "SELECT "
+                    "name "
+                "FROM "
+                    "metamorphic_grades, "
+                    "sample_metamorphic_grades "
+                "WHERE "
+                    "metamorphic_grades.metamorphic_grade_id = sample_metamorphic_grades.metamorphic_grade_id AND "
+                    "sample_metamorphic_grades.sample_id = %(sample_id)s"
+                ),
             "references": (
                 "SELECT "
                     "name "
@@ -122,7 +126,7 @@ class _SampleGetQuery(_DbGetQuery):
                 "SELECT "
                     "images.filename, "
                     "images.checksum_64x64, "
-                    "images.checksum_half, " 
+                    "images.checksum_half, "
                     "images.height, "
                     "images.width, "
                     "image_type.image_type "

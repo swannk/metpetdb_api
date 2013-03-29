@@ -1,6 +1,5 @@
 from django_nose import FastFixtureTestCase
 
-
 class UtilTest(FastFixtureTestCase):
     def __init__(self, arg):
         import webservices.util as util
@@ -25,7 +24,7 @@ class UtilTest(FastFixtureTestCase):
         ]
 
         self.assertEquals(expected_string, json.dumps(data, cls=self.CustomJSONEncoder))
-        
+       
     def test_CustomJSONEncoder_datetime(self):
         import json
         import datetime
@@ -54,8 +53,6 @@ class UtilTest(FastFixtureTestCase):
             {"name": "region2"},
             {"name": "region3"}
         ]
-
-
 
         cursor = self._query_regions({"sample_id": 1})
         self.assertEqual(cursor.rowcount, 3)
@@ -149,14 +146,13 @@ class SampleTest(FastFixtureTestCase):
             "owner_name": u"B",
             "description": u"D1",
             "collector_name": u"A",
-            "collection_date": datetime.datetime(1984, 10, 27, 0, 0), 
+            "collection_date": datetime.datetime(1984, 10, 27, 0, 0),
             "location_text": u"A",
             "longitude": 5.0,
             "latitude": 10.0,
             "country": u"A",
             "public_data": True,
             "subsamples_count": 3L,
-            "metamorphic_grade_name": u"mg1",
             "rock_type_name": u"Rock1",
             "minerals": [
                 {"name": u"mineral"}
@@ -170,6 +166,10 @@ class SampleTest(FastFixtureTestCase):
                     'checksum_half': u'A                                                 ',
                     'filename': u'fileA'
                 }
+            ],
+            "metamorphic_grades": [
+                {"name": u"mg1"},
+                {"name": u"mg4"}
             ],
             "metamorphic_regions": [
                 {"name": u"mr1"},

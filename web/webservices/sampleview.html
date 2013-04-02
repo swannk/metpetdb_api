@@ -63,7 +63,7 @@
 			</tr>
 			<tr>
 				<td class="sample_label">Metamorphic Grade</td>
-				<td class="sample_value">{{sample.attributes.metamorphic_grade_name}}</td>
+				<td class="sample_value">{% for metamorphic_grade in sample.attributes.metamorphic_grades%}{{metamorphic_grade.name}}, {%endfor%}</td>
 			</tr>
 			<tr>
 				<td class="sample_label">Publication References</td>

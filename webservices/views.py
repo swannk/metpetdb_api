@@ -29,70 +29,34 @@ def samplelist(request):
 	
 	for sample in samplelist:
 		print sample[1]
-	return render(request,'samplelist.html', {'samples':samplelist},)
+	return render(request,'samplelist.html', {'samples':samplelist})
 
-# view function renders sampleview.html/json data depending on the request
-def sample(request, sample_id, format_type=''):
-	path= request.path
-	path= path.split("/")
-
+# view function renders sampleview.html
+def sample(request, sample_id):
 	sampleobj = SampleObject(sample_id)
-
-	
-	subsamples=SubsampleTableObject(sample_id)
-
-	if format_type=="json":
-		return HttpResponse(sampleobj.json())
-
-	return render(request, 'sampleview.html',{'sample':sampleobj, 'subsamples':subsamples.attributes['*'],}) 
-
-#	else:
-
-#		return HttpResponse("Sample does not Exist")
+	if sampleobj.exists():
+		subsamples=SubsampleTableObject(sample_id)
+		return render(request, 'sampleview.html',{'sample':sampleobj, 'subsamples':subsamples.attributes['*'],}) 
+	else:
+		return HttpResponse("Sample does not Exist")
 
 
-# view function renders subsampleview.html/json data depending on the request
+# view function renders subsampleview.html
 def subsample(request, subsample_id):
-	path= request.path
-	path= path.split("/")
-
 	subsampleobj =SubsampleObject(subsample_id)
-	#subsample_test=SubsampleObject(1447)
-	#print subsample_test.attributes
-
 	if subsampleobj.exists():
-
 		subsampleimgobj=SubsampleImagesTableObject(subsample_id)
-		#imgobjtest=SubsampleImagesTableObject(1454)
-		#print imgobjtest.attributes['*']
-
 		chemanalyses=ChemicalAnalysisTableObject(subsample_id)
-		#chem_test=ChemicalAnalysisTableObject(1447)
-		#print chem_test.attributes['*']
-
-		if path[-1]=="json":
-			return HttpResponse(subsampleobj.json())
-		else:
-			return render(request, 'subsampleview.html',{'subsample':subsampleobj, 'chemanalyses':chemanalyses.attributes['*'], 'images':subsampleimgobj.attributes['*'],}) 
-
+		return render(request, 'subsampleview.html',{'subsample':subsampleobj, 'chemanalyses':chemanalyses.attributes['*'], 'images':subsampleimgobj.attributes['*'],}) 
 	else: 
-		
 		return HttpResponse("Subsample does not exist")		
 
 
 # view function renders chemanalysisview.html/json data depending on the request
 def chemicalanalysis(request, chemical_analysis_id):
-	path= request.path
-	path= path.split("/")
-
 	chemanalysisobj =ChemicalAnalysisObject(chemical_analysis_id)
-	#chem=ChemicalAnalysisObject(5275)
-	#print chem.attributes
-	if chemanalysisobj.exists():	
-		if path[-1]=="json":
-			return HttpResponse(chemanalysisobj.json())
-		else:
-			return render(request, 'chemicalanalysisview.html',{'chemicalanalysis':chemanalysisobj,}) 
+	if chemanalysisobj.exists():
+		return render(request, 'chemicalanalysisview.html',{'chemicalanalysis':chemanalysisobj,}) 
 	else:
 		return HttpResponse("Chemical Analysis does not exist")
 

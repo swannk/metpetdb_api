@@ -6,14 +6,18 @@ from django.views.generic.simple import direct_to_template
 #admin.autodiscover()
 
 
-urlpatterns = patterns('', 
+urlpatterns = patterns('',
+url(r'^webservices/sample/(\d+)/json/$','webservices.views.sample'),
 url(r'^webservices/sample/(\d+)/$','webservices.views.sample', name='sample'),
-url(r'^webservices/sample/(?P<sample_id>\d+)/(?P<format_type>\w+)/$','webservices.views.sample', name='sample'),
 url(r'^webservices/subsample/(\d+)/json/$','webservices.views.subsample'), 
 url(r'^webservices/subsample/(\d+)/$','webservices.views.subsample', name='subsample'), 
 url(r'^webservices/chemicalanalysis/(\d+)/json$', 'webservices.views.chemicalanalysis'), 
-url(r'^webservices/chemicalanalysis/(\d+)/$', 'webservices.views.chemicalanalysis', name='chemanalysis'), 
+url(r'^webservices/chemicalanalysis/(\d+)/$', 'webservices.views.chemicalanalysis', name='chemanalysis'),
 url(r'^api/metpetdb/$','webservices.views.metpetdb'), 
+#api urls
+url(r'^api/sample/(\d+)/$', 'api.views.sample'), 
+url(r'^api/subsample/(\d+)/$', 'api.views.subsample'),
+url(r'^api/chemicalanalysis/(\d+)/$', 'api.views.chemicalanalysis'),
 #sample list url
 url(r'^webservices/samplelist/$', 'webservices.views.samplelist', name='samplelist'),
 url(r'^$', 'webservices.views.index', name='index'),

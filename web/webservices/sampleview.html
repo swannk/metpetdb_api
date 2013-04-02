@@ -102,7 +102,10 @@
 				{% for image in sample.attributes.images%}
 				<tr id="thumb_row"> 
 					<td><!-- URLs pointing to the current petdb server where image files are located, cant make this generic -->
-						<a href="http://metpetdb.rpi.edu/metpetweb/image/?checksum={{image.checksum}}">
+						<a href="http://metpetdb.rpi.edu/metpetweb/image/?checksum={{image.checksum_half}}" rel="lightbox" 
+							title="Image type: {{ image.image_type }} <br>
+								File name: {{ image.filename }} <br>
+								<a href='http://metpetdb.rpi.edu/metpetweb/image/?checksum={{image.checksum}}' target='_blank'>View Original</a>">
 							<img src="http://metpetdb.rpi.edu/metpetweb/image/?checksum={{image.checksum_64x64}}"/>
 						</a>
 					</td>
@@ -143,7 +146,7 @@
 			{%endfor%}
 		</tbody>
 	</table>
-
+<br><br>
 
 <!--------------------- JS for Page elements ------------------------------------------------------------------------>
 
@@ -160,9 +163,9 @@
 		console.log('enter table code');
 	    $('#subsampletable_canvas').dataTable();
 
-	    $('#thumb_row td a').lightBox();   //lightbox code
+	    $('#thumb_row td a').lightbox();   //lightbox code
 
-	   // $('#tej_close').css({"font-size": "15px", "color": "red", "text-decoration":"none"}); -->need to figure out how to serve static files in django - jquery.lightbox-0.5.css
+	   
 	} );
 
 	//google map api

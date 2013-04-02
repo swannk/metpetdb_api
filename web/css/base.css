@@ -44,6 +44,18 @@ border-bottom: 1px solid white;
     padding-bottom: 10px;
 }
 
+#first_para
+{
+  width: 670px;
+}
+
+#slices
+{
+    float: right;
+    border: 3px solid #C7C6C6;
+    border-radius: 5px
+}
+
 
 /*------------------ CSS for SampleView ------------------*/
 /* style for tables which are affected by s2s_demo.css which is a search.html dependency */ 

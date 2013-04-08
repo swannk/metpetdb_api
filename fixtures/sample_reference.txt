@@ -3,7 +3,9 @@
   "values": [
 	{"sample_id": "1", "reference_id": "1"},
 	{"sample_id": "2", "reference_id": "2"},
-	{"sample_id": "3", "reference_id": "3"}
+	{"sample_id": "3", "reference_id": "3"},
+	{"sample_id": "4", "reference_id": "4"},
+	{"sample_id": "5", "reference_id": "5"}
 
 	]}
 ]

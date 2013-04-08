@@ -6,7 +6,11 @@
 	{"sample_id": "3", "metamorphic_grade_id": "3"},
 	{"sample_id": "1", "metamorphic_grade_id": "4"},
 	{"sample_id": "2", "metamorphic_grade_id": "5"},
-	{"sample_id": "3", "metamorphic_grade_id": "6"}
+	{"sample_id": "3", "metamorphic_grade_id": "6"},
+	{"sample_id": "4", "metamorphic_grade_id": "7"},
+	{"sample_id": "4", "metamorphic_grade_id": "8"},
+	{"sample_id": "5", "metamorphic_grade_id": "9"},
+	{"sample_id": "5", "metamorphic_grade_id": "10"}
 	]}
 ]
 

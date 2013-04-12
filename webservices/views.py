@@ -44,9 +44,11 @@ def sample(request, sample_id):
 # view function renders subsampleview.html
 def subsample(request, subsample_id):
 	subsampleobj =SubsampleObject(subsample_id)
+	
 	if subsampleobj.exists():
 		subsampleimgobj=SubsampleImagesTableObject(subsample_id)
 		chemanalyses=ChemicalAnalysisTableObject(subsample_id)
+		print chemanalyses.attributes['*']
 		return render(request, 'subsampleview.html',{'subsample':subsampleobj, 'chemanalyses':chemanalyses.attributes['*'], 'images':subsampleimgobj.attributes['*'],}) 
 	else: 
 		return HttpResponse("Subsample does not exist")		
@@ -145,7 +147,7 @@ def metpetdb(request):
 	elif returntype=='map':
 		return HttpResponse(getAllJSON(str(samples)), content_type="application/json")
 	else:
-		return HttpResponse(getSampleResults(str(samples)), content_type="application/json")
+		return HttpResponse(getSampleResults(str(samples)))
 
 #Not sure if below is used for anything right now
 #Function to format oxides by subscripting digits

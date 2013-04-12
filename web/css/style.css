@@ -79,7 +79,8 @@ border-bottom: 1px solid white;
 
 #s2s-result-panel
 {
-    width:100%;
+    width:890px;
+    float: right;
     margin-top: 0px;
     margin-bottom: 20px;
     vertical-align: top;

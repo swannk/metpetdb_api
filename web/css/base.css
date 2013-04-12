@@ -19,13 +19,44 @@ h3
 	font-weight: 400;
 }
 
+/* Style for dummy table which has the data to export to csv*/ 
+#dummy
+{
+    visibility: hidden;
+    height: 10px;
+    overflow: hidden;
+}
 
-hr {
-clear: both;
-margin-bottom: 25px;
-border: none;
-border-top: 1px solid #B6B8B7;
-border-bottom: 1px solid white;
+#exportBtn
+{
+    float: right;
+    margin-top: 10px;
+    display: inline-block;
+    padding: 5px 14px;
+    font-weight: normal;
+    background-color: white;
+    color: #409f89;
+    border: 1px solid #DDD;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+#exportBtn: hover
+{
+    text-decoration: none;
+    cursor: pointer;
+    background-color: #409F89;
+    color: #F8F8F8;
+}
+
+hr 
+{
+    clear: both;
+    margin-bottom: 25px;
+    border: none;
+    border-top: 1px solid #B6B8B7;
+    border-bottom: 1px solid white;
 }
 
 .navbar .nav

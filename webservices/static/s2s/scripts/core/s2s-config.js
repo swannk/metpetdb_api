@@ -2,7 +2,7 @@
 	/**
 	 * Globals
 	 */
-	s2s.utils.servletRoot = "http://aquarius.tw.rpi.edu/projects/s2s/tomcat/s2s/";
+	s2s.utils.servletRoot = "http://localhost:8080/s2s/";
 	s2s.utils.metadataService = s2s.utils.servletRoot + "metadata";
 	s2s.utils.proxyService = s2s.utils.servletRoot + "proxy";
 	s2s.utils.sessionService = "http://aquarius.tw.rpi.edu/projects/s2s/tomcat/s2s/session";

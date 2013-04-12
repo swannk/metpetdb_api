@@ -39,3 +39,39 @@ def subsamples(request, sample_id):
 def chemical_analyses(request, subsample_id):
     chemicalAnalysisTableObj = ChemicalAnalysisTableObject(subsample_id)
     return HttpResponse(chemicalAnalysisTableObj.json())
+
+
+# uses size and id
+# sizes - 1,2,3,4 --> from mobile to original
+'''def images(request):
+
+	size=request.GET.get('size','')
+	attribute_id =request.GET.get('id','')
+
+	cursor=db.cursor()
+	#mobile image - checksum_mobile
+	if size==1:
+
+		image_data=cursor.execute("SELECT  ")
+
+	#Thumbnail images
+	elif size==2:
+
+		image_data=cursor.execute("SELECT")
+
+	#pop up images
+	elif size==3:
+
+		image_data=cursor.execute("SELECT")
+
+	#original images
+	elif size==4:
+
+		image_data=cursor.execute("SELECT")
+
+	else: 
+
+		HTTPResponse("please follow the correct URL parameters")'''
+
+
+

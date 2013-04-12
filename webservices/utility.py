@@ -36,7 +36,6 @@ def getAllJSON(query):
                         jsonValues['sample_number']=unicode(data[i][1])
                         jsonValues['rock_type']=unicode(data[i][2])
                         jsonValues['owner']=unicode(data[i][3])
-                        jsonValues['sample_minerals']=unicode(data[i][4])
                         jsonValues['lat']=unicode(data[i][5])
                         jsonValues['lon']=unicode(data[i][6])
 
@@ -47,8 +46,6 @@ def getAllJSON(query):
                         jsonValues['sample_number']=unicode(data[i][1])
                         jsonValues['rock_type']=unicode(data[i][2])
                         jsonValues['owner']=unicode(data[i][3])
-                        sample_mineral_list=unicode(data[i][4])
-                        jsonValues['sample_minerals']=sample_mineral_list
                         jsonValues['lat']=unicode(data[i][5])
                         jsonValues['lon']=unicode(data[i][6])
                         jsonData.append(jsonValues)
@@ -61,18 +58,12 @@ def getSampleResults(query):
         cursor.execute(query)
         data=cursor.fetchall()
         resultSetSize=len(data)
-        htmlData="<table id='gridData'><thead><tr><th>Sample Number</th><th>Rock Type</th><th>Sample Minerals</th><th>Owner</th></tr></thead><tbody>"
-        str1=''
+        htmlData="<table id='gridData'><thead><tr><th>Sample Number</th><th>Sub Count</th><th>Chem Count</th><th>Owner</th></tr></thead><tbody>"
         i=0
         while i<resultSetSize:
-
-                if ((i+1)!=resultSetSize) and (data[i][0]==data[i+1][0] and data[i][1]==data[i+1][1] and data[i][2]==data[i+1][2] and data[i][3]==data[i+1][3]):
-                        htmlData=htmlData+"<tr><td><a href='http://metpetdb.rpi.edu/metpetweb/#sample/"+unicode(data[i][0])+"'>"+unicode(data[i][1])+"</a></td><td>"+unicode(data[i][2])+"</td>"
-                        
-
-                else:
-                        htmlData=htmlData+"<tr><td><a href='http://metpetdb.rpi.edu/metpetweb/#sample/"+unicode(data[i][0])+"'>"+unicode(data[i][1])+"</a></td><td>"+unicode(data[i][2])+"</td><td>"+unicode(data[i][4])+"</td><td>"+unicode(data[i][3])+"</td></tr>"
+                htmlData=htmlData+"<tr><td><a href='http://metpetdb.rpi.edu/metpetweb/#sample/"+unicode(data[i][0])+"'>"+unicode(data[i][1])+"</a></td><td>"+unicode(data[i][4])+"</td><td>"+unicode(data[i][5])+"</td><td>"+unicode(data[i][3])+"</td></tr>"
                 i=i+1
-        htmlData=htmlData+'</tbody></table>'
+        htmlData=htmlData+"</tbody></table>"
+
         return htmlData
 

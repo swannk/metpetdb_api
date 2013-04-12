@@ -16,7 +16,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'metpetdb',                      # Or path to database file if using sqlite3.
+        'NAME': 'mpdb',                      # Or path to database file if using sqlite3.
         'USER': 'metpetdb',                      # Not used with sqlite3.
         'PASSWORD': 'metpetdb',                  # Not used with sqlite3.
         'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -125,10 +125,10 @@ INSTALLED_APPS = (
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    #'django_nose',
+    'django_nose',
     'webservices',  
     'api',
-    #'fixtures',  
+    'fixtures',  
 )
 
 TEST_RUNNER = 'fixtures.util.CustomTestSuiteRunner'

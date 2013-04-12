@@ -3,9 +3,16 @@
   "values": [
 	{"sample_id": "1", "region_id": "1"},
 	{"sample_id": "1", "region_id": "2"},
-	{"sample_id": "1", "region_id": "3"}
-
-
+	{"sample_id": "1", "region_id": "3"},
+	{"sample_id": "4", "region_id": "4"},
+	{"sample_id": "4", "region_id": "5"},
+	{"sample_id": "4", "region_id": "6"},
+	{"sample_id": "4", "region_id": "7"},
+	{"sample_id": "5", "region_id": "1"},
+	{"sample_id": "5", "region_id": "2"},
+	{"sample_id": "5", "region_id": "3"},
+	{"sample_id": "5", "region_id": "8"},
+	{"sample_id": "5", "region_id": "9"}
 	]}
 ]
 

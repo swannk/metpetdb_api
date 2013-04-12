@@ -17,7 +17,19 @@
 	"sample_id": "3",
 	"user_id": "2",
 	"comment_text": "'commentC'",
-	"date_added": "'1984-10-13 01:00:00'"}
+	"date_added": "'1984-10-13 01:00:00'"},
+	
+	{"comment_id": "4",
+	"sample_id": "4",
+	"user_id": "0",
+	"comment_text": "'commentD'",
+	"date_added": "'1984-10-13 01:00:00'"},
+
+	{"comment_id": "5",
+	"sample_id": "5",
+	"user_id": "1",
+	"comment_text": "'commentE'",
+	"date_added": "'1999-10-01 01:00:00'"}
 	]}
 ]
 

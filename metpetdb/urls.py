@@ -9,6 +9,7 @@ from django.views.generic.simple import direct_to_template
 urlpatterns = patterns('',
 url(r'^webservices/sample/(\d+)/json/$','webservices.views.sample'),
 url(r'^webservices/sample/(\d+)/$','webservices.views.sample', name='sample'),
+url(r'^webservices/sample/(\d+)/images/json/$','webservices.views.sample_images'),
 url(r'^webservices/subsample/(\d+)/json/$','webservices.views.subsample'), 
 url(r'^webservices/subsample/(\d+)/$','webservices.views.subsample', name='subsample'), 
 url(r'^webservices/chemicalanalysis/(\d+)/json$', 'webservices.views.chemicalanalysis'), 

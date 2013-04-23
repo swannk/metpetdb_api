@@ -79,7 +79,7 @@ def chemicalanalysis(request, chemical_analysis_id):
 '''S2S webservice view'''
 #Main faceted serach view
 def metpetdb(request):
-<<<<<<< HEAD
+
 	formattype=request.GET.get('format','json')
 
 	returntype=request.GET.get('returntype','sampleresults')

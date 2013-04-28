@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.db import connection as con
 from webservices.SampleQuery import *
 from webservices.utility import *
-from webservices.sample import SampleObject
+from webservices.sample import SampleObject, SampleImagesObject
 from webservices.subsample import SubsampleObject, SubsampleTableObject, SubsampleImagesTableObject
 from webservices.chemicalanalysis import ChemicalAnalysisObject, ChemicalAnalysisTableObject
 
@@ -69,6 +69,15 @@ def chemicalanalysis(request, chemical_analysis_id):
 		return render(request, 'chemicalanalysisview.html',{'chemicalanalysis':chemanalysisobj,}) 
 	else:
 		return HttpResponse("Chemical Analysis does not exist")
+
+
+def sample_images(request, sample_id):
+    sampleimagesobj = SampleImagesObject(sample_id)
+
+    if sampleimagesobj.exists():
+        return HttpResponse(sampleimagesobj.json())
+    else:
+        return HttpResponse("Sample does not Exist")
 
 
 

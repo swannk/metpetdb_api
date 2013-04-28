@@ -127,7 +127,6 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'django_nose',
     'webservices',  
-    'api',
     'fixtures',  
 )
 

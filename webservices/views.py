@@ -339,11 +339,17 @@ def metpetdb(request):
 		return HttpResponse(getFacetJSON(samples.metamorphic_grade_facet()), content_type="application/json")
 	elif returntype=='metamorphicregion_facet':
 		return HttpResponse(getFacetJSON(samples.metamorphic_region_facet()), content_type="application/json")
-	elif returntype== 'publication_facet':
-		return HttpResponse(getFacetJSON(samples.publication_facet()), content_type="application/json")
 	elif returntype=='map':
-		return HttpResponse(getAllJSON(str(samples)), content_type="application/json")
+		return HttpResponse(getAllJSON(samples.get_main_brief()), content_type="application/json")
 	else:
-		return HttpResponse(getSampleResults(str(samples)), content_type="application/json")
+		cursor=con.cursor()
+        	cursor.execute(samples.get_count())
+        	sample_count=cursor.fetchall()
+        	#this is currently a hack to pass a html element containing the sample_count
+        	htmlCount="<div id='sampleCount'>"+str(sample_count[0][0])+"</div>"
+        	if sample_count>500:
+        		return HttpResponse(getSampleResults(samples.get_main(500))+htmlCount)
+        	else:
+        		return HttpResponse(getSampleResults(samples.get_main(500)))
 	
 			

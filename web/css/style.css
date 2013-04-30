@@ -74,6 +74,20 @@ border-bottom: 1px solid white;
     display:none;
 }
 
+
+/* Style for the display line at the top of search page*/
+
+#displayCount
+{
+    position: relative;
+    margin-top: 15px;
+    margin-left: 15px;
+    float:left;
+    font-size: 15px;
+    color: black;    
+    padding: 3px 7px 2px 7px;
+}   
+
 #s2s-search-panel
 {
     vertical-align:top;

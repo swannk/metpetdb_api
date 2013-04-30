@@ -165,10 +165,19 @@ def metpetdb(request):
 	elif returntype== 'publication_facet':
 		return HttpResponse(getFacetJSON(samples.publication_facet()), content_type="application/json")
 	elif returntype=='map':
-		return HttpResponse(getAllJSON(str(samples)), content_type="application/json")
-
+		#q=test.get_main_brief()
+		return HttpResponse(getAllJSON(samples.get_main_brief()), content_type="application/json")
 	else:
-		return HttpResponse(getSampleResults(str(samples)))
+		cursor=con.cursor()
+        cursor.execute(samples.get_count())
+        sample_count=cursor.fetchall()
+        #this is currently a hack to pass a html element containing the sample_count
+        htmlCount="<div id='sampleCount' display:'none'>"+str(sample_count[0][0])+"</div>"
+        print htmlCount
+        if sample_count>500:
+        	return HttpResponse(getSampleResults(samples.get_main(500))+htmlCount)
+        else:
+        	return HttpResponse(getSampleResults(samples.get_main(500)))
 
 #Not sure if below is used for anything right now
 #Function to format oxides by subscripting digits

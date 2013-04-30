@@ -1,6 +1,7 @@
 from django.db import connection as con
 import json
 
+
 #creates JSON for facets
 def getFacetJSON(query):
         cursor=con.cursor()
@@ -36,20 +37,21 @@ def getAllJSON(query):
                         jsonValues['sample_number']=unicode(data[i][1])
                         jsonValues['rock_type']=unicode(data[i][2])
                         jsonValues['owner']=unicode(data[i][3])
-                        jsonValues['lat']=unicode(data[i][5])
-                        jsonValues['lon']=unicode(data[i][6])
+                        jsonValues['lat']=unicode(data[i][4])
+                        jsonValues['lon']=unicode(data[i][5])
 
                         jsonData.append(jsonValues)
                 else:
-                        sample_mineral_list=''
+                        
                         jsonValues['id']=unicode(data[i][0])
                         jsonValues['sample_number']=unicode(data[i][1])
                         jsonValues['rock_type']=unicode(data[i][2])
                         jsonValues['owner']=unicode(data[i][3])
-                        jsonValues['lat']=unicode(data[i][5])
-                        jsonValues['lon']=unicode(data[i][6])
+                        jsonValues['lat']=unicode(data[i][4])
+                        jsonValues['lon']=unicode(data[i][5])
                         jsonData.append(jsonValues)
                 i=i+1
+               
         return json.dumps(jsonData)
 
 #create HTML table output for results (This is currently a hack. Code must be cleaned to generate HTML when format=HTML)
@@ -58,12 +60,13 @@ def getSampleResults(query):
         cursor.execute(query)
         data=cursor.fetchall()
         resultSetSize=len(data)
-        htmlData="<table id='gridData'><thead><tr><th>Sample Number</th><th>Sub Count</th><th>Chem Count</th><th>Owner</th></tr></thead><tbody>"
+        htmlData="<table id='gridData'><thead><tr><th>Sample Number</th><th>Subsample Count</th><th>Analysis Count</th><th>Image Count</th></tr></thead><tbody>"
         i=0
         while i<resultSetSize:
-                htmlData=htmlData+"<tr><td><a href='http://metpetdb.rpi.edu/metpetweb/#sample/"+unicode(data[i][0])+"'>"+unicode(data[i][1])+"</a></td><td>"+unicode(data[i][4])+"</td><td>"+unicode(data[i][5])+"</td><td>"+unicode(data[i][3])+"</td></tr>"
+                htmlData=htmlData+"<tr><td><a href='http://metpetdb.rpi.edu/metpetweb/#sample/"+unicode(data[i][0])+"'>"+unicode(data[i][1])+"</a></td><td>"+unicode(data[i][7])+"</td><td>"+unicode(data[i][8])+"</td><td>"+unicode(data[i][9])+"</td></tr>"
                 i=i+1
         htmlData=htmlData+"</tbody></table>"
 
         return htmlData
+
 

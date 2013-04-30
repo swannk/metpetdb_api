@@ -9,13 +9,15 @@
                 <div id="search-panel" class="row">
                     <input id="exportBtn" value="View CSV" type="button">
                     <div id="s2s-search-panel" class="span2"></div>
+                    <div id="displayCount"></div>
                     <div id="s2s-result-panel"></div>                    
                 </div>
             </div>
+
             
         </div>
         <div id="dummy"></div>
-
+        
 
         <!--                SCRIPTS                 -->
         <!-- Helper scripts -->
@@ -110,6 +112,7 @@
 
             function makeGrid() {
 
+                
                 //put the contents of gridData into another table
                 var source = document.getElementById('gridData');
                 var destination = source.cloneNode(true);
@@ -124,10 +127,19 @@
                 jQuery("table#gridData tbody tr.even td.sorting_1 a").attr("target","_blank");
                 jQuery("table#gridData tbody tr.odd td.sorting_1 a").attr("target","_blank");
 
+		//Showing the number of results displayed as opposed to total number of results found in the database
+                var count=document.getElementById('sampleCount').innerHTML;
+                console.log("count: " + count);
+               if(count>500){
+                document.getElementById('displayCount').innerHTML = "Showing first 500 of "+count+ " results found in the Database";
+               }
+                else
+                    document.getElementById("displayCount").innerHTML = " " ;
+
             }
 
             jQuery('#exportBtn').click(function(){
-                jQuery('#dummyData').table2CSV({header:['Sample Number','Rock Type','Sample Minerals', 'Owner']});
+                jQuery('#dummyData').table2CSV({header:['Sample Number','subsample Count','Analysis Count', 'Image Count']});
 
             });
 
@@ -139,3 +151,4 @@
         
     </body>
 {%endblock%}
+

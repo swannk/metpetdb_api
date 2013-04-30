@@ -335,6 +335,8 @@ def metpetdb(request):
 		return HttpResponse(getFacetJSON(samples.region_facet()), content_type="application/json")
 	elif returntype=='owner_facet':
 		return HttpResponse(getFacetJSON(samples.owner_facet()), content_type="application/json")
+	elif returntype== 'publication_facet':
+		return HttpResponse(getFacetJSON(samples.publication_facet()), content_type="application/json")
 	elif returntype=='metamorphicgrade_facet':
 		return HttpResponse(getFacetJSON(samples.metamorphic_grade_facet()), content_type="application/json")
 	elif returntype=='metamorphicregion_facet':

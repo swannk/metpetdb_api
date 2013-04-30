@@ -346,7 +346,7 @@ def metpetdb(request):
         	cursor.execute(samples.get_count())
         	sample_count=cursor.fetchall()
         	#this is currently a hack to pass a html element containing the sample_count
-        	htmlCount="<div id='sampleCount'>"+str(sample_count[0][0])+"</div>"
+        	htmlCount="<div id='sampleCount' display:'none'>"+str(sample_count[0][0])+"</div>"
         	if sample_count>500:
         		return HttpResponse(getSampleResults(samples.get_main(500))+htmlCount)
         	else:

@@ -5,6 +5,7 @@ import json
 #creates JSON for facets
 def getFacetJSON(query):
         cursor=con.cursor()
+        print query
         cursor.execute(query)
         data=cursor.fetchall()
         jsonData=[]
@@ -20,6 +21,7 @@ def getFacetJSON(query):
                 jsonValues['count']=dataCount
                 jsonData.append(jsonValues)
         return json.dumps(jsonData)
+
 
 #creates JSON array for all data
 def getAllJSON(query):

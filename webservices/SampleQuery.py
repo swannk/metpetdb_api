@@ -181,7 +181,7 @@ class SampleQuery(object):
 
     def publication_facet( self ) :
         """ Return all publication info in a single facet. """
-        return self.get_facet( "publication_id, georeference, journal, publication_year, author" )
+        return self.get_facet( "publication_id, author" )
 
     def get_selection ( self, field, value_set ) :
         """ Assumes the values are integers corresponding to ids,

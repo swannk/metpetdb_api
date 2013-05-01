@@ -62,7 +62,7 @@ def getSampleResults(query):
         cursor.execute(query)
         data=cursor.fetchall()
         resultSetSize=len(data)
-        htmlData="<table id='gridData'><thead><tr><th>Sample Number</th><th>Subsample Count</th><th>Analysis Count</th><th>Image Count</th></tr></thead><tbody>"
+        htmlData="<table id='gridData'><thead><tr><th>Sample Number</th><th>Subsamples</th><th>Analyses</th><th>Images</th></tr></thead><tbody>"
         i=0
         while i<resultSetSize:
                 htmlData=htmlData+"<tr><td><a href='http://metpetdb.rpi.edu/metpetweb/#sample/"+unicode(data[i][0])+"'>"+unicode(data[i][1])+"</a></td><td>"+unicode(data[i][7])+"</td><td>"+unicode(data[i][8])+"</td><td>"+unicode(data[i][9])+"</td></tr>"

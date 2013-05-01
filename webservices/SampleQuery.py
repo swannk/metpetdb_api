@@ -178,10 +178,10 @@ class SampleQuery(object):
     def metamorphic_grade_facet( self ) :
         """ Return list of metamorphic grades for the given query. """
         return self.get_facet( "sample_metamorphic_grade_id, sample_metamorphic_grade" )
-
+#just sending out id and author for now
     def publication_facet( self ) :
         """ Return all publication info in a single facet. """
-        return self.get_facet( "publication_id, georeference, journal, publication_year, author" )
+        return self.get_facet( "publication_id, author" )
 
     def get_selection ( self, field, value_set ) :
         """ Assumes the values are integers corresponding to ids,

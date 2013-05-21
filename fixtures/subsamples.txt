@@ -26,19 +26,19 @@
 	"user_id": "2",
 	"grid_id": "3",
 	"name": "'C'",
-	"subsample_type_id": "3"}
+	"subsample_type_id": "3"},
 
 	{"subsample_id": "4",
 	"version": "1",
-	"public_date": "'Y'",
+	"public_data": "'Y'",
 	"sample_id": "5",
 	"user_id": "0",
 	"grid_id": "4",
 	"name": "'D'",
 	"subsample_type_id": "4"
-	}
+	},
 
-	{"subsample_id": "5"
+	{"subsample_id": "5",
 	"version": "1",
 	"public_data": "'Y'",
 	"sample_id": "4",

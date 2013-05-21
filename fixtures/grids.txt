@@ -21,14 +21,14 @@
 	"subsample_id": "3",
 	"width": "30",
 	"height": "60",
-	"public_data": "'Y'"}
+	"public_data": "'Y'"},
 
 	{"grid_id": "4",
 	"version": "1",
 	"subsample_id": "4",
 	"width": "5",
 	"height": "15",
-	"public_data": "'Y'"}
+	"public_data": "'Y'"},
 
 	{"grid_id": "5",
 	"version": "1",

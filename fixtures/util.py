@@ -57,6 +57,7 @@ class CustomTestSuiteRunner(NoseTestSuiteRunner):
             line = f.read()
             line = line.strip("\n")
 
+            print "Loading {}...".format(fname)
             data_val = sj.loads(line)
 
             for table in data_val:

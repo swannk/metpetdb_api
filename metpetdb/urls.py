@@ -5,6 +5,12 @@ from django.views.generic.simple import direct_to_template
 #from django.contrib import admin
 #admin.autodiscover()
 
+from webservices.tastyapi.resources import SampleResource, RockTypeResource
+from tastypie.api import Api
+
+api_v1 = Api(api_name='v1')
+api_v1.register(SampleResource())
+api_v1.register(RockTypeResource())
 
 urlpatterns = patterns('', 
 url(r'^webservices/sample/(\d+)/$','webservices.views.sample', name='sample'), 
@@ -24,6 +30,7 @@ url(r'^webservices/sample/(\d+)/images/json/$','webservices.views.sample_images'
 url(r'^webservices/samples$', 'webservices.views.samples'),
 url(r'^webservices/chemicalanalyses$', 'webservices.views.chemical_analyses'),
 
+url(r'tastyapi/', include(api_v1.urls)),
 
     # Examples:
     # url(r'^$', 'metpetdb.views.home', name='home'),

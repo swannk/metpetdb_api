@@ -12,9 +12,11 @@ class SampleResource(ModelResource):
         authorization = Authorization()
         excludes = ['user_id', 'collector_id', 'location']
         filtering = {
-                'version' : ALL,
-                'collection_date' : ALL,
-                'rock_type' : ALL_WITH_RELATIONS,
+                'version': ALL,
+                'sesar_number': ALL,
+                'public_data': ALL,
+                'collection_date': ALL,
+                'rock_type': ALL_WITH_RELATIONS,
                 }
 
 class RockTypeResource(ModelResource):
@@ -23,3 +25,6 @@ class RockTypeResource(ModelResource):
         resource_name = "rock_type"
         queryset = RockType.objects.all()
         authorization = Authorization()
+        filtering = {
+                'rock_type': ALL,
+                }

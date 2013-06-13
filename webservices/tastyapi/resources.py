@@ -24,7 +24,6 @@ class RockTypeResource(ModelResource):
     class Meta:
         resource_name = "rock_type"
         queryset = RockType.objects.all()
-        authorization = Authorization()
         filtering = {
                 'rock_type': ALL,
                 }

@@ -5,7 +5,7 @@ from django.views.generic.simple import direct_to_template
 #from django.contrib import admin
 #admin.autodiscover()
 
-from webservices.tastyapi.resources import SampleResource, RockTypeResource
+from tastyapi.resources import SampleResource, RockTypeResource
 from tastypie.api import Api
 
 api_v1 = Api(api_name='v1')

@@ -21,7 +21,6 @@ class Sample(models.Model):
     def __unicode__(self):
         return u"Sample #{}".format(self.sample_id)
     class Meta:
-        app_label = 'webservices'
         db_table = 'samples'
         managed = False
 
@@ -31,7 +30,6 @@ class RockType(models.Model):
     def __unicode__(self):
         return self.rock_type
     class Meta:
-        app_label = 'webservices'
         db_table = 'rock_type'
         managed = False
 

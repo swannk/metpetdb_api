@@ -1,7 +1,9 @@
 from django.db import transaction
+from django.core.exceptions import DoesNotExist
 from tastypie.resources import ModelResource
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie import fields
+from tastypie.validation import Validation
 from tastypie.authorization import Authorization
 from .models import Sample, RockType
 
@@ -22,8 +24,44 @@ class BaseResource(ModelResource):
                 transaction.rollback()
             return response
 
-class SampleResource(BaseResource):
-    rock_type = fields.ToOneField("webservices.tastyapi.resources.RockTypeResource",
+class VersionedResource(BaseResource):
+    def hydrate_version(self, bundle):
+        if 'version' in bundle.data:
+            bundle.data['version'] += 1
+        else:
+            bundle.data['version'] = 1
+        return bundle
+
+class VersionValidation(Validation):
+    def __init__(self, queryset, pk_field):
+        self.queryset = queryset
+        self.pk_field = pk_field
+    def is_valid(self, bundle, request=None):
+        if not bundle.data:
+            return {'__all__': 'No data.'}
+        errors = {}
+        if self.pk_field in bundle.data:
+            try:
+                previous = self.queryset.get(pk=bundle.data[self.pk_field])
+            except DoesNotExist:
+                previous = None
+        else:
+            previous = None
+        if previous is None:
+            if 'version' in bundle.data and bundle.data['version'] != 0:
+                # A version of 0 will be incremented to 1 during hydration
+                return {'version': 'Cannot find previous version.'}
+        else:
+            if 'version' not in bundle.data:
+                return {'__all__': 'That object already exists (you must specify a version).'}
+            elif bundle.data['version'] != previous.version:
+                return {'version': 'Edit conflict (object has changed since last GET).'}
+        return {}
+
+
+
+class SampleResource(VersionedResource):
+    rock_type = fields.ToOneField("tastyapi.resources.RockTypeResource",
                                   "rock_type")
     class Meta:
         queryset = Sample.objects.all()
@@ -36,6 +74,7 @@ class SampleResource(BaseResource):
                 'collection_date': ALL,
                 'rock_type': ALL_WITH_RELATIONS,
                 }
+        validation = VersionValidation(Sample.objects.all(), 'sample_id')
 
 class RockTypeResource(BaseResource):
     samples = fields.ToManyField(SampleResource, "sample_set")

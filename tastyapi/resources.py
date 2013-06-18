@@ -114,15 +114,15 @@ class SubsampleResource(VersionedResource):
 
 
 class ReferenceResource(BaseResource):
-    subsamples = fields.ToManyField('tastyapi.resources.ChemicalAnalysisResource',
-                                    'subsample_set')
+    analyses = fields.ToManyField('tastyapi.resources.ChemicalAnalysisResource',
+                                    'chemicalanalysis_set')
     class Meta:
         queryset = models.Reference.objects.all()
         filtering = {'name': ALL}
 
 class ChemicalAnalysisResource(VersionedResource):
     subsample = fields.ToOneField(SubsampleResource, "subsample")
-    reference = fields.ToOneField(ReferenceResource, "reference")
+    reference = fields.ToOneField(ReferenceResource, "reference", null=True)
     class Meta:
         resource_name = 'chemical_analysis'
         queryset = models.ChemicalAnalysis.objects.all()

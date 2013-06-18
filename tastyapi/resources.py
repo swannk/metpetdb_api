@@ -1,5 +1,5 @@
 from django.db import transaction
-from django.core.exceptions import DoesNotExist
+from django.core.exceptions import ObjectDoesNotExist
 from tastypie.resources import ModelResource
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie import fields
@@ -43,7 +43,7 @@ class VersionValidation(Validation):
         if self.pk_field in bundle.data:
             try:
                 previous = self.queryset.get(pk=bundle.data[self.pk_field])
-            except DoesNotExist:
+            except ObjectDoesNotExist:
                 previous = None
         else:
             previous = None
@@ -78,7 +78,7 @@ class SampleResource(VersionedResource):
                 'collection_date': ALL,
                 'rock_type': ALL_WITH_RELATIONS,
                 }
-        validation = VersionValidation(Sample.objects.all(), 'sample_id')
+        validation = VersionValidation(Sample.objects.all(), 'id')
 
 class RockTypeResource(BaseResource):
     samples = fields.ToManyField(SampleResource, "sample_set")

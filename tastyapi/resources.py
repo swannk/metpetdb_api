@@ -138,7 +138,7 @@ class ChemicalAnalysisResource(VersionedResource):
                 'stage_y': ALL,
                 'analysis_method': ALL,
                 'where_done': ALL,
-                'analyst': ALL
+                'analyst': ALL,
                 'analysis_date': ALL,
                 'large_rock': ALL,
                 'total': ALL,

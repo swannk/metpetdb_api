@@ -5,7 +5,7 @@ from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie import fields
 from tastypie.validation import Validation
 from tastypie.authorization import Authorization
-from .models import Sample, RockType, Subsample, SubsampleType
+from . import models
 
 class BaseResource(ModelResource):
     @transaction.commit_manually
@@ -68,7 +68,7 @@ class SampleResource(VersionedResource):
     rock_type = fields.ToOneField("tastyapi.resources.RockTypeResource",
                                   "rock_type")
     class Meta:
-        queryset = Sample.objects.all()
+        queryset = models.Sample.objects.all()
         authorization = Authorization()
         excludes = ['user', 'collector', 'location']
         filtering = {
@@ -84,23 +84,24 @@ class RockTypeResource(BaseResource):
     samples = fields.ToManyField(SampleResource, "sample_set")
     class Meta:
         resource_name = "rock_type"
-        queryset = RockType.objects.all()
+        queryset = models.RockType.objects.all()
         filtering = {
                 'rock_type': ALL,
                 }
 
 class SubsampleTypeResource(BaseResource):
-    samples = fields.ToManyField("tastyapi.resources.SubsampleResource",
+    subsamples = fields.ToManyField("tastyapi.resources.SubsampleResource",
                                  "subsample_set")
     class Meta:
-        queryset = SubsampleType.objects.all()
+        resource_name = 'subsample_type'
+        queryset = models.SubsampleType.objects.all()
         filtering = {'subsample_type': ALL}
 
 class SubsampleResource(VersionedResource):
     sample = fields.ToOneField(SampleResource, "sample")
     subsample_type = fields.ToOneField(SubsampleTypeResource, "subsample_type")
     class Meta:
-        queryset = Subsample.objects.all()
+        queryset = models.Subsample.objects.all()
         excludes = ['user']
         authorization = Authorization()
         filtering = {
@@ -110,4 +111,37 @@ class SubsampleResource(VersionedResource):
                 'subsample_type': ALL_WITH_RELATIONS,
                 }
         validation = VersionValidation(queryset, 'subsample_id')
+
+
+class ReferenceResource(BaseResource):
+    subsamples = fields.ToManyField('tastyapi.resources.ChemicalAnalysisResource',
+                                    'subsample_set')
+    class Meta:
+        queryset = models.Reference.objects.all()
+        filtering = {'name': ALL}
+
+class ChemicalAnalysisResource(VersionedResource):
+    subsample = fields.ToOneField(SubsampleResource, "subsample")
+    reference = fields.ToOneField(ReferenceResource, "reference")
+    class Meta:
+        resource_name = 'chemical_analysis'
+        queryset = models.ChemicalAnalysis.objects.all()
+        excludes = ['image', 'mineral', 'user']
+        authorization = Authorization()
+        filtering = {
+                'subsample': ALL_WITH_RELATIONS,
+                'reference': ALL_WITH_RELATIONS,
+                'public_data': ALL,
+                'reference_x': ALL,
+                'reference_y': ALL,
+                'stage_x': ALL,
+                'stage_y': ALL,
+                'analysis_method': ALL,
+                'where_done': ALL,
+                'analyst': ALL
+                'analysis_date': ALL,
+                'large_rock': ALL,
+                'total': ALL,
+                }
+        validation = VersionValidation(queryset, 'chemical_analysis_id')
 

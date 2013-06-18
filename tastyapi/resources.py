@@ -48,10 +48,14 @@ class VersionValidation(Validation):
         else:
             previous = None
         if previous is None:
-            if 'version' in bundle.data and bundle.data['version'] != 0:
+            if request is not None and request.method == 'PUT':
+                return {'__all__': 'Cannot find previous version (use POST to create).'}
+            elif 'version' in bundle.data and bundle.data['version'] != 0:
                 # A version of 0 will be incremented to 1 during hydration
                 return {'version': 'Cannot find previous version.'}
         else:
+            if request is not None and request.method == 'POST':
+                return {'__all__': 'That object already exists (use PUT to update).'}
             if 'version' not in bundle.data:
                 return {'__all__': 'That object already exists (you must specify a version).'}
             elif bundle.data['version'] != previous.version:

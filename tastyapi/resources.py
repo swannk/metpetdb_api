@@ -113,6 +113,19 @@ class SubsampleResource(VersionedResource):
         validation = VersionValidation(queryset, 'subsample_id')
 
 
+class MineralResource(BaseResource):
+    real_mineral = fields.ToOneField('tastyapi.resources.MineralResource',
+                                     'real_mineral')
+    analyses = fields.ToManyField('tastyapi.resources.ChemicalAnalysisResource',
+                                  'chemicalanalysis_set')
+    class Meta:
+        queryset = models.Mineral.objects.all()
+        filtering = {
+                'name': ALL,
+                'real_mineral': ALL_WITH_RELATIONS,
+                }
+
+
 class ReferenceResource(BaseResource):
     analyses = fields.ToManyField('tastyapi.resources.ChemicalAnalysisResource',
                                     'chemicalanalysis_set')
@@ -123,10 +136,11 @@ class ReferenceResource(BaseResource):
 class ChemicalAnalysisResource(VersionedResource):
     subsample = fields.ToOneField(SubsampleResource, "subsample")
     reference = fields.ToOneField(ReferenceResource, "reference", null=True)
+    mineral = fields.ToOneField(MineralResource, "mineral", null=True)
     class Meta:
         resource_name = 'chemical_analysis'
         queryset = models.ChemicalAnalysis.objects.all()
-        excludes = ['image', 'mineral', 'user']
+        excludes = ['image', 'user']
         authorization = Authorization()
         filtering = {
                 'subsample': ALL_WITH_RELATIONS,

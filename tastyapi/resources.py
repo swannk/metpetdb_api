@@ -5,7 +5,7 @@ from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie import fields
 from tastypie.validation import Validation
 from tastypie.authorization import Authorization
-from .models import Sample, RockType
+from .models import Sample, RockType, Subsample, SubsampleType
 
 class BaseResource(ModelResource):
     @transaction.commit_manually
@@ -70,7 +70,7 @@ class SampleResource(VersionedResource):
     class Meta:
         queryset = Sample.objects.all()
         authorization = Authorization()
-        excludes = ['user_id', 'collector_id', 'location']
+        excludes = ['user', 'collector', 'location']
         filtering = {
                 'version': ALL,
                 'sesar_number': ALL,
@@ -78,7 +78,7 @@ class SampleResource(VersionedResource):
                 'collection_date': ALL,
                 'rock_type': ALL_WITH_RELATIONS,
                 }
-        validation = VersionValidation(Sample.objects.all(), 'id')
+        validation = VersionValidation(queryset, 'id')
 
 class RockTypeResource(BaseResource):
     samples = fields.ToManyField(SampleResource, "sample_set")
@@ -88,3 +88,26 @@ class RockTypeResource(BaseResource):
         filtering = {
                 'rock_type': ALL,
                 }
+
+class SubsampleType(BaseResource):
+    samples = fields.ToManyField("tastyapi.resources.SubsampleResource",
+                                 "subsample_set")
+    class Meta:
+        queryset = SubsampleType.objects.all()
+        filtering = {'subsample_type': ALL}
+
+class Subsample(VersionedResource):
+    sample = fields.ToOneField(SampleResource, "sample")
+    subsample_type = fields.ToOneField(SubsampleType, "subsample_type")
+    class Meta:
+        queryset = Subsample.objects.all()
+        excludes = ['user']
+        authorization = Authorization()
+        filtering = {
+                'public_data': ALL,
+                'grid_id': ALL,
+                'name': ALL,
+                'subsample_type': ALL_WITH_RELATIONS,
+                }
+        validation = VersionValidation(queryset, 'subsample_id')
+

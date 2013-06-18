@@ -56,7 +56,7 @@ class VersionValidation(Validation):
         else:
             if request is not None and request.method == 'POST':
                 return {'__all__': 'That object already exists (use PUT to update).'}
-            if 'version' not in bundle.data:
+            elif 'version' not in bundle.data:
                 return {'__all__': 'That object already exists (you must specify a version).'}
             elif bundle.data['version'] != previous.version:
                 return {'version': 'Edit conflict (object has changed since last GET).'}

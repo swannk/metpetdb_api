@@ -89,16 +89,16 @@ class RockTypeResource(BaseResource):
                 'rock_type': ALL,
                 }
 
-class SubsampleType(BaseResource):
+class SubsampleTypeResource(BaseResource):
     samples = fields.ToManyField("tastyapi.resources.SubsampleResource",
                                  "subsample_set")
     class Meta:
         queryset = SubsampleType.objects.all()
         filtering = {'subsample_type': ALL}
 
-class Subsample(VersionedResource):
+class SubsampleResource(VersionedResource):
     sample = fields.ToOneField(SampleResource, "sample")
-    subsample_type = fields.ToOneField(SubsampleType, "subsample_type")
+    subsample_type = fields.ToOneField(SubsampleTypeResource, "subsample_type")
     class Meta:
         queryset = Subsample.objects.all()
         excludes = ['user']

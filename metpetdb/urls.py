@@ -5,12 +5,15 @@ from django.views.generic.simple import direct_to_template
 #from django.contrib import admin
 #admin.autodiscover()
 
-from tastyapi.resources import SampleResource, RockTypeResource
+from tastyapi.resources import SampleResource, RockTypeResource, SubsampleResource
+from tastyapi.resources import SubsampleTypeResource
 from tastypie.api import Api
 
 api_v1 = Api(api_name='v1')
 api_v1.register(SampleResource())
 api_v1.register(RockTypeResource())
+api_v1.register(SubsampleResource())
+api_v1.register(SubsampleTypeResource())
 
 urlpatterns = patterns('', 
 url(r'^webservices/sample/(\d+)/$','webservices.views.sample', name='sample'), 

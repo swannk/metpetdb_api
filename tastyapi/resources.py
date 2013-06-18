@@ -52,12 +52,12 @@ class VersionValidation(Validation):
                 return {'__all__': 'Cannot find previous version (use POST to create).'}
             elif 'version' in bundle.data and bundle.data['version'] != 0:
                 # A version of 0 will be incremented to 1 during hydration
-                return {'version': 'Cannot find previous version.'}
+                return {'version': 'This should be 0 or absent.'}
         else:
             if request is not None and request.method == 'POST':
                 return {'__all__': 'That object already exists (use PUT to update).'}
             elif 'version' not in bundle.data:
-                return {'__all__': 'That object already exists (you must specify a version).'}
+                return {'__all__': 'Data corrupted (version number missing).'}
             elif bundle.data['version'] != previous.version:
                 return {'version': 'Edit conflict (object has changed since last GET).'}
         return {}

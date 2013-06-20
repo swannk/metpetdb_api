@@ -2,8 +2,8 @@ from django.conf.urls import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic.simple import direct_to_template
 # Uncomment the next two lines to enable the admin:
-#from django.contrib import admin
-#admin.autodiscover()
+from django.contrib import admin
+admin.autodiscover()
 
 from tastyapi.resources import SampleResource, RockTypeResource, SubsampleResource
 from tastyapi.resources import SubsampleTypeResource, ReferenceResource
@@ -47,6 +47,6 @@ url(r'tastyapi/', include(api_v1.urls)),
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    # url(r'^admin/', include(admin.site.urls)),
+url(r'^admin/', include(admin.site.urls)),
 )
 urlpatterns+=staticfiles_urlpatterns()

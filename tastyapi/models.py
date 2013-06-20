@@ -54,6 +54,8 @@ class Mineral(Model):
     mineral_id = SmallIntegerField(primary_key=True)
     real_mineral = ForeignKey('self')
     name = CharField(max_length=100, unique=True)
+    def __unicode__(self):
+        return self.name
     class Meta:
         managed = False
         db_table = u'minerals'
@@ -61,6 +63,8 @@ class Mineral(Model):
 class MetamorphicGrade(Model):
     metamorphic_grade_id = SmallIntegerField(primary_key=True)
     name = CharField(max_length=100, unique=True)
+    def __unicode__(self):
+        return self.name
     class Meta:
         managed = False
         db_table = u'metamorphic_grades'
@@ -71,6 +75,8 @@ class MetamorphicRegion(Model):
     shape = PolygonField(blank=True, null=True)
     description = TextField(blank=True)
     label_location = GeometryField(blank=True, null=True) # This field type is a guess.
+    def __unicode__(self):
+        return self.name
     class Meta:
         managed = False
         db_table = u'metamorphic_regions'
@@ -78,6 +84,8 @@ class MetamorphicRegion(Model):
 class Reference(Model):
     reference_id = BigIntegerField(primary_key=True)
     name = CharField(max_length=100, unique=True)
+    def __unicode__(self):
+        return self.name
     class Meta:
         managed = False
         db_table = u'reference'
@@ -85,6 +93,8 @@ class Reference(Model):
 class Region(Model):
     region_id = SmallIntegerField(primary_key=True)
     name = CharField(max_length=100, unique=True)
+    def __unicode__(self):
+        return self.name
     class Meta:
         managed = False
         db_table = u'regions'
@@ -92,6 +102,8 @@ class Region(Model):
 class RockType(Model):
     rock_type_id = SmallIntegerField(primary_key=True)
     rock_type = CharField(max_length=100, unique=True)
+    def __unicode__(self):
+        return self.rock_type
     class Meta:
         managed = False
         db_table = u'rock_type'
@@ -118,6 +130,8 @@ class Sample(Model):
     minerals = ManyToManyField(Mineral, through='SampleMineral')
     references = ManyToManyField(Reference, through='SampleReference')
     regions = ManyToManyField(Region, through='SampleRegion')
+    def __unicode__(self):
+        return u'Sample #' + unicode(self.id)
     class Meta:
         managed = False
         db_table = u'samples'
@@ -126,6 +140,8 @@ class SampleAlias(Model):
     sample_alias_id = BigIntegerField(primary_key=True)
     sample = ForeignKey(Sample, related_name='aliases', null=True, blank=True)
     alias = CharField(max_length=35)
+    def __unicode__(self):
+        return self.alias
     class Meta:
         managed = False
         db_table = u'sample_aliases'
@@ -187,6 +203,8 @@ class SampleRegion(Model):
 class MineralType(Model):
     mineral_type_id = SmallIntegerField(primary_key=True)
     name = CharField(max_length=50)
+    def __unicode__(self):
+        return self.name
     class Meta:
         managed = False
         db_table = u'mineral_types'
@@ -199,6 +217,8 @@ class Element(Model):
     atomic_number = IntegerField()
     weight = FloatField(null=True, blank=True)
     order_id = IntegerField(null=True, blank=True)
+    def __unicode__(self):
+        return self.name
     class Meta:
         managed = False
         db_table = u'elements'
@@ -212,6 +232,8 @@ class Oxide(Model):
     cations_per_oxide = SmallIntegerField(null=True, blank=True)
     conversion_factor = FloatField()
     order_id = IntegerField(null=True, blank=True)
+    def __unicode__(self):
+        return self.species
     class Meta:
         managed = False
         db_table = u'oxides'
@@ -244,6 +266,8 @@ class User(Model):
     professional_url = CharField(max_length=255, blank=True)
     research_interests = CharField(max_length=1024, blank=True)
     request_contributor = CharField(max_length=1, blank=True)
+    def __unicode__(self):
+        return self.name
     class Meta:
         managed = False
         db_table = u'users'
@@ -251,6 +275,8 @@ class User(Model):
 class SubsampleType(Model):
     subsample_type_id = SmallIntegerField(primary_key=True)
     subsample_type = CharField(max_length=100, unique=True)
+    def __unicode__(self):
+        return self.subsample_type
     class Meta:
         managed = False
         db_table = u'subsample_type'
@@ -264,6 +290,8 @@ class Subsample(Model):
     grid_id = BigIntegerField(null=True, blank=True)
     name = CharField(max_length=100)
     subsample_type = ForeignKey(SubsampleType)
+    def __unicode__(self):
+        return self.name
     class Meta:
         managed = False
         db_table = u'subsamples'
@@ -304,9 +332,14 @@ class ChemicalAnalysis(Model):
     large_rock = CharField(max_length=1)
     total = FloatField(null=True, blank=True)
     spot_id = BigIntegerField()
+    def __unicode__(self):
+        return u'Analysis of "{}" via {} by {}.'.format(self.subsample,
+                                                        self.analysis_method,
+                                                        self.analyst)
     class Meta:
         managed = False
         db_table = u'chemical_analyses'
+        verbose_name_plural = 'chemical analyses'
 
 class ChemicalAnalysisOxide(Model):
     chemical_analysis_oxide_id = AutoField(primary_key=True, db_column='chemical_analysis_oxides_pk_id')

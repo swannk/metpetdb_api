@@ -42,7 +42,8 @@ class VersionValidation(Validation):
         errors = {}
         if self.pk_field in bundle.data:
             try:
-                previous = self.queryset.get(pk=bundle.data[self.pk_field])
+                previous = (self.queryset.select_for_update().
+                            get(pk=bundle.data[self.pk_field]))
             except ObjectDoesNotExist:
                 previous = None
         else:

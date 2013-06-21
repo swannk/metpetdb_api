@@ -122,7 +122,8 @@ class Sample(Model):
     country = CharField(max_length=100, blank=True)
     description = TextField(blank=True)
     collector_name = CharField(db_column='collector', max_length=50, blank=True)
-    collector = ForeignKey('User', db_column='collector_id',  blank=True) # would be collector_id_id
+    collector = ForeignKey('User', db_column='collector_id', # would be collector_id_id
+                           null=True, blank=True)
     location_text = CharField(max_length=50, blank=True)
     location = PointField()
     metamorphic_grades = ManyToManyField(MetamorphicGrade, through='SampleMetamorphicGrade')

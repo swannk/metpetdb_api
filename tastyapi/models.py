@@ -22,7 +22,7 @@ class GroupExtra(Model):
     group_type = CharField(max_length=10, choices=(('public', 'public'),
                                                           ('u_uid', 'user'),
                                                           ('p_pid', 'project')))
-    owner = ForeignKey(User, blank=True, null=True)
+    owner = ForeignKey(AuthUser, blank=True, null=True)
 
 
 class GroupAccess(Model):
@@ -48,7 +48,7 @@ def get_public_groups():
 
 
 # Called after a User instance is saved:
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=AuthUser)
 def fix_user_groups(sender, instance, created, raw, **kwargs):
     """Ensure that the user has their own group and is in the public group(s)."""
     return # TODO: Make this send email instead of fixing groups immediately

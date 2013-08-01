@@ -27,7 +27,7 @@ class DACBackend(ModelBackend):
             all_perms = Permission.objects.filter(content_type=ctype)
             try:
                 read_perm = all_perms.get(codename__startswith='read')
-                write_perm = all_perms.get(codename__startswith='write')
+                write_perm = all_perms.get(codename__startswith='change')
             except ObjectDoesNotExist:
                 # No permissions applicable, bail.
                 # This can happen if the object does not provide a read perm.

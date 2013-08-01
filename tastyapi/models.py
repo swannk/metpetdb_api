@@ -42,7 +42,6 @@ def get_public_groups():
     if not public_groups.exists():
         # None exist, create a new one
         new_public = Group.objects.create(name=PUBLIC_GROUP_DEFAULT_NAME)
-        new_public.user.add(User.objects.all())
         GroupExtra.create(group=new_public, group_type='public')
     return public_groups
 

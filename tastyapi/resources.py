@@ -98,6 +98,7 @@ class ObjectAuthorization(Authorization):
     def __init__(self, app_name, model_name, *args, **kwargs):
         """Store some information which we'll need later."""
         self.read_perm = "{}.read_{}".format(app_name, model_name)
+        self.add_perm = "{}.add_{}".format(app_name, model_name)
         self.change_perm = "{}.change_{}".format(app_name, model_name)
         self.del_perm = "{}.delete_{}".format(app_name, model_name)
         super(ObjectAuthorization, self).__init__(*args, **kwargs)
@@ -109,6 +110,9 @@ class ObjectAuthorization(Authorization):
     read_detail = _check_perm_closure(lambda self: self.read_perm)
     def create_list(self, object_list, bundle):
         """Check object_list to make sure new objects are owned by us."""
+        if not bundle.request.user.has_perm(self.add_perm):
+            raise Unauthorized("User {} is not manually verified."
+                               .format(bundle.request.user))
         result = []
         for item in object_list:
             if item.owner == bundle.request.user:
@@ -116,7 +120,8 @@ class ObjectAuthorization(Authorization):
         return result
     def create_detail(self, object_list, bundle):
         """Check bundle.obj to make sure it is owned by us."""
-        if bundle.obj.owner == bundle.request.user:
+        user = bundle.request.user
+        if bundle.obj.owner == user and user.has_perm(self.add_perm):
             return True
         else:
             raise Unauthorized()

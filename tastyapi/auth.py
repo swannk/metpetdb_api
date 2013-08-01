@@ -46,6 +46,16 @@ class DACBackend(ModelBackend):
                 if can_write:
                     results.add("%s.%s" % (write_perm.content_type.app_label,
                                            write_perm.codename))
+        else:
+            # Check whether the user should have add permissions
+            create_perms = Permission.objects.filter(codename__startswith='add')
+            personal_group = Group.objects.filter(groupextra__group_type='u_uid',
+                                                  owner=user_obj)
+            if personal_group.exists():
+                # The user has add permissions, 
+                results.update(set("%s.%s" % (create_perm.content_type.app_label,
+                                              create_perm.codename)
+                                   for create_perm in create_perms))
         # Call the superclass in case obj is None
         results.update(super(DACBackend, self).get_group_permissions(user_obj, obj))
         return results

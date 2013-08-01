@@ -1,13 +1,17 @@
+import uuid
+
 from django.db.models import Model, BigIntegerField, CharField, DateTimeField, FloatField, ForeignKey, IntegerField,ManyToManyField, SmallIntegerField, TextField, AutoField, OneToOneField
 from django.db.models import BooleanField, PositiveIntegerField
 from django.db.models import Field
 from django.db.models import Q
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User as AuthUser
+from django.contrib.auth.models import Group
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.gis.db.models import GeoManager, PolygonField, PointField, GeometryField
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
+from django.core.mail import EmailMessage
 
 PUBLIC_GROUP_DEFAULT_NAME = 'public_group'
 
@@ -53,22 +57,7 @@ def fix_user_groups(sender, instance, created, raw, **kwargs):
         return
     if not created:
         return
-    public_groups = get_public_groups()
-    # Now verify the user is a member of each public group
-    for group in public_groups.select_for_update():
-        if group not in instance.groups:
-            instance.groups.add(group)
     # Verify there is precisely one uid group for this user.
-    user_groups = Group.objects.filter(groupextra__group_type='u_uid',
-                                       groupextra__owner=instance)
-    user_groups = user_groups.select_for_update()
-    if user_groups.count() != 1:
-        # There isn't, so get rid of whichever do exist and create from scratch
-        user_groups.delete()
-        user_group_name = USER_GROUP_DEFAULT_PREFIX + instance.username
-        user_group = Group.objects.create(name=user_group_name)
-        user_group.user.add(instance)
-        GroupExtra.create(group=user_group, group_type='u_uid', owner=instance)
 
 
 @receiver(pre_save)
@@ -372,8 +361,71 @@ class User(Model):
     professional_url = CharField(max_length=255, blank=True)
     research_interests = CharField(max_length=1024, blank=True)
     request_contributor = CharField(max_length=1, blank=True)
+    django_user = OneToOneField(AuthUser, blank=True, null=True)
     def __unicode__(self):
         return self.name
+    def send_email(self):
+        """Called to send a verification email to the user.
+        
+        Will generate a new code on every invocation, for security purposes.
+
+        Does not actually send the email, due to transactional semantics.
+        Instead, an EmailMessage object is returned which may be sent with its
+        send() method.  It is recommended to finish the current transaction
+        before sending the email, because this method modifies the User object.
+        """
+        # UUID type 4 is collision-proof, unpredictable, and does not leak any
+        # sensitive information like MAC addresses.  In hex it's precisely 32
+        # characters long, and is thus an ideal choice for a confirmation code.
+        self.confirmation_code = uuid.uuid4().hex
+        subject = "Confirm your email address"
+        # NB: No indent, to avoid adding indent to sent emails:
+        message_text = (
+"""This is an automated message from metpetdb.  Someone (probably you) has
+created an account with this email address.  The confirmation code for this
+account is {}.""").format(self.confirmation_code)
+        from_addr = 'noreply@example.com' # FIXME: Replace this
+        to_addr = self.email
+        email = EmailMessage(subject, message_text, from_addr, [to_addr])
+        return email
+    def auto_verify(self, confirmation_code):
+        """Called to perform email verification.
+
+        Checks confirmation_code and adds the user to public groups so they
+        may read public data.
+
+        Raises a ValueError if confirmation_code doesn't match the stored code,
+        or if there is no corresponding Django user.
+
+        Pass confirmation_code=None to bypass this check.
+        """
+        if confirmation_code is None or confirmation_code == self.confirmation_code:
+            if self.django_user is None:
+                raise ValueError("This user doesn't exist in django.contrib.auth yet.")
+            public_groups = get_public_groups()
+            for group in public_groups.select_for_update():
+                if group not in self.django_user.groups:
+                    instance.groups.add(group)
+        else:
+            raise ValueError("Confirmation code incorrect.")
+    def manual_verify(self):
+        """Called to request full verification.
+
+        Adds the user to a personal group so they may upload and share data.
+        """
+        if self.django_user is None:
+            raise ValueError("This user doesn't exist in django.contrib.auth yet.")
+        user_groups = Group.objects.filter(groupextra__group_type='u_uid',
+                                           groupextra__owner=self.django_user)
+        user_groups = user_groups.select_for_update()
+        if user_groups.count() != 1:
+            # There isn't, so get rid of whichever do exist and create from scratch
+            user_groups.delete()
+            user_group_name = USER_GROUP_DEFAULT_PREFIX + self.django_user.username
+            user_group = Group.objects.create(name=user_group_name)
+            user_group.user.add(self.django_user)
+            GroupExtra.create(group=user_group, group_type='u_uid', owner=self.django_user)
+
     class Meta:
         managed = False
         db_table = u'users'

@@ -11,6 +11,18 @@ ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
 
+AUTHENTICATION_BACKENDS = ('tastyapi.auth.DACBackend',)
+
+PASSWORD_HASHERS = (
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.BCryptPasswordHasher',
+    'django.contrib.auth.hashers.SHA1PasswordHasher',
+    'tastyapi.hashing.SHA1WithBase64SaltHasher',
+    'django.contrib.auth.hashers.MD5PasswordHasher',
+    'django.contrib.auth.hashers.CryptPasswordHasher',
+)
+
 MANAGERS = ADMINS
 
 DATABASES = {

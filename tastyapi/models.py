@@ -1,6 +1,107 @@
 from django.db.models import Model, BigIntegerField, CharField, DateTimeField, FloatField, ForeignKey, IntegerField,ManyToManyField, SmallIntegerField, TextField, AutoField, OneToOneField
+from django.db.models import BooleanField, PositiveIntegerField
 from django.db.models import Field
+from django.db.models import Q
+from django.contrib.auth.models import User, Group
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes import generic
 from django.contrib.gis.db.models import GeoManager, PolygonField, PointField, GeometryField
+from django.db.models.signals import post_save, pre_save
+from django.dispatch import receiver
+
+PUBLIC_GROUP_DEFAULT_NAME = 'public_group'
+
+USER_GROUP_DEFAULT_PREFIX = 'user_group_'
+
+class GroupExtra(Model):
+    group = OneToOneField(Group)
+    group_type = CharField(max_length=10, choices=(('public', 'public'),
+                                                          ('u_uid', 'user'),
+                                                          ('p_pid', 'project')))
+    owner = ForeignKey(User, blank=True, null=True)
+
+
+class GroupAccess(Model):
+    group = ForeignKey(Group)
+    read_access = BooleanField()
+    write_access = BooleanField()
+    content_type = ForeignKey(ContentType)
+    object_id = PositiveIntegerField()
+    accessible_object = generic.GenericForeignKey('content_type', 'object_id')
+    class Meta:
+        unique_together = ('group', 'content_type', 'object_id')
+
+
+def get_public_groups():
+    """Get or create the public group(s) as a queryset."""
+    public_groups = Group.objects.filter(groupextra__group_type='public')
+    if not public_groups.exists():
+        # None exist, create a new one
+        new_public = Group.objects.create(name=PUBLIC_GROUP_DEFAULT_NAME)
+        new_public.user.add(User.objects.all())
+        GroupExtra.create(group=new_public, group_type='public')
+    return public_groups
+
+
+# Called after a User instance is saved:
+@receiver(post_save, sender=User)
+def fix_user_groups(sender, instance, created, raw, **kwargs):
+    """Ensure that the user has their own group and is in the public group(s)."""
+    return # TODO: Make this send email instead of fixing groups immediately
+    if raw:
+        # DB is in an inconsistent state; abort
+        return
+    if not created:
+        return
+    public_groups = get_public_groups()
+    # Now verify the user is a member of each public group
+    for group in public_groups.select_for_update():
+        if group not in instance.groups:
+            instance.groups.add(group)
+    # Verify there is precisely one uid group for this user.
+    user_groups = Group.objects.filter(groupextra__group_type='u_uid',
+                                       groupextra__owner=instance)
+    user_groups = user_groups.select_for_update()
+    if user_groups.count() != 1:
+        # There isn't, so get rid of whichever do exist and create from scratch
+        user_groups.delete()
+        user_group_name = USER_GROUP_DEFAULT_PREFIX + instance.username
+        user_group = Group.objects.create(name=user_group_name)
+        user_group.user.add(instance)
+        GroupExtra.create(group=user_group, group_type='u_uid', owner=instance)
+
+
+@receiver(pre_save)
+def fix_public(sender, instance, raw, **kwargs):
+    """Make public objects publicly accessible and private objects not."""
+    if raw:
+        # DB is in an inconsistent state; abort
+        return
+    if not hasattr(sender, 'public_data'):
+        # We don't need to fix this one; abort
+        return
+    try:
+        if sender.select_for_update().get(instance).public_data == instance.public_data:
+            # Did not change, abort
+            return
+    except sender.DoesNotExist:
+        pass
+    sender_type = ContentType.objects.get_for_model(sender)
+    public_groups = get_public_groups()
+    query = Q(groupaccess__object_id=instance.pk,
+              groupaccess__content_type=sender_type)
+    groups_with_item = public_groups.filter(query)
+    groups_without_item = public_groups.exclude(groups_with_item)
+    if instance.public_data == 'Y':
+        for group in groups_without_item.select_for_update():
+            group.groupaccess.create(read_access=True, write_access=False,
+                                     content_type=sender_type,
+                                     object_id=instance.pk)
+    else:
+        for group in groups_with_item.select_for_update():
+            group.groupaccess.delete(content_type=sender_type,
+                                     object_id=instance.pk)
+
 
 class BinaryField(Field):
     description = 'A sequence of bytes'
@@ -42,6 +143,7 @@ class Image(Model):
     scale = SmallIntegerField(null=True, blank=True)
     owner = ForeignKey('User', db_column='user_id')
     public_data = CharField(max_length=1, choices=PUBLIC_DATA_CHOICES)
+    group_access = generic.GenericRelation(GroupAccess)
     checksum_64x64 = CharField(max_length=50)
     checksum_half = CharField(max_length=50)
     filename = CharField(max_length=256)
@@ -49,6 +151,7 @@ class Image(Model):
     class Meta:
         managed = False
         db_table = u'images'
+        permissions = (('read_image', 'Can read image'),)
         
 class Mineral(Model):
     mineral_id = SmallIntegerField(primary_key=True)
@@ -113,6 +216,7 @@ class Sample(Model):
     version = IntegerField()
     sesar_number = CharField(max_length=9, blank=True)
     public_data = CharField(max_length=1, choices=PUBLIC_DATA_CHOICES)
+    group_access = generic.GenericRelation(GroupAccess)
     collection_date = DateTimeField(null=True, blank=True)
     date_precision = SmallIntegerField(null=True, blank=True)
     number = CharField(max_length=35)
@@ -136,6 +240,7 @@ class Sample(Model):
     class Meta:
         managed = False
         db_table = u'samples'
+        permissions = (('read_sample', 'Can read sample'),)
         
 class SampleAlias(Model):
     sample_alias_id = BigIntegerField(primary_key=True)
@@ -286,6 +391,7 @@ class Subsample(Model):
     subsample_id = BigIntegerField(primary_key=True)
     version = IntegerField()
     public_data = CharField(max_length=1)
+    group_access = generic.GenericRelation(GroupAccess)
     sample = ForeignKey(Sample)
     user = ForeignKey(User)
     grid_id = BigIntegerField(null=True, blank=True)
@@ -296,6 +402,7 @@ class Subsample(Model):
     class Meta:
         managed = False
         db_table = u'subsamples'
+        permissions = (('read_subsample', 'Can read subsample'),)
 
 
 
@@ -316,6 +423,7 @@ class ChemicalAnalysis(Model):
     version = IntegerField()
     subsample = ForeignKey(Subsample)
     public_data = CharField(max_length=1)
+    group_access = generic.GenericRelation(GroupAccess)
     reference_x = FloatField(null=True, blank=True)
     reference_y = FloatField(null=True, blank=True)
     stage_x = FloatField(null=True, blank=True)
@@ -341,6 +449,7 @@ class ChemicalAnalysis(Model):
         managed = False
         db_table = u'chemical_analyses'
         verbose_name_plural = 'chemical analyses'
+        permissions = (('read_analysis', 'Can read analysis'),)
 
 class ChemicalAnalysisOxide(Model):
     chemical_analysis_oxide_id = AutoField(primary_key=True, db_column='chemical_analysis_oxides_pk_id')
@@ -412,9 +521,11 @@ class Grids(Model):
     width = SmallIntegerField()
     height = SmallIntegerField()
     public_data = CharField(max_length=1)
+    group_access = generic.GenericRelation(GroupAccess)
     class Meta:
         managed = False
         db_table = u'grids'
+        permissions = (('read_grids', 'Can read grids'),)
 
 class ImageOnGrid(Model):
     image_on_grid_id = BigIntegerField(primary_key=True)
@@ -538,6 +649,7 @@ class Subsample(Model):
     subsample_id = BigIntegerField(primary_key=True)
     version = IntegerField()
     public_data = CharField(max_length=1)
+    group_access = generic.GenericRelation(GroupAccess)
     sample = ForeignKey(Sample)
     user = ForeignKey(User)
     grid_id = BigIntegerField(null=True, blank=True)
@@ -546,6 +658,7 @@ class Subsample(Model):
     class Meta:
         managed = False
         db_table = u'subsamples'
+        permissions = (('read_subsample', 'Can read subsample'),)
 
 class SpatialRefSys(Model):
     srid = IntegerField(primary_key=True)

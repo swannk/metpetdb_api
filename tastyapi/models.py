@@ -42,7 +42,7 @@ def get_public_groups():
     if not public_groups.exists():
         # None exist, create a new one
         new_public = Group.objects.create(name=PUBLIC_GROUP_DEFAULT_NAME)
-        GroupExtra.create(group=new_public, group_type='public')
+        GroupExtra(group=new_public, group_type='public').save()
     return public_groups
 
 
@@ -403,8 +403,8 @@ account is {}.""").format(self.confirmation_code)
                 raise ValueError("This user doesn't exist in django.contrib.auth yet.")
             public_groups = get_public_groups()
             for group in public_groups.select_for_update():
-                if group not in self.django_user.groups:
-                    instance.groups.add(group)
+                if group not in self.django_user.groups.all():
+                    self.django_user.groups.add(group)
         else:
             raise ValueError("Confirmation code incorrect.")
     def manual_verify(self):
@@ -422,8 +422,8 @@ account is {}.""").format(self.confirmation_code)
             user_groups.delete()
             user_group_name = USER_GROUP_DEFAULT_PREFIX + self.django_user.username
             user_group = Group.objects.create(name=user_group_name)
-            user_group.user.add(self.django_user)
-            GroupExtra.create(group=user_group, group_type='u_uid', owner=self.django_user)
+            user_group.user_set.add(self.django_user)
+            GroupExtra(group=user_group, group_type='u_uid', owner=self.django_user).save()
 
     class Meta:
         managed = False

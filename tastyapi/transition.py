@@ -45,6 +45,9 @@ def main():
                                                                     '-'])[:30]
         logger.debug("Username = %s", username)
         password = translate(bytearray(metpet_user.password))
+        if password == 'sha1$$':
+            logger.warning("%s (%s) has an unusable password and won't be "+
+                           "able to log in.", metpet_user.name, email)
         logger.debug("Password hash = %s", password)
         result = AuthUser(username=username, password=password, email=email,
                           is_staff=False, is_active=True, is_superuser=False)
@@ -53,8 +56,10 @@ def main():
         metpet_user.save()
         if metpet_user.enabled.upper() == 'Y':
             # Add user to public group(s), so (s)he can read public things
+            logger.info("Adding %s to public group.", metpet_user.name)
             metpet_user.auto_verify(None) # Pass None to skip code check
         if metpet_user.contributor_enabled.upper() == 'Y':
             # Add user to personal group, so (s)he can create things
+            logger.info("Adding %s to personal group.", metpet_user.name)
             metpet_user.manual_verify()
         metpet_user.save()

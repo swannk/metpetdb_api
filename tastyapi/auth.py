@@ -38,8 +38,8 @@ class DACBackend(ModelBackend):
                 # Find all the groups by which this user might have access
                 # NB: this queryset returns GroupAccess's, not Groups
                 groupset = obj.group_access.filter(group__user=user_obj)
-                can_read = groupset.exists(read_access=True)
-                can_write = groupset.exists(write_access=True)
+                can_read = groupset.filter(read_access=True).exists()
+                can_write = groupset.filter(write_access=True).exists()
                 if can_read:
                     results.add("%s.%s" % (read_perm.content_type.app_label,
                                            read_perm.codename))

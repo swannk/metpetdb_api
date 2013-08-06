@@ -1,5 +1,5 @@
 from django.contrib.auth.backends import ModelBackend
-from django.contrib.auth.models import Permission
+from django.contrib.auth.models import Permission, Group, User
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
@@ -50,7 +50,7 @@ class DACBackend(ModelBackend):
             # Check whether the user should have add permissions
             create_perms = Permission.objects.filter(codename__startswith='add')
             personal_group = Group.objects.filter(groupextra__group_type='u_uid',
-                                                  owner=user_obj)
+                                                  groupextra__owner=user_obj)
             if personal_group.exists():
                 # The user has add permissions, 
                 results.update(set("%s.%s" % (create_perm.content_type.app_label,

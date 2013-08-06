@@ -2,12 +2,16 @@ import base64
 import logging
 logger = logging.getLogger(__name__)
 
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User as AuthUser
 from django.contrib.auth.models import Group
 from django.db import transaction
 
+from .models import get_public_groups
 from .models import User as MetpetUser
 from .models import Group, GroupExtra, GroupAccess
+from .models import Sample, Image
+from .models import Subsample, ChemicalAnalysis, Grids
 
 def translate(raw_crypt):
     """Translates a metpetdb salted password into a Django salted password."""
@@ -26,12 +30,14 @@ def translate(raw_crypt):
 
 @transaction.commit_on_success
 def main():
-    """Imports metpetdb's user table into Django, for use with the auth system.
+    """Imports metpetdb's various tables into Django for auth purposes.
     
     BEFORE RUNNING THIS SCRIPT, execute the following SQL:
 
         ALTER TABLE users ADD COLUMN django_user_id int UNIQUE REFERENCES
         auth_user(id); 
+
+    This function is idempotent, but shouldn't need to be run multiple times.
     """
     for metpet_user in MetpetUser.objects.filter(django_user=None):
         logger.info("Transitioning %s.", metpet_user.name)
@@ -63,3 +69,32 @@ def main():
             logger.info("Adding %s to personal group.", metpet_user.name)
             metpet_user.manual_verify()
         metpet_user.save()
+    models_with_owners = [Sample, Image]
+    models_with_public_data = [Sample, Image, Subsample, ChemicalAnalysis, Grids]
+    public_groups = get_public_groups()
+    for Model in models_with_owners:
+        ctype = ContentType.objects.get_for_model(Model)
+        for item in Model.objects.all():
+            owner = item.owner
+            owner_django = owner.django_user
+            try:
+                owner_group = Group.objects.get(groupextra__owner=owner_django,
+                                                groupextra__group_type='u_uid')
+            except Group.DoesNotExist:
+                logger.warning("Skipping item %s, owner %s doesn't have a group.",
+                               item, owner)
+                continue # skip this item
+            if GroupAccess.objects.filter(group=owner_group, content_type=ctype,
+                                          object_id=item.pk).exists():
+                continue # Already been done, skip it
+            GroupAccess(group=owner_group, read_access=True, write_access=True,
+                        content_type=ctype, object_id=item.pk).save()
+    for Model in models_with_public_data:
+        ctype = ContentType.objects.get_for_model(Model)
+        for item in Model.objects.filter(public_data__iexact='y'):
+            for group in public_groups:
+                if GroupAccess.objects.filter(group=group, content_type=ctype,
+                                              object_id=item.pk).exists():
+                    continue # Object is already in this group
+                GroupAccess(group=group, content_type=ctype, object_id=item.pk,
+                            read_access=True, write_access=False).save()

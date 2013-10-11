@@ -22,7 +22,6 @@ def formatOxide(species):
         return retStr
 
 
-
 #Request to serve search.html
 def search(request):
 	return render(request, 'index.html')
@@ -282,14 +281,9 @@ def metpetdb(request):
 	region_id=request.GET.get('region_id','')
 
 	metamorphic_grade_id=request.GET.get('metamorphicgrade_id','')
-	print "*******************"
-	print metamorphic_grade_id
 	
 	metamorphic_region_id=request.GET.get('metamorphicregion_id','')
 
-	print "*******************"
-	print metamorphic_region_id
-	
 	publication_id= request.GET.get('publication_id','')
 	
 	if rocktype_id!='':
@@ -335,11 +329,7 @@ def metpetdb(request):
 	
 	samples=SampleQuery(rock_type=rocktype_id_list,country=country_list,owner_id=owner_id_list,mineral_id=mineral_id_list,region_id=region_id_list,metamorphic_grade_id=metamorphic_grade_id_list, metamorphic_region_id=metamorphic_region_id_list, publication_id=publication_id_list)
 	#sample_test = SampleQuery(rock_type=[], country=[], owner_id=[], mineral_id=[], region_id=[], metamorphic_grade_id=[13,], metamorphic_region_id=[], publication_id=[])
-	print "*****************"
-	print samples
 
-	#print "*********************"
-	#print sample_test
 	if returntype=='rocktype_facet':
 		return HttpResponse(getFacetJSON(samples.rock_type_facet()), content_type="application/json")
 	elif returntype=='country_facet':
@@ -357,7 +347,6 @@ def metpetdb(request):
 	elif returntype== 'publication_facet':
 		return HttpResponse(getFacetJSON(samples.publication_facet()), content_type="application/json")
 	elif returntype=='map':
-		#q=test.get_main_brief()
 		return HttpResponse(getAllJSON(samples.get_main_brief()), content_type="application/json")
 	else:
 		cursor=con.cursor()

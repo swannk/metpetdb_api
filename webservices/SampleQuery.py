@@ -302,9 +302,10 @@ if __name__ == '__main__':
                        mineral_id = [], region_id = [], metamorphic_grade_id = [], \
                        metamorphic_region_id = [], publication_id = [] ) 
 
+'''
     print str(p)
 
-    '''
+
     print str(p)
 
     r = SampleQuery(mineral_id = [-1] ) 

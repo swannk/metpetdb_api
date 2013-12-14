@@ -21,6 +21,15 @@
     s2s:forInput :Minerals ;
     s2s:hasOutput core:LabelIdCountJsonArray .
 
+:Minerals2 a s2s:Input ;
+    core:hasDelimiter ","^^xsd:string ;
+    rdfs:comment "A search parameter for data related to any selected minerals2."^^xsd:string ;
+    rdfs:label "Mineral2"^^xsd:string .
+
+:Minerals2Query a s2s:InputValuesInterface ;
+    s2s:forInput :Minerals2 ;
+    s2s:hasOutput core:LabelIdCountJsonArray .
+
 :Owners a s2s:Input ;
     core:hasDelimiter ","^^xsd:string ;
     rdfs:comment "A search parameter for data related to any selected owners."^^xsd:string ;
@@ -73,6 +82,15 @@
  	
 :PublicationsQuery a s2s:InputValuesInterface ;
     s2s:forInput :Publications ;
+    s2s:hasOutput core:LabelIdCountJsonArray .
+
+:Countries  a s2s:Input ;
+    core:hasDelimiter ","^^xsd:string ;
+    rdfs:comment "A search parameter for data related to any selected countries."^^xsd:string ;
+    rdfs:label "Countries"^^xsd:string .
+    
+:CountriesQuery a s2s:InputValuesInterface ;
+    s2s:forInput :Countries ;
     s2s:hasOutput core:LabelIdCountJsonArray .
 
 :SearchService

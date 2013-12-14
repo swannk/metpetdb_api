@@ -66,13 +66,34 @@ border-bottom: 1px solid white;
     background-color: #F9F9F9;
 }
 
-#myMap
+#myMap, #map3d
 {
     position:relative;
-    width: 99%;
-    height:400px;
+    float: right;
+    width: 850px;
+    height:500px;
     border: 3px solid #C7C6C6;
 }
+
+/* Style for the display line at the top of search page*/
+
+#displayCount
+{
+    position: relative;
+    margin-top: 15px;
+    margin-left: 15px;
+    font-size: 15px;
+    color: black;    
+    padding: 3px 7px 2px 7px;
+} 
+
+#s2s-facet-panel
+{
+    width: 26em !important;
+    float: left;
+
+}
+
 
 #search-panel
 {
@@ -99,15 +120,14 @@ border-bottom: 1px solid white;
 
 #s2s-search-panel
 {
-    vertical-align:top;
+    float: left;
     width: 25em;
-    float:left;
     margin-top: 15px;
 }
 
 #metpetdb-results
 {
-    width:890px;
+    width:860px;
     float: right;
     margin-top: 0px;
     margin-bottom: 20px;
@@ -253,18 +273,42 @@ div.widget-divider div.ui-accordion-content.ui-helper-reset.ui-widget-content.ui
     left: -10000px;
 }
 
-#exportBtn
+#kmlview
 {
     display: inline-block;
-    margin-top: 10px;
     padding: 5px 14px;
+    margin-top: 20px;
+    margin-left: 300px;
     background-color: white;
     color: #409F89;
     border: 1px solid #DDD;
     -webkit-border-radius: 15px;
     -moz-border-radius: 15px;
     border-radius: 15px;
-    float: right;
+
+}
+
+#kmlview:hover
+{
+    text-decoration: none;
+    cursor: pointer;
+    background-color: #409F89;
+    color: #F8F8F8;
+}
+
+#exportBtn
+{
+    display: inline-block;
+    padding: 5px 14px;
+    margin-top: 0px;
+    margin-left: 30px;
+    background-color: white;
+    color: #409F89;
+    border: 1px solid #DDD;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+
 }
 
 #exportBtn:hover
@@ -274,3 +318,31 @@ div.widget-divider div.ui-accordion-content.ui-helper-reset.ui-widget-content.ui
     background-color: #409F89;
     color: #F8F8F8;
 }
+
+#view3d{
+    display: inline-block;
+    padding: 5px 14px;
+    margin-top: 0px;
+    margin-left: 30px;
+    background-color: white;
+    color: #409F89;
+    border: 1px solid #DDD;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+#view3d:hover
+{
+    text-decoration: none;
+    cursor: pointer;
+    background-color: #409F89;
+    color: #F8F8F8;
+}
+
+
+/* http://stackoverflow.com/questions/9904379/google-map-zoom-controls-not-displaying-correctly */
+.gmnoprint img {
+    max-width: none; 
+}
+

@@ -1,11 +1,15 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from webservices.models import *
 import json
 import sys
+import os
 from django.db import connection as con
 from webservices.SampleQuery import *
 from webservices.utility import *
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
+from webservices.json2kml import *
+from django.core.files import File
+from django.core.servers.basehttp import FileWrapper
 #direct stdout to stderr so that it is logged by the webserver
 sys.stdout = sys.stderr
 
@@ -272,11 +276,15 @@ def metpetdb(request):
 	
 	rocktype_id=request.GET.get('rocktype_id','')
 	
-	country=request.GET.get('country','')
+	country=request.GET.get('country_name','')
 	
 	owner_id=request.GET.get('owner_id','')
 	
 	mineral_id=request.GET.get('mineral_id','')
+	#print mineral_id
+
+	mineral2_id=request.GET.get('mineral2_id','')
+	#print mineral2_id
 	
 	region_id=request.GET.get('region_id','')
 
@@ -292,9 +300,14 @@ def metpetdb(request):
 		rocktype_id_list=[]
 
 	if mineral_id!='':
-		mineral_id_list=mineral_id.split(',')
+		mineral1_id_list=mineral_id.split(',')
 	else:
-		mineral_id_list=[]
+		mineral1_id_list=[]
+
+	if mineral2_id!='':
+		mineral2_id_list=mineral2_id.split(',')
+	else:
+		mineral2_id_list=[]
 	
 	if owner_id!='':
 		owner_id_list=owner_id.split(',')
@@ -325,17 +338,26 @@ def metpetdb(request):
 		publication_id_list=publication_id.split(',')
 	else:
 		publication_id_list=[]
+		
+	#mineral facet assemblage is a list of lists
 
-	
+	mineral_id_list =[]
+	mineral_id_list.append(mineral1_id_list)
+	mineral_id_list.append(mineral2_id_list)
+
+
 	samples=SampleQuery(rock_type=rocktype_id_list,country=country_list,owner_id=owner_id_list,mineral_id=mineral_id_list,region_id=region_id_list,metamorphic_grade_id=metamorphic_grade_id_list, metamorphic_region_id=metamorphic_region_id_list, publication_id=publication_id_list)
+	#print samples
 	#sample_test = SampleQuery(rock_type=[], country=[], owner_id=[], mineral_id=[], region_id=[], metamorphic_grade_id=[13,], metamorphic_region_id=[], publication_id=[])
 
 	if returntype=='rocktype_facet':
 		return HttpResponse(getFacetJSON(samples.rock_type_facet()), content_type="application/json")
 	elif returntype=='country_facet':
-		return HttpResponse(getFacetJSON(samples.country_facet()), content_type="application/json")
+		return HttpResponse(getFacet(samples.country_facet()), content_type="application/json")
 	elif returntype=='mineral_facet':
 		return HttpResponse(getFacetJSON(samples.mineral_facet()), content_type="application/json")
+	elif returntype=='mineral2_facet':
+		return HttpResponse(getFacetJSON(samples.mineral_facet2()), content_type="application/json")
 	elif returntype=='region_facet':
 		return HttpResponse(getFacetJSON(samples.region_facet()), content_type="application/json")
 	elif returntype=='owner_facet':
@@ -360,4 +382,40 @@ def metpetdb(request):
         else:
         	return HttpResponse(getSampleResults(samples.get_main(500)))
 	
-			
+'''
+def earth(request):
+		PROJECT_DIR = os.path.dirname(__file__)
+		PROJECT_DIR = os.path.join(PROJECT_DIR, '..')
+		KML_DIR = os.path.join(PROJECT_DIR, 'web')
+		data = request.POST.get('jsondata')
+		items = json.loads(data)
+		f = open(KML_DIR+'/'+'BasicKML.kml','w')
+		with open(KML_DIR+'/'+'BasicKML.kml', 'w') as f:
+			myfile = File(f)
+			myfile.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+			myfile.write("<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n")
+			myfile.write("  <Document>\n")
+			for item in items:
+				myfile.write("   <Folder>\n")
+				myfile.write("    <name>"+item["sample_number"]+"</name>\n")
+				myfile.write("     <Placemark>\n")
+				myfile.write("     <name>"+item["sample_number"]+"</name>\n")
+				myfile.write("      <Description>"+"Rocktype: "+item["rock_type"]+"Owner: "+item["owner"]+"</Description>\n")
+				myfile.write("       <Point><coordinates>"+item["lat"]+","+item["lon"]+"</coordinates></Point>\n")
+				myfile.write("     </Placemark>\n")
+				myfile.write("   </Folder>")
+				myfile.write("\n")
+			myfile.write("  </Document>\n</kml>\n")
+			myfile.closed
+			f.closed
+			f = open(KML_DIR+'/'+'BasicKML.kml', 'r+')
+			x= File(f)
+			my_data = x.read()
+			print my_data
+			x.closed
+			f.closed
+			response = HttpResponse(content_type='application/vnd.google-earth.kml+xml')
+			response['Content-Disposition'] = 'attachment; filename="BasicKML.kml"'
+			response.write(file(KML_DIR+'/'+'BasicKML.kml', "rb").read())
+		return response
+'''

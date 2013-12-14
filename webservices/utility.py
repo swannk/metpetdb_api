@@ -1,6 +1,7 @@
 from django.db import connection as con
 import json
 
+
 #creates JSON for facets
 def getFacetJSON(query):
         cursor=con.cursor()
@@ -10,8 +11,8 @@ def getFacetJSON(query):
         for row in data:
                 dataId=unicode(row[0])
                 dataLabel=unicode(row[1])
-		if dataLabel=='':
-			dataLabel='Missing Value'
+                if dataLabel=='':
+                        dataLabel='Missing Value'
                 dataCount=unicode(row[2])
                 jsonValues={}
                 jsonValues['id']=dataId
@@ -19,6 +20,24 @@ def getFacetJSON(query):
                 jsonValues['count']=dataCount
                 jsonData.append(jsonValues)
         return json.dumps(jsonData)
+
+#country facet does not have IDs
+def getFacet(query):
+        cursor=con.cursor()
+        cursor.execute(query)
+        data=cursor.fetchall()
+        jsonData=[]
+        for row in data:
+                dataId=unicode(row[0])
+                dataLabel=unicode(row[0])
+                dataCount=unicode(row[1])
+                jsonValues={}
+                jsonValues['id']=dataId
+                jsonValues['label']=dataLabel
+                jsonValues['count']=dataCount
+                jsonData.append(jsonValues)
+        return json.dumps(jsonData)
+
 
 #creates JSON array for all data
 def getAllJSON(query):

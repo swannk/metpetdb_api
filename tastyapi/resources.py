@@ -9,6 +9,10 @@ from tastypie.authorization import Authorization
 from tastypie.authentication import ApiKeyAuthentication
 from tastypie.exceptions import Unauthorized, InvalidFilterError, ImmediateHttpResponse
 from . import models, auth
+import logging
+
+logging.basicConfig()
+logger = logging.getLogger(__name__)
 
 PREFIX_STRING = '_extra_filter_prefixes'
 
@@ -57,13 +61,16 @@ class VersionValidation(Validation):
                 return {'__all__': 'Cannot find previous version (use POST to create).'}
             elif 'version' in bundle.data and bundle.data['version'] != 0:
                 # A version of 0 will be incremented to 1 during hydration
-                return {'version': 'This should be 0 or absent.'}
+                # Is this needed? Version is already set to 1 by the time we
+                # come here.
+                # return {'version': 'This should be 0 or absent.'}
+                pass
         else:
             if request is not None and request.method == 'POST':
                 return {'__all__': 'That object already exists (use PUT to update).'}
             elif 'version' not in bundle.data:
                 return {'__all__': 'Data corrupted (version number missing).'}
-            elif bundle.data['version'] != previous.version:
+            elif bundle.data['version'] != previous.version + 1:
                 return {'version': 'Edit conflict (object has changed since last GET).'}
         return {}
 
@@ -93,7 +100,7 @@ def _check_perm_closure(permission_lambda):
 
 class ObjectAuthorization(Authorization):
     """Tastypie custom Authorization class.
-    
+
     Provides row-level CRUD permissions."""
     def __init__(self, app_name, model_name, *args, **kwargs):
         """Store some information which we'll need later."""
@@ -110,21 +117,28 @@ class ObjectAuthorization(Authorization):
     read_detail = _check_perm_closure(lambda self: self.read_perm)
     def create_list(self, object_list, bundle):
         """Check object_list to make sure new objects are owned by us."""
+        logger.info("Received list of objects to create")
         if not bundle.request.user.has_perm(self.add_perm):
+            logger.warning("User is not verified.")
             raise Unauthorized("User {} is not manually verified."
                                .format(bundle.request.user))
         result = []
         for item in object_list:
             if item.owner == bundle.request.user:
                 result.append(item)
+            else:
+                logger.warning("User must own created object.")
         return result
     def create_detail(self, object_list, bundle):
         """Check bundle.obj to make sure it is owned by us."""
         user = bundle.request.user
-        if bundle.obj.owner == user and user.has_perm(self.add_perm):
+        logger.info("Received single object to create")
+        if bundle.obj.user.django_user == user and user.has_perm(self.add_perm):
             return True
         else:
-            raise Unauthorized()
+            # print bundle.obj.user.django_user
+            logger.warning("User must own created object.")
+            raise Unauthorized("User must own created object.")
     update_list = _filter_by_permission_closure(lambda self: self.change_perm)
     update_detail = _check_perm_closure(lambda self: self.change_perm)
     delete_list = _filter_by_permission_closure(lambda self: self.change_perm)
@@ -144,7 +158,7 @@ class FirstOrderResource(ModelResource):
 
         This makes a list of all filters which involve related fields and
         attaches that list to the set of ORM filters.  It will then be used
-        by apply_filters to 
+        by apply_filters to
         """
         extra_filter_prefixes = []
         if filters is None:
@@ -276,14 +290,23 @@ class FirstOrderResource(ModelResource):
                 bundle.data[field_name] = None
         return bundle
 
+class UserResource(BaseResource):
+    class Meta:
+        queryset = models.User.objects.all()
+        authorization = Authorization()
+        authentication = ApiKeyAuthentication()
+        excludes = ['password', 'confirmation_code']
+
 class SampleResource(VersionedResource, FirstOrderResource):
     rock_type = fields.ToOneField("tastyapi.resources.RockTypeResource",
                                   "rock_type")
+    user = fields.ToOneField("tastyapi.resources.UserResource", "user")
     class Meta:
         queryset = models.Sample.objects.all()
-        authorization = ObjectAuthorization()
+        allowed_methods = ['get', 'post', 'put', 'delete']
         authentication = ApiKeyAuthentication()
-        excludes = ['user', 'collector', 'location']
+        authorization = ObjectAuthorization('tastyapi', 'sample')
+        excludes = ['user', 'collector']
         filtering = {
                 'version': ALL,
                 'sesar_number': ALL,
@@ -291,14 +314,15 @@ class SampleResource(VersionedResource, FirstOrderResource):
                 'collection_date': ALL,
                 'rock_type': ALL_WITH_RELATIONS,
                 }
-        validation = VersionValidation(queryset, 'id')
+        validation = VersionValidation(queryset, 'sample_id')
+
 
 class RockTypeResource(BaseResource):
     samples = fields.ToManyField(SampleResource, "sample_set")
     class Meta:
         resource_name = "rock_type"
         queryset = models.RockType.objects.all()
-        authentication = ApiKeyAuthentication()
+        allowed_methods = ['get', 'post', 'put']
         filtering = {
                 'rock_type': ALL,
                 }
@@ -320,6 +344,7 @@ class SubsampleResource(VersionedResource, FirstOrderResource):
         excludes = ['user']
         authorization = ObjectAuthorization('tastyapi', 'subsample')
         authentication = ApiKeyAuthentication()
+        # authorization = Authorization()
         filtering = {
                 'public_data': ALL,
                 'grid_id': ALL,
@@ -357,7 +382,7 @@ class ChemicalAnalysisResource(VersionedResource, FirstOrderResource):
     mineral = fields.ToOneField(MineralResource, "mineral", null=True)
     class Meta:
         resource_name = 'chemical_analysis'
-        queryset = models.ChemicalAnalysis.objects.all()
+        queryset = models.ChemicalAnalyses.objects.all()
         excludes = ['image', 'user']
         authorization = ObjectAuthorization('tastyapi', 'chemical_analysis')
         authentication = ApiKeyAuthentication()

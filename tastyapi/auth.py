@@ -52,7 +52,7 @@ class DACBackend(ModelBackend):
             personal_group = Group.objects.filter(groupextra__group_type='u_uid',
                                                   groupextra__owner=user_obj)
             if personal_group.exists():
-                # The user has add permissions, 
+                # The user has add permissions,
                 results.update(set("%s.%s" % (create_perm.content_type.app_label,
                                               create_perm.codename)
                                    for create_perm in create_perms))
@@ -73,7 +73,7 @@ class DACBackend(ModelBackend):
                 # If the user is the superuser, just give them all permissions.
                 # NB: Permissions need to be translated into a string format
                 #     for some bizarre reason
-                perms = (["%s.%s" % (p.content_type.app_label, p.codename) for 
+                perms = (["%s.%s" % (p.content_type.app_label, p.codename) for
                           p in all_perms])
                 results.update(perms)
         # delegate to get_group_permissions to handle groups
@@ -92,7 +92,7 @@ def get_read_queryset(user, prefix=None):
         qs = Foo.objects.filter(query)
 
     Now qs has only those Foo objects which user may read.
-    
+
     The backend is written in Python, and can only determine permissions on a
     case-by-case basis.  We need a way to produce database queries for
     "everything John Doe can read," since the alternative is manually checking
@@ -102,7 +102,7 @@ def get_read_queryset(user, prefix=None):
     related objects instead of the current object.
 
     Typical usage:
-        
+
         query = get_read_queryset(user, 'bar')
         qs = Foo.objects.filter(query)
 

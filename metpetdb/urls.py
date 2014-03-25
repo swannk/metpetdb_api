@@ -9,10 +9,12 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 # from django.contrib import admin
 # admin.autodiscover()
 
-from tastyapi.resources import SampleResource, RockTypeResource, SubsampleResource
-from tastyapi.resources import SubsampleTypeResource, ReferenceResource
-from tastyapi.resources import ChemicalAnalysisResource, MineralResource
-from tastyapi.resources import UserResource
+from tastyapi.resources import SampleResource, RockTypeResource, \
+                               SubsampleResource, SubsampleTypeResource, \
+                               ReferenceResource, ChemicalAnalysisResource, \
+                               MineralResource, UserResource, RegionResource, \
+                               MetamorphicGradeResource, \
+                               MetamorphicRegionResource
 from tastypie.api import Api
 
 api_v1 = Api(api_name='v1')
@@ -24,6 +26,9 @@ api_v1.register(SubsampleTypeResource())
 api_v1.register(ReferenceResource())
 api_v1.register(ChemicalAnalysisResource())
 api_v1.register(MineralResource())
+api_v1.register(RegionResource())
+api_v1.register(MetamorphicGradeResource())
+api_v1.register(MetamorphicRegionResource())
 
 urlpatterns = patterns('',
 url(r'^webservices/sample/(\d+)/$','webservices.views.sample', name='sample'),

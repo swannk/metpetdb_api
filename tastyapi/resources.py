@@ -1,4 +1,4 @@
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from tastypie.resources import ModelResource
@@ -8,6 +8,7 @@ from tastypie.validation import Validation
 from tastypie.authorization import Authorization
 from tastypie.authentication import ApiKeyAuthentication
 from tastypie.exceptions import Unauthorized, InvalidFilterError, ImmediateHttpResponse
+
 from . import models, auth
 import logging
 
@@ -298,9 +299,22 @@ class UserResource(BaseResource):
         excludes = ['password', 'confirmation_code']
 
 class SampleResource(VersionedResource, FirstOrderResource):
+    user = fields.ToOneField("tastyapi.resources.UserResource", "user")
     rock_type = fields.ToOneField("tastyapi.resources.RockTypeResource",
                                   "rock_type")
-    user = fields.ToOneField("tastyapi.resources.UserResource", "user")
+    regions = fields.ToManyField("tastyapi.resources.RegionResource",
+                                 "regions")
+    references = fields.ToManyField("tastyapi.resources.ReferenceResource",
+                                    "references")
+    minerals = fields.ToManyField("tastyapi.resources.MineralResource",
+                                  "minerals")
+    metamorphic_grades = fields.ToManyField(
+                                "tastyapi.resources.MetamorphicGradeResource",
+                                "metamorphic_grades")
+    metamorphic_regions = fields.ToManyField(
+                                "tastyapi.resources.MetamorphicRegionResource",
+                                "metamorphic_regions")
+
     class Meta:
         queryset = models.Sample.objects.all()
         allowed_methods = ['get', 'post', 'put', 'delete']
@@ -313,19 +327,96 @@ class SampleResource(VersionedResource, FirstOrderResource):
                 'public_data': ALL,
                 'collection_date': ALL,
                 'rock_type': ALL_WITH_RELATIONS,
+                'regions': ALL_WITH_RELATIONS,
                 }
         validation = VersionValidation(queryset, 'sample_id')
 
+    def save_m2m(self, bundle):
+        # Map the M2M request fields to their appropriate classes
+        class_mapping = {'regions': models.SampleRegion,
+                         'references': models.SampleReference,
+                         'minerals': models.SampleMineral,
+                         'metamorphic_grades': models.SampleMetamorphicGrade,
+                         'metamorphic_regions': models.SampleMetamorphicRegion}
+
+        # Map the request fields to the appropirate field names on the
+        # intermediate "through" table
+        field_mapping = {'regions': 'region',
+                         'references': 'reference',
+                         'minerals': 'mineral',
+                         'metamorphic_grades': 'metamorphic_grade',
+                         'metamorphic_regions': 'metamorphic_region'}
+
+        for field_name, field_object in self.fields.items():
+            if not getattr(field_object, 'is_m2m', False):
+                continue
+
+            if not field_object.attribute:
+                continue
+
+            # This will get or create a new record for each M2M record passed
+            # in the request. The class_mapping variable above specifies which
+            # classes are currently accepted.
+            for field in bundle.data[field_name]:
+                try: id = class_mapping[field_name].objects.latest('id').id + 1
+                except class_mapping[field_name].DoesNotExist: id = 1
+
+                kwargs = {'id': id,
+                          'sample': models.Sample.objects.get(
+                                                      pk=bundle.obj.sample_id),
+                          field_mapping[field_name]: field.obj}
+
+                try: class_mapping[field_name].objects.get_or_create(**kwargs)
+                except IntegrityError: continue
+
+
+class RegionResource(BaseResource):
+    class Meta:
+        queryset = models.Region.objects.all()
+        authentication = ApiKeyAuthentication()
+        allowed_methods = ['get']
+        resource_name = "region"
+        filtering = { 'region': ALL }
 
 class RockTypeResource(BaseResource):
     samples = fields.ToManyField(SampleResource, "sample_set")
     class Meta:
         resource_name = "rock_type"
+        authentication = ApiKeyAuthentication()
         queryset = models.RockType.objects.all()
         allowed_methods = ['get', 'post', 'put']
+        filtering = { 'rock_type': ALL }
+
+class MineralResource(BaseResource):
+    real_mineral = fields.ToOneField('tastyapi.resources.MineralResource',
+                                     'real_mineral')
+    # analyses = fields.ToManyField('tastyapi.resources.ChemicalAnalysisResource',
+    #                               'chemicalanalysis_set')
+    class Meta:
+        resource_name = 'mineral'
+        queryset = models.Mineral.objects.all()
+        authentication = ApiKeyAuthentication()
+        allowed_methods = ['get']
         filtering = {
-                'rock_type': ALL,
+                'name': ALL,
+                'real_mineral': ALL_WITH_RELATIONS,
                 }
+
+class MetamorphicGradeResource(BaseResource):
+    class Meta:
+        resource_name = "metamorphic_grade"
+        authentication = ApiKeyAuthentication()
+        queryset = models.MetamorphicGrade.objects.all()
+        allowed_methods = ['get']
+        filtering = { 'name': ALL }
+
+class MetamorphicRegionResource(BaseResource):
+    class Meta:
+        resource_name = "metamorphic_region"
+        authentication = ApiKeyAuthentication()
+        queryset = models.MetamorphicRegion.objects.all()
+        allowed_methods = ['get']
+        filtering = { 'name': ALL }
 
 class SubsampleTypeResource(BaseResource):
     subsamples = fields.ToManyField("tastyapi.resources.SubsampleResource",
@@ -354,25 +445,14 @@ class SubsampleResource(VersionedResource, FirstOrderResource):
         validation = VersionValidation(queryset, 'subsample_id')
 
 
-class MineralResource(BaseResource):
-    real_mineral = fields.ToOneField('tastyapi.resources.MineralResource',
-                                     'real_mineral')
-    analyses = fields.ToManyField('tastyapi.resources.ChemicalAnalysisResource',
-                                  'chemicalanalysis_set')
-    class Meta:
-        queryset = models.Mineral.objects.all()
-        authentication = ApiKeyAuthentication()
-        filtering = {
-                'name': ALL,
-                'real_mineral': ALL_WITH_RELATIONS,
-                }
 
 
 class ReferenceResource(BaseResource):
-    analyses = fields.ToManyField('tastyapi.resources.ChemicalAnalysisResource',
-                                    'chemicalanalysis_set')
+    # analyses = fields.ToManyField('tastyapi.resources.ChemicalAnalysisResource',
+    #                                 'chemicalanalysis_set')
     class Meta:
         queryset = models.Reference.objects.all()
+        allowed_methods = ['get']
         authentication = ApiKeyAuthentication()
         filtering = {'name': ALL}
 
@@ -402,4 +482,3 @@ class ChemicalAnalysisResource(VersionedResource, FirstOrderResource):
                 'total': ALL,
                 }
         validation = VersionValidation(queryset, 'chemical_analysis_id')
-

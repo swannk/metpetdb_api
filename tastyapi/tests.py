@@ -1,7 +1,11 @@
 from django.contrib.contenttypes.models import ContentType
 from .models import Group, GroupExtra, GroupAccess
 from tastyapi.models import User, Sample, Subsample, SubsampleType, \
-                            RockType, get_public_groups, GroupExtra
+                            RockType, ChemicalAnalyses, Region, SampleRegion, \
+                            SampleReference, SampleMetamorphicGrade, \
+                            SampleMineral, SampleMetamorphicRegion, \
+                            GroupExtra, get_public_groups
+
 from django.contrib.auth.models import User as AuthUser
 from tastypie.test import ResourceTestCase
 from tastypie.models import ApiKey
@@ -20,6 +24,26 @@ valid_post_data = {
     'date_precision': '1',
     'number': 'NL-67:2005-06290',
     'rock_type': '/tastyapi/v1/rock_type/16/',
+    'regions': ['2',
+                '/tastyapi/v1/region/3/',
+                '/tastyapi/v1/region/4/',
+                '/tastyapi/v1/region/4/'],
+    'references': ['/tastyapi/v1/reference/1/',
+                   '/tastyapi/v1/reference/2/',
+                   '/tastyapi/v1/reference/2/',
+                   '/tastyapi/v1/reference/2/'],
+    'metamorphic_grades': ['/tastyapi/v1/metamorphic_grade/1/',
+                           '/tastyapi/v1/metamorphic_grade/2/',
+                           '/tastyapi/v1/metamorphic_grade/3/',
+                           '/tastyapi/v1/metamorphic_grade/4/'],
+    'metamorphic_regions': ['/tastyapi/v1/metamorphic_region/427/',
+                           '/tastyapi/v1/metamorphic_region/428/',
+                           '/tastyapi/v1/metamorphic_region/429/',
+                           '/tastyapi/v1/metamorphic_region/430/'],
+    'minerals': ['/tastyapi/v1/mineral/1/',
+                 '/tastyapi/v1/mineral/2/',
+                 '/tastyapi/v1/mineral/3/',
+                 '/tastyapi/v1/mineral/4/'],
     'description': 'Created by a test case',
     'location_error': '2000',
     'country': 'Brazil',
@@ -48,6 +72,7 @@ class TestSetUp(ResourceTestCase):
 
     def get_credentials(self, user_id = 1):
         auth_user = AuthUser.objects.get(pk = user_id)
+        # username should be dynamic
         return "ApiKey sibel:{0}".format(ApiKey.objects.get(user =
                                                             auth_user).key)
 
@@ -58,6 +83,31 @@ class TestSetUp(ResourceTestCase):
         public_groups = get_public_groups()
         nt.assert_equal("user_group_sibel", personal_group.name)
         nt.assert_in(public_group, public_groups)
+
+# class RegionCreateTest(TestSetUp):
+#     fixtures = ['auth_users.json', 'users.json']
+#     def test_creates_a_region(self):
+#         post_data = {
+#                   'region_id': '1',
+#                   'name': 'Mineral 1'
+#         }
+
+#         credentials = self.get_credentials()
+#         resp = client.post('/tastyapi/v1/region/', data = post_data,
+#                             authentication = credentials, format = 'json')
+#         self.assertHttpCreated(resp)
+#         nt.assert_equal(Region.objects.count(), 1)
+
+class RegionReadTest(TestSetUp):
+    fixtures = ['auth_users.json', 'users.json', 'regions.json']
+    def setUp(self):
+        super(RegionReadTest, self).setUp()
+
+    def test_reads_an_existing_region(self):
+        credentials = self.get_credentials()
+        resp = client.get('/tastyapi/v1/region/1/',
+                          authentication = credentials, format = 'json')
+        self.assertHttpOK(resp)
 
 
 class SampleResourceReadTest(TestSetUp):
@@ -97,7 +147,9 @@ class SampleResourceReadTest(TestSetUp):
 
 
 class SampleResourceCreateTest(TestSetUp):
-    fixtures = ['auth_users.json', 'users.json', 'rock_types.json']
+    fixtures = ['auth_users.json', 'users.json', 'regions.json',
+                'references.json', 'metamorphic_grades.json', 'minerals.json',
+                'rock_types.json', 'metamorphic_regions.json']
 
     def test_authorized_user_can_create_a_sample(self):
         nt.assert_equal(Sample.objects.count(), 0)
@@ -105,7 +157,25 @@ class SampleResourceCreateTest(TestSetUp):
         resp = client.post('/tastyapi/v1/sample/', data = valid_post_data,
                            authentication = credentials, format = 'json')
         self.assertHttpCreated(resp)
+
         nt.assert_equal(Sample.objects.count(), 1)
+
+        sample = Sample.objects.get(pk=1)
+        nt.assert_equal(sample.metamorphic_regions.all().count(), 4)
+        nt.assert_equal(SampleMetamorphicRegion.objects.count(), 4)
+
+        nt.assert_equal(SampleMetamorphicGrade.objects.count(), 4)
+        nt.assert_equal(sample.metamorphic_grades.all().count(), 4)
+
+        nt.assert_equal(SampleReference.objects.count(), 2)
+        nt.assert_equal(sample.references.all().count(), 2)
+
+        nt.assert_equal(SampleMineral.objects.count(), 4)
+        nt.assert_equal(sample.minerals.all().count(), 4)
+
+        nt.assert_equal(SampleRegion.objects.count(), 3)
+        nt.assert_equal(sample.regions.all().count(), 3)
+
 
     def test_unauthorized_user_cannot_create_a_sample(self):
         nt.assert_equal(Sample.objects.count(), 0)

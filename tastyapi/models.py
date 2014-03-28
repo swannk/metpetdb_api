@@ -16,11 +16,11 @@ from django.contrib.gis.db.models import GeoManager, PolygonField, PointField, G
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.core.mail import EmailMessage
-
 from django.db import models as DjangoModels
 from tastypie.models import ApiKey
-
 from django.contrib.gis.db import models
+
+from . import util
 
 # from tastypie.models import create_api_key
 
@@ -45,6 +45,7 @@ class GroupAccess(Model):
     accessible_object = generic.GenericForeignKey('content_type', 'object_id')
     class Meta:
         unique_together = ('group', 'content_type', 'object_id')
+        get_latest_by = 'id'
 
 
 def get_public_groups():
@@ -291,6 +292,7 @@ class Region(models.Model):
     class Meta:
         managed = False
         db_table = u'regions'
+        get_latest_by = "region_id"
 
 class RockType(models.Model):
     rock_type_id = models.SmallIntegerField(primary_key=True)
@@ -415,7 +417,7 @@ class Sample(models.Model):
     metamorphic_grades = ManyToManyField(MetamorphicGrade, through='SampleMetamorphicGrade')
     metamorphic_regions = ManyToManyField(MetamorphicRegion, through='SampleMetamorphicRegion')
     minerals = ManyToManyField(Mineral, through='SampleMineral')
-    references = ManyToManyField('Reference', through='SampleReference')
+    references = ManyToManyField(Reference, through='SampleReference')
     regions = ManyToManyField(Region, through='SampleRegion')
     group_access = generic.GenericRelation(GroupAccess)
 
@@ -424,25 +426,19 @@ class Sample(models.Model):
     class Meta:
         managed = False
         db_table = u'samples'
+        get_latest_by = "sample_id"
         permissions = (('read_sample', 'Can read sample'),)
                         # 'create_sample', 'Can create sample',)
     def save(self, **kwargs):
         # Assign a sample ID only for create requests
-        if self.sample_id is None:
-            try: id = Sample.objects.latest('sample_id').sample_id + 1
-            except Sample.DoesNotExist: id = 1
-            self.sample_id = id
-        sample = super(Sample, self).save()
-
+        self.sample_id = self.sample_id or util.get_next_id(Sample)
+        super(Sample, self).save()
 
 @receiver(post_save, sender=Sample)
 def create_sample_group_access(sender, instance, created, **kwargs):
     ctype = ContentType.objects.get_for_model(instance)
     group_id = instance.user.django_user.groups.filter(
                     name__endswith=instance.user.django_user.username)[0].id
-
-    try: id = GroupAccess.objects.latest('id').id + 1
-    except GroupAccess.DoesNotExist: id = 1
 
     # Create a group access only if one doesn't already exists.
     # This will be true when we are updating an existing sample.
@@ -451,7 +447,7 @@ def create_sample_group_access(sender, instance, created, **kwargs):
                                                object_id = instance.sample_id)
     except GroupAccess.DoesNotExist:
         GroupAccess.objects.create(
-            id = id,
+            id = util.get_next_id(GroupAccess),
             group_id = group_id,
             read_access = True,
             write_access = True,

@@ -357,13 +357,10 @@ class SampleResource(VersionedResource, FirstOrderResource):
         """ Remove free-text fields "regions" and "references" from the bundle
         and save them for later, so that Tastypie doesn't try to save them
         on its own, and fail"""
-        regions = bundle.data.pop('regions')
-        references = bundle.data.pop('references')
+        free_text_fields = {'regions': bundle.data.pop('regions'),
+                           'references': bundle.data.pop('references')}
         super(SampleResource, self).obj_create(bundle, **kwargs)
-
         sample = Sample.objects.get(pk=bundle.obj.sample_id)
-        free_text_fields = {'regions': regions,
-                           'references': references}
 
         for field_name, entries in free_text_fields.iteritems():
             for entry in entries:

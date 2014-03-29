@@ -356,7 +356,7 @@ class SampleResource(VersionedResource, FirstOrderResource):
 
         """ Remove free-text fields "regions" and "references" from the bundle
         and save them for later, so that Tastypie doesn't try to save them
-        on its own, and fail"""
+        on its own and fail"""
         free_text_fields = {'regions': bundle.data.pop('regions'),
                            'references': bundle.data.pop('references')}
         super(SampleResource, self).obj_create(bundle, **kwargs)
@@ -392,9 +392,9 @@ class SampleResource(VersionedResource, FirstOrderResource):
             if field_object.readonly:
                 continue
 
-            # This will get or create a new record for each M2M record passed
-            # in the request. The class_mapping variable above specifies which
-            # classes are currently accepted.
+            """This will get or create a new record for each M2M record passed
+               in the request. The CLASS_MAPPING global variable defined at
+               the top specifies which classes are currently accepted."""
             for field in bundle.data[field_name]:
                 sample = Sample.objects.get(pk=bundle.obj.sample_id)
 

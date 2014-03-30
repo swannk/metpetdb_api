@@ -1,5 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
-from .models import Group, GroupExtra, GroupAccess
+from tastyapi.models import Group, GroupExtra, GroupAccess
 from tastyapi.models import User, Sample, Subsample, SubsampleType, \
                             RockType, ChemicalAnalyses, Region, SampleRegion, \
                             SampleReference, SampleMetamorphicGrade, \
@@ -354,4 +354,4 @@ class SampleResourceUpdateDeleteTest(TestSetUp):
 #         pass
 
 #     def teardown(self):
-# 	    pass
+#       pass

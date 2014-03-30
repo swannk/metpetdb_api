@@ -20,7 +20,7 @@ from django.db import models as DjangoModels
 from tastypie.models import ApiKey
 from django.contrib.gis.db import models
 
-from . import util
+from . import utils
 
 # from tastypie.models import create_api_key
 
@@ -409,13 +409,16 @@ class Sample(models.Model):
     location_error = models.FloatField(null=True, blank=True)
     country = models.CharField(max_length=100, blank=True)
     description = models.TextField(blank=True)
-    # collector_name = models.CharField(max_length=50, blank=True)
-    collector = models.ForeignKey('User', related_name='+', null=True, db_column='collector_id', blank=True)
+    collector_name = models.CharField(max_length=50, blank=True)
+    collector = models.ForeignKey('User', related_name='+', null=True,
+                                  db_column='collector_id', blank=True)
     location_text = models.CharField(max_length=50, blank=True)
     location = models.PointField()
     objects = models.GeoManager()
-    metamorphic_grades = ManyToManyField(MetamorphicGrade, through='SampleMetamorphicGrade')
-    metamorphic_regions = ManyToManyField(MetamorphicRegion, through='SampleMetamorphicRegion')
+    metamorphic_grades = ManyToManyField(MetamorphicGrade,
+                                         through='SampleMetamorphicGrade')
+    metamorphic_regions = ManyToManyField(MetamorphicRegion,
+                                          through='SampleMetamorphicRegion')
     minerals = ManyToManyField(Mineral, through='SampleMineral')
     references = ManyToManyField(Reference, through='SampleReference')
     regions = ManyToManyField(Region, through='SampleRegion')
@@ -431,7 +434,7 @@ class Sample(models.Model):
                         # 'create_sample', 'Can create sample',)
     def save(self, **kwargs):
         # Assign a sample ID only for create requests
-        self.sample_id = self.sample_id or util.get_next_id(Sample)
+        self.sample_id = self.sample_id or utils.get_next_id(Sample)
         super(Sample, self).save()
 
 @receiver(post_save, sender=Sample)
@@ -447,7 +450,7 @@ def create_sample_group_access(sender, instance, created, **kwargs):
                                                object_id = instance.sample_id)
     except GroupAccess.DoesNotExist:
         GroupAccess.objects.create(
-            id = util.get_next_id(GroupAccess),
+            id = utils.get_next_id(GroupAccess),
             group_id = group_id,
             read_access = True,
             write_access = True,
@@ -462,6 +465,7 @@ class SampleMetamorphicGrade(models.Model):
         managed = False
         unique_together = (('sample', 'metamorphic_grade'),)
         db_table = u'sample_metamorphic_grades'
+        get_latest_by = 'id'
 
 class SampleMetamorphicRegion(models.Model):
     sample = models.ForeignKey('Sample')
@@ -471,6 +475,7 @@ class SampleMetamorphicRegion(models.Model):
         managed = False
         unique_together = (('sample', 'metamorphic_region'),)
         db_table = u'sample_metamorphic_regions'
+        get_latest_by = 'id'
 
 class SampleMineral(models.Model):
     mineral = models.ForeignKey(Mineral)
@@ -481,6 +486,7 @@ class SampleMineral(models.Model):
         managed = False
         unique_together = (('mineral', 'sample'),)
         db_table = u'sample_minerals'
+        get_latest_by = 'id'
 
 class SampleReference(models.Model):
     sample = models.ForeignKey('Sample')
@@ -490,6 +496,7 @@ class SampleReference(models.Model):
         managed = False
         unique_together = (('sample', 'reference'),)
         db_table = u'sample_reference'
+        get_latest_by = 'id'
 
 
 class SampleRegion(models.Model):
@@ -500,6 +507,7 @@ class SampleRegion(models.Model):
         managed = False
         unique_together = (('sample', 'region'),)
         db_table = u'sample_regions'
+        get_latest_by = 'id'
 
 class SampleAliase(models.Model):
     sample_alias_id = models.BigIntegerField(primary_key=True)

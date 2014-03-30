@@ -113,6 +113,27 @@ def fix_public(sender, instance, raw, **kwargs):
             group.groupaccess.delete(content_type=sender_type,
                                      object_id=instance.pk)
 
+@receiver(post_save)
+def create_group_access(sender, instance, created, **kwargs):
+    if sender in [Sample, Subsample]:
+        ctype = ContentType.objects.get_for_model(instance)
+        group_id = instance.user.django_user.groups.filter(
+                      name__endswith=instance.user.django_user.username)[0].id
+
+        # Create a group access only if one doesn't already exists.
+        # This will be true when we are updating an existing sample.
+        try:
+            group_access = GroupAccess.objects.get(group_id=group_id,
+                                                   object_id=instance.sample_id)
+        except GroupAccess.DoesNotExist:
+            GroupAccess.objects.create(
+                id = utils.get_next_id(GroupAccess),
+                group_id = group_id,
+                read_access = True,
+                write_access = True,
+                content_type = ctype,
+                object_id = instance.sample_id)
+
 
 class BinaryField(Field):
     description = 'A sequence of bytes'
@@ -437,26 +458,6 @@ class Sample(models.Model):
         self.sample_id = self.sample_id or utils.get_next_id(Sample)
         super(Sample, self).save()
 
-@receiver(post_save, sender=Sample)
-def create_sample_group_access(sender, instance, created, **kwargs):
-    ctype = ContentType.objects.get_for_model(instance)
-    group_id = instance.user.django_user.groups.filter(
-                    name__endswith=instance.user.django_user.username)[0].id
-
-    # Create a group access only if one doesn't already exists.
-    # This will be true when we are updating an existing sample.
-    try:
-        group_access = GroupAccess.objects.get(group_id = group_id,
-                                               content_type = ctype,
-                                               object_id = instance.sample_id)
-    except GroupAccess.DoesNotExist:
-        GroupAccess.objects.create(
-            id = utils.get_next_id(GroupAccess),
-            group_id = group_id,
-            read_access = True,
-            write_access = True,
-            content_type = ctype,
-            object_id = instance.sample_id)
 
 class SampleMetamorphicGrade(models.Model):
     sample = models.ForeignKey('Sample')

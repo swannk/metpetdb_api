@@ -69,8 +69,8 @@ class TestSetUp(ResourceTestCase):
     def get_credentials(self, user_id = 1):
         auth_user = AuthUser.objects.get(pk = user_id)
         # username should be dynamic
-        return "ApiKey sibel:{0}".format(ApiKey.objects.get(user =
-                                                            auth_user).key)
+        return "ApiKey {0}:{1}".format(auth_user.username,
+                                       ApiKey.objects.get(user=auth_user).key)
 
     def test_valid_registration_sibel(self):
         nt.assert_equal(len(self.user.django_user.groups.all()), 2)

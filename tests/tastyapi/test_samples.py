@@ -1,7 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from tastyapi.models import Group, GroupExtra, GroupAccess
 from tastyapi.models import User, Sample, Subsample, SubsampleType, \
-                            RockType, ChemicalAnalyses, Region, SampleRegion, \
+                            RockType, ChemicalAnalyses, Region, SampleRegion,\
                             SampleReference, SampleMetamorphicGrade, \
                             SampleMineral, SampleMetamorphicRegion, \
                             GroupExtra, get_public_groups
@@ -9,101 +9,9 @@ from tastyapi.models import User, Sample, Subsample, SubsampleType, \
 from django.contrib.auth.models import User as AuthUser
 from tastypie.test import ResourceTestCase
 from tastypie.models import ApiKey
-from tastypie.test import TestApiClient
-from nose.tools import eq_
 import nose.tools as nt
-from tastypie.models import ApiKey
+from .base_class import TestSetUp, client
 import logging
-
-client = TestApiClient()
-
-valid_post_data = {
-    'user': '/tastyapi/v1/user/1/',
-    'sesar_number': '14342',
-    'public_data': 'Y',
-    'date_precision': '1',
-    'number': 'NL-67:2005-06290',
-    'rock_type': '/tastyapi/v1/rock_type/16/',
-    'regions': ['Pune', 'Mumbai', 'Pune', 'Hyderabad'],
-    'references': ['2004-061314',
-                   '2004-065494',
-                   '2004-065494'],
-    'metamorphic_grades': ['/tastyapi/v1/metamorphic_grade/1/',
-                           '/tastyapi/v1/metamorphic_grade/2/',
-                           '/tastyapi/v1/metamorphic_grade/3/',
-                           '/tastyapi/v1/metamorphic_grade/4/'],
-    'metamorphic_regions': ['/tastyapi/v1/metamorphic_region/427/',
-                           '/tastyapi/v1/metamorphic_region/428/',
-                           '/tastyapi/v1/metamorphic_region/429/',
-                           '/tastyapi/v1/metamorphic_region/430/'],
-    'minerals': ['/tastyapi/v1/mineral/1/',
-                 '/tastyapi/v1/mineral/2/',
-                 '/tastyapi/v1/mineral/3/',
-                 '/tastyapi/v1/mineral/4/'],
-    'description': 'Created by a test case',
-    'location_error': '2000',
-    'country': 'Brazil',
-    'location_text': 'amfadf',
-    'location': 'POINT (-49.3400382995604971 -16.5187797546387003)'
-}
-
-class TestSetUp(ResourceTestCase):
-    fixtures = ['auth_users.json', 'users.json']
-
-    def setUp(self):
-        super(TestSetUp, self).setUp()
-        auth_user = AuthUser.objects.get(pk = 1)
-        ApiKey.objects.create(user = auth_user)
-        self.user = User.objects.get(pk = 1)
-        self.user.manual_verify()
-
-        auth_user = AuthUser.objects.get(pk = 2)
-        ApiKey.objects.create(user = auth_user)
-        user = User.objects.get(pk = 2)
-        user.manual_verify()
-
-        # A user who doesn't have their own personal group
-        auth_user = AuthUser.objects.get(pk = 3)
-        ApiKey.objects.create(user = auth_user)
-
-    def get_credentials(self, user_id = 1):
-        auth_user = AuthUser.objects.get(pk = user_id)
-        # username should be dynamic
-        return "ApiKey {0}:{1}".format(auth_user.username,
-                                       ApiKey.objects.get(user=auth_user).key)
-
-    def test_valid_registration_sibel(self):
-        nt.assert_equal(len(self.user.django_user.groups.all()), 2)
-        personal_group = self.user.django_user.groups.all()[0]
-        public_group = self.user.django_user.groups.all()[1]
-        public_groups = get_public_groups()
-        nt.assert_equal("user_group_sibel", personal_group.name)
-        nt.assert_in(public_group, public_groups)
-
-# class RegionCreateTest(TestSetUp):
-#     fixtures = ['auth_users.json', 'users.json']
-#     def test_creates_a_region(self):
-#         post_data = {
-#                   'region_id': '1',
-#                   'name': 'Mineral 1'
-#         }
-
-#         credentials = self.get_credentials()
-#         resp = client.post('/tastyapi/v1/region/', data = post_data,
-#                             authentication = credentials, format = 'json')
-#         self.assertHttpCreated(resp)
-#         nt.assert_equal(Region.objects.count(), 1)
-
-class RegionReadTest(TestSetUp):
-    fixtures = ['auth_users.json', 'users.json', 'regions.json']
-    def setUp(self):
-        super(RegionReadTest, self).setUp()
-
-    def test_reads_an_existing_region(self):
-        credentials = self.get_credentials()
-        resp = client.get('/tastyapi/v1/region/1/',
-                          authentication = credentials, format = 'json')
-        self.assertHttpOK(resp)
 
 
 class SampleResourceReadTest(TestSetUp):
@@ -150,6 +58,37 @@ class SampleResourceCreateTest(TestSetUp):
     def test_authorized_user_can_create_a_sample(self):
         nt.assert_equal(Sample.objects.count(), 0)
         credentials = self.get_credentials()
+
+        valid_post_data = {
+            'user': '/tastyapi/v1/user/1/',
+            'sesar_number': '14342',
+            'public_data': 'Y',
+            'date_precision': '1',
+            'number': 'NL-67:2005-06290',
+            'rock_type': '/tastyapi/v1/rock_type/16/',
+            'regions': ['Pune', 'Mumbai', 'Pune', 'Hyderabad'],
+            'references': ['2004-061314',
+                           '2004-065494',
+                           '2004-065494'],
+            'metamorphic_grades': ['/tastyapi/v1/metamorphic_grade/1/',
+                                   '/tastyapi/v1/metamorphic_grade/2/',
+                                   '/tastyapi/v1/metamorphic_grade/3/',
+                                   '/tastyapi/v1/metamorphic_grade/4/'],
+            'metamorphic_regions': ['/tastyapi/v1/metamorphic_region/427/',
+                                   '/tastyapi/v1/metamorphic_region/428/',
+                                   '/tastyapi/v1/metamorphic_region/429/',
+                                   '/tastyapi/v1/metamorphic_region/430/'],
+            'minerals': ['/tastyapi/v1/mineral/1/',
+                         '/tastyapi/v1/mineral/2/',
+                         '/tastyapi/v1/mineral/3/',
+                         '/tastyapi/v1/mineral/4/'],
+            'description': 'Created by a test case',
+            'location_error': '2000',
+            'country': 'Brazil',
+            'location_text': 'amfadf',
+            'location': 'POINT (-49.3400382995604971 -16.5187797546387003)'
+          }
+
         resp = client.post('/tastyapi/v1/sample/', data = valid_post_data,
                            authentication = credentials, format = 'json')
         self.assertHttpCreated(resp)
@@ -254,6 +193,32 @@ class SampleResourceUpdateDeleteTest(TestSetUp):
         self.assertHttpUnauthorized(resp)
 
 
+# class RegionReadTest(TestSetUp):
+#     fixtures = ['auth_users.json', 'users.json', 'regions.json']
+#     def setUp(self):
+#         super(RegionReadTest, self).setUp()
+
+#     def test_reads_an_existing_region(self):
+#         credentials = self.get_credentials()
+#         resp = client.get('/tastyapi/v1/region/1/',
+#                           authentication = credentials, format = 'json')
+#         self.assertHttpOK(resp)
+
+# class RegionCreateTest(TestSetUp):
+#     fixtures = ['auth_users.json', 'users.json']
+#     def test_creates_a_region(self):
+#         post_data = {
+#                   'region_id': '1',
+#                   'name': 'Mineral 1'
+#         }
+
+#         credentials = self.get_credentials()
+#         resp = client.post('/tastyapi/v1/region/', data = post_data,
+#                             authentication = credentials, format = 'json')
+#         self.assertHttpCreated(resp)
+#         nt.assert_equal(Region.objects.count(), 1)
+
+
 
 # class RockTypeResourceTest(TestSetUp):
 
@@ -297,10 +262,6 @@ class SampleResourceUpdateDeleteTest(TestSetUp):
 #         resp = client.get('/tastyapi/v1/subsample/100/',
 #                           authentication=credentials, format='json')
 #         self.assertHttpNotFound(resp)
-
-
-
-
 
 
 

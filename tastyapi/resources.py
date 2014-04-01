@@ -488,12 +488,15 @@ class ReferenceResource(BaseResource):
     # analyses = fields.ToManyField('tastyapi.resources.ChemicalAnalysisResource',
     #                                 'chemicalanalysis_set')
     class Meta:
+        resource_name = 'reference'
         queryset = Reference.objects.all()
         allowed_methods = ['get']
         authentication = ApiKeyAuthentication()
+        # authorization = ObjectAuthorization('tastyapi', 'reference')
         filtering = {'name': ALL}
 
 class ChemicalAnalysisResource(VersionedResource, FirstOrderResource):
+    user = fields.ToOneField("tastyapi.resources.UserResource", "user")
     subsample = fields.ToOneField(SubsampleResource, "subsample")
     reference = fields.ToOneField(ReferenceResource, "reference", null=True)
     mineral = fields.ToOneField(MineralResource, "mineral", null=True)
@@ -502,7 +505,7 @@ class ChemicalAnalysisResource(VersionedResource, FirstOrderResource):
         resource_name = 'chemical_analysis'
         allowed_methods = ['get', 'post', 'put', 'delete']
         excludes = ['image', 'user']
-        authorization = ObjectAuthorization('tastyapi', 'chemical_analysis')
+        authorization = ObjectAuthorization('tastyapi', 'chemicalanalyses')
         authentication = ApiKeyAuthentication()
         filtering = {
                 'subsample': ALL_WITH_RELATIONS,

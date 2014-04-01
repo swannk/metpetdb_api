@@ -298,6 +298,9 @@ class FirstOrderResource(ModelResource):
                 except ImmediateHttpResponse:
                     # We don't have permission, remove it
                     value.remove(item)
+                except AttributeError:
+                    # ToOne field is empty; abort
+                    continue
             if value is not bundle.data[field_name] and not value:
                 # For ToOne fields: value was a singleton, and now it's empty,
                 # so null out the corresponding entry in bundle.data

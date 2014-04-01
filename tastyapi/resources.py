@@ -151,7 +151,6 @@ class ObjectAuthorization(Authorization):
         if bundle.obj.user.django_user == user and user.has_perm(self.add_perm):
             return True
         else:
-            # print bundle.obj.user.django_user
             logger.warning("User must own created object.")
             raise Unauthorized("User must own created object.")
     update_list = _filter_by_permission_closure(lambda self: self.change_perm)
@@ -455,10 +454,11 @@ class MetamorphicRegionResource(BaseResource):
         filtering = { 'name': ALL }
 
 class SubsampleTypeResource(BaseResource):
-    subsamples = fields.ToManyField("tastyapi.resources.SubsampleResource",
-                                 "subsample_set")
+    # subsamples = fields.ToManyField("tastyapi.resources.SubsampleResource",
+    #                              "subsample_set")
     class Meta:
         resource_name = 'subsample_type'
+        allowed_methods = ['get']
         queryset = SubsampleType.objects.all()
         authentication = ApiKeyAuthentication()
         filtering = {'subsample_type': ALL}
@@ -469,9 +469,9 @@ class SubsampleResource(VersionedResource, FirstOrderResource):
     class Meta:
         queryset = Subsample.objects.all()
         excludes = ['user']
+        allowed_methods = ['get']
         authorization = ObjectAuthorization('tastyapi', 'subsample')
         authentication = ApiKeyAuthentication()
-        # authorization = Authorization()
         filtering = {
                 'public_data': ALL,
                 'grid_id': ALL,
@@ -495,8 +495,9 @@ class ChemicalAnalysisResource(VersionedResource, FirstOrderResource):
     reference = fields.ToOneField(ReferenceResource, "reference", null=True)
     mineral = fields.ToOneField(MineralResource, "mineral", null=True)
     class Meta:
-        resource_name = 'chemical_analysis'
         queryset = ChemicalAnalyses.objects.all()
+        resource_name = 'chemical_analysis'
+        allowed_methods = ['get', 'post', 'put', 'delete']
         excludes = ['image', 'user']
         authorization = ObjectAuthorization('tastyapi', 'chemical_analysis')
         authentication = ApiKeyAuthentication()

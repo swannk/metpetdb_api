@@ -115,7 +115,7 @@ def fix_public(sender, instance, raw, **kwargs):
 
 @receiver(post_save)
 def create_group_access(sender, instance, created, **kwargs):
-    if sender in [Sample, Subsample]:
+    if sender in [Sample, Subsample, ChemicalAnalyses]:
         ctype = ContentType.objects.get_for_model(instance)
         group_id = instance.user.django_user.groups.filter(
                       name__endswith=instance.user.django_user.username)[0].id
@@ -124,7 +124,8 @@ def create_group_access(sender, instance, created, **kwargs):
         # This will be true when we are updating an existing sample.
         try:
             group_access = GroupAccess.objects.get(group_id=group_id,
-                                                   object_id=instance.sample_id)
+                                                   content_type=ctype,
+                                                   object_id=instance.pk)
         except GroupAccess.DoesNotExist:
             GroupAccess.objects.create(
                 id = utils.get_next_id(GroupAccess),
@@ -132,8 +133,34 @@ def create_group_access(sender, instance, created, **kwargs):
                 read_access = True,
                 write_access = True,
                 content_type = ctype,
-                object_id = instance.sample_id)
+                object_id = instance.pk)
 
+@receiver(post_save)
+def fix_public_post(sender, instance, created, **kwargs):
+    if not hasattr(instance, 'public_data'):
+        # We don't need to fix this one; abort
+        return
+    sender_type = ContentType.objects.get_for_model(sender)
+    public_groups = get_public_groups()
+    if instance.public_data == 'Y':
+        for group in public_groups.select_for_update():
+            try:
+                GroupAccess.objects.get(group_id=group.id,
+                                        content_type=sender_type,
+                                        object_id=instance.pk)
+            except:
+                GroupAccess.objects.create(id=utils.get_next_id(GroupAccess),
+                                           group_id=group.id,
+                                           read_access=True, write_access=False,
+                                           content_type=sender_type,
+                                           object_id=instance.pk)
+    else:
+        for group in public_groups:
+            try:
+                GroupAccess.objects.get(group_id=group.id,
+                                        content_type=sender_type,
+                                        object_id=instance.pk).delete()
+            except: continue
 
 class BinaryField(Field):
     description = 'A sequence of bytes'
@@ -262,7 +289,7 @@ class MetamorphicGrade(models.Model):
     def __unicode__(self):
         return self.name
     class Meta:
-        managed = False
+        # managed = False
         db_table = u'metamorphic_grades'
 
 class MetamorphicRegion(models.Model):
@@ -275,7 +302,7 @@ class MetamorphicRegion(models.Model):
     def __unicode__(self):
         return self.name
     class Meta:
-        managed = False
+        # managed = False
         db_table = u'metamorphic_regions'
 
 class MineralType(models.Model):
@@ -292,7 +319,7 @@ class Mineral(models.Model):
     def __unicode__(self):
         return self.name
     class Meta:
-        managed = False
+        # managed = False
         db_table = u'minerals'
 
 
@@ -302,7 +329,7 @@ class Reference(models.Model):
     def __unicode__(self):
         return self.name
     class Meta:
-        managed = False
+        # managed = False
         db_table = u'reference'
 
 class Region(models.Model):
@@ -311,7 +338,7 @@ class Region(models.Model):
     def __unicode__(self):
         return self.name
     class Meta:
-        managed = False
+        # managed = False
         db_table = u'regions'
         get_latest_by = "region_id"
 
@@ -321,7 +348,7 @@ class RockType(models.Model):
     def __unicode__(self):
         return self.rock_type
     class Meta:
-        managed = False
+        # managed = False
         db_table = u'rock_type'
 
 class Role(models.Model):
@@ -448,7 +475,7 @@ class Sample(models.Model):
     def __unicode__(self):
         return u'Sample #' + unicode(self.sample_id)
     class Meta:
-        managed = False
+        # managed = False
         db_table = u'samples'
         get_latest_by = "sample_id"
         permissions = (('read_sample', 'Can read sample'),)
@@ -464,7 +491,7 @@ class SampleMetamorphicGrade(models.Model):
     metamorphic_grade = models.ForeignKey(MetamorphicGrade)
     id = models.IntegerField(primary_key=True)
     class Meta:
-        managed = False
+        # managed = False
         unique_together = (('sample', 'metamorphic_grade'),)
         db_table = u'sample_metamorphic_grades'
         get_latest_by = 'id'
@@ -474,7 +501,7 @@ class SampleMetamorphicRegion(models.Model):
     metamorphic_region = models.ForeignKey(MetamorphicRegion)
     id = models.IntegerField(primary_key=True)
     class Meta:
-        managed = False
+        # managed = False
         unique_together = (('sample', 'metamorphic_region'),)
         db_table = u'sample_metamorphic_regions'
         get_latest_by = 'id'
@@ -485,7 +512,7 @@ class SampleMineral(models.Model):
     amount = models.CharField(max_length=30, blank=True)
     id = models.IntegerField(primary_key=True)
     class Meta:
-        managed = False
+        # managed = False
         unique_together = (('mineral', 'sample'),)
         db_table = u'sample_minerals'
         get_latest_by = 'id'
@@ -495,7 +522,7 @@ class SampleReference(models.Model):
     reference = models.ForeignKey(Reference)
     id = models.IntegerField(primary_key=True)
     class Meta:
-        managed = False
+        # managed = False
         unique_together = (('sample', 'reference'),)
         db_table = u'sample_reference'
         get_latest_by = 'id'
@@ -506,7 +533,7 @@ class SampleRegion(models.Model):
     region = models.ForeignKey(Region)
     id = models.IntegerField(primary_key=True)
     class Meta:
-        managed = False
+        # managed = False
         unique_together = (('sample', 'region'),)
         db_table = u'sample_regions'
         get_latest_by = 'id'
@@ -518,7 +545,7 @@ class SampleAliase(models.Model):
     def __unicode__(self):
         return self.alias
     class Meta:
-        managed = False
+        # managed = False
         db_table = u'sample_aliases'
         unique_together = (('sample', 'alias'),)
 
@@ -532,8 +559,18 @@ class Subsample(models.Model):
     grid_id = models.BigIntegerField(null=True, blank=True)
     name = models.CharField(max_length=100)
     subsample_type = models.ForeignKey(SubsampleType)
+    group_access = generic.GenericRelation(GroupAccess)
+    def __unicode__(self):
+        return u'Subsample #' + unicode(self.subsample_id)
     class Meta:
         db_table = 'subsamples'
+        get_latest_by = 'subsample_id'
+        permissions = (('read_subsample', 'Can read subsample'),)
+
+    def save(self, **kwargs):
+        # Assign an ID only for create requests
+        self.subsample_id = self.subsample_id or utils.get_next_id(Subsample)
+        super(Subsample, self).save()
 
 class Grid(models.Model):
     grid_id = models.BigIntegerField(primary_key=True)
@@ -568,8 +605,17 @@ class ChemicalAnalyses(models.Model):
     large_rock = models.CharField(max_length=1)
     total = models.FloatField(null=True, blank=True)
     spot_id = models.BigIntegerField()
+    group_access = generic.GenericRelation(GroupAccess)
     class Meta:
         db_table = 'chemical_analyses'
+        get_latest_by = 'chemical_analysis_id'
+        permissions = (('read_chemicalanalyses', 'Can read chemical analysis'),)
+
+    def save(self, **kwargs):
+        # Assign an ID only for create requests
+        self.chemical_analysis_id = self.chemical_analysis_id or \
+                                    utils.get_next_id(ChemicalAnalyses)
+        super(ChemicalAnalyses, self).save()
 
 class ChemicalAnalysisElement(models.Model):
     chemical_analysis = models.ForeignKey(ChemicalAnalyses)
@@ -619,7 +665,7 @@ class Image(models.Model):
     filename = models.CharField(max_length=256)
     checksum_mobile = models.CharField(max_length=50, blank=True)
     class Meta:
-        managed = False
+        # managed = False
         db_table = u'images'
         permissions = (('read_image', 'Can read image'),)
 

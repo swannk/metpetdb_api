@@ -44,31 +44,6 @@ class ChemAnalysesTestSetUp(TestSetUp):
                                  name='Subsample 1',
                                  subsample_type=subsample_type)
 
-class ChemAnalysesReadTest(ChemAnalysesTestSetUp):
-    def setUp(self):
-        super(ChemAnalysesReadTest, self).setUp()
-        rock_type = RockType.objects.get(pk = 16)
-        user = User.objects.get(pk=1)
-        subsample_type = SubsampleType.objects.get(pk=2)
-        subsample = Subsample.objects.get(pk=1)
-        ChemicalAnalyses.objects.create(version=1,
-                                        subsample=subsample,
-                                        user=user,
-                                        large_rock='Y',
-                                        total=1232.10,
-                                        spot_id=18,
-                                        public_data='Y')
-
-    def test_authorized_user_can_read_chem_analysis(self):
-        credentials = self.get_credentials()
-        resp = client.get('/tastyapi/v1/chemical_analysis/1/',
-                          authentication = credentials, format = 'json')
-        print GroupAccess.objects.all().count()
-        nt.assert_equal(10, Sample.objects.all().count())
-        self.assertHttpOK(resp)
-
-
-
 class ChemAnalysesCreateTest(ChemAnalysesTestSetUp):
 
     def test_authorized_user_can_create_a_chemical_analysis(self):
@@ -86,6 +61,92 @@ class ChemAnalysesCreateTest(ChemAnalysesTestSetUp):
             'spot_id': '11',
         }
 
-        resp = client.post('/tastyapi/v1/chemical_analysis/', data=valid_post_data,
-                           authentication=credentials, format='json')
+        resp = client.post('/tastyapi/v1/chemical_analysis/',
+                           data=valid_post_data,
+                           authentication=credentials,
+                           format='json')
         self.assertHttpCreated(resp)
+
+class ChemAnalysesReadUpdateDeleteTest(ChemAnalysesTestSetUp):
+    def setUp(self):
+        super(ChemAnalysesReadUpdateDeleteTest, self).setUp()
+        rock_type = RockType.objects.get(pk = 16)
+        user = User.objects.get(pk=1)
+        subsample_type = SubsampleType.objects.get(pk=2)
+        subsample = Subsample.objects.get(pk=1)
+        # Public chemical analysis
+        ChemicalAnalyses.objects.create(version=1,
+                                        subsample=subsample,
+                                        user=user,
+                                        large_rock='Y',
+                                        total=1232.10,
+                                        spot_id=18,
+                                        public_data='Y')
+
+        # Private chemical analysis
+        ChemicalAnalyses.objects.create(version=1,
+                                        subsample=subsample,
+                                        user=user,
+                                        large_rock='Y',
+                                        total=1232.10,
+                                        spot_id=20,
+                                        public_data='N')
+
+    def test_authorized_user_can_read_chem_analysis(self):
+        credentials = self.get_credentials()
+        resp = client.get('/tastyapi/v1/chemical_analysis/1/',
+                          authentication = credentials, format = 'json')
+        print GroupAccess.objects.all().count()
+        self.assertHttpOK(resp)
+
+    def test_user_can_read_unowned_public_chemical_analysis(self):
+        credentials = self.get_credentials(user_id=2)
+        resp = client.get('/tastyapi/v1/chemical_analysis/1/',
+                          authentication = credentials, format = 'json')
+        print GroupAccess.objects.all().count()
+        self.assertHttpOK(resp)
+
+    def test_user_cannot_read_unowned_private_chemical_analysis(self):
+        credentials = self.get_credentials(user_id=2)
+        resp = client.get('/tastyapi/v1/chemical_analysis/2/',
+                        authentication = credentials, format = 'json')
+        print GroupAccess.objects.all().count()
+        self.assertHttpUnauthorized(resp)
+
+    def test_user_can_update_own_chemical_analysis(self):
+        credentials = self.get_credentials()
+        chem_a = self.deserialize(client.get(
+                                           '/tastyapi/v1/chemical_analysis/1/',
+                                           authentication = credentials,
+                                           format='json'))
+        nt.assert_equal(chem_a['spot_id'], '18')
+        chem_a['spot_id'] = 25
+        resp = client.put('/tastyapi/v1/chemical_analysis/1/',
+                          data=chem_a,
+                          authentication=credentials,
+                          format='json')
+
+        chem_a = self.deserialize(client.get(
+                                           '/tastyapi/v1/chemical_analysis/1/',
+                                           authentication = credentials,
+                                           format='json'))
+        self.assertHttpAccepted(resp)
+        nt.assert_equal(chem_a['spot_id'], '25')
+
+    def test_user_can_delete_own_chemical_analysis(self):
+        credentials = self.get_credentials()
+        nt.assert_equal(ChemicalAnalyses.objects.count(), 2)
+        resp = client.delete('/tastyapi/v1/chemical_analysis/1/',
+                              authentication=credentials,
+                              format='json')
+        self.assertHttpAccepted(resp)
+        nt.assert_equal(ChemicalAnalyses.objects.count(), 1)
+
+    def test_user_cannot_delete_unowned_chemical_analysis(self):
+        credentials = self.get_credentials(user_id=2)
+        nt.assert_equal(ChemicalAnalyses.objects.count(), 2)
+        resp = client.delete('/tastyapi/v1/chemical_analysis/1/',
+                              authentication=credentials,
+                              format='json')
+        self.assertHttpUnauthorized(resp)
+        nt.assert_equal(ChemicalAnalyses.objects.count(), 2)

@@ -467,12 +467,13 @@ class SubsampleTypeResource(BaseResource):
         filtering = {'subsample_type': ALL}
 
 class SubsampleResource(VersionedResource, FirstOrderResource):
+    user = fields.ToOneField("tastyapi.resources.UserResource", "user")
     sample = fields.ToOneField(SampleResource, "sample")
     subsample_type = fields.ToOneField(SubsampleTypeResource, "subsample_type")
     class Meta:
         queryset = Subsample.objects.all()
         excludes = ['user']
-        allowed_methods = ['get']
+        allowed_methods = ['get', 'post', 'put', 'delete']
         authorization = ObjectAuthorization('tastyapi', 'subsample')
         authentication = ApiKeyAuthentication()
         filtering = {

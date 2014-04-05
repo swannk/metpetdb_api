@@ -15,11 +15,13 @@ class TestSetUp(ResourceTestCase):
         ApiKey.objects.create(user = auth_user)
         self.user = User.objects.get(pk = 1)
         self.user.manual_verify()
+        self.user.auto_verify(confirmation_code=None)
 
         auth_user = AuthUser.objects.get(pk = 2)
         ApiKey.objects.create(user = auth_user)
         user = User.objects.get(pk = 2)
         user.manual_verify()
+        self.user.auto_verify(confirmation_code=None)
 
         # A user who doesn't have their own personal group
         auth_user = AuthUser.objects.get(pk = 3)

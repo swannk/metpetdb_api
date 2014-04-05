@@ -119,7 +119,8 @@ def fix_public(sender, instance, created, **kwargs):
             except:
                 GroupAccess.objects.create(id=utils.get_next_id(GroupAccess),
                                            group_id=group.id,
-                                           read_access=True, write_access=False,
+                                           read_access=True,
+                                           write_access=False,
                                            content_type=sender_type,
                                            object_id=instance.pk)
     else:
@@ -183,6 +184,27 @@ class User(models.Model):
     request_contributor = models.CharField(max_length=1, blank=True)
     django_user = OneToOneField(AuthUser, blank=True, null=True)
 
+    def auto_verify(self, confirmation_code):
+        """Called to perform email verification.
+
+        Checks confirmation_code and adds the user to public groups so they
+        may read public data.
+
+        Raises a ValueError if confirmation_code doesn't match the stored code,
+        or if there is no corresponding Django user.
+
+        Pass confirmation_code=None to bypass this check.
+        """
+        if confirmation_code is None or confirmation_code == self.confirmation_code:
+            if self.django_user is None:
+                raise ValueError("This user doesn't exist in django.contrib.auth yet.")
+            public_groups = get_public_groups()
+            for group in public_groups.select_for_update():
+                if group not in self.django_user.groups.all():
+                    self.django_user.groups.add(group)
+        else:
+            raise ValueError("Confirmation code incorrect.")
+
     def manual_verify(self):
         """Called to request full verification.
 
@@ -201,13 +223,13 @@ class User(models.Model):
             user_group.user_set.add(self.django_user)
             GroupExtra(group=user_group, group_type='u_uid', owner=self.django_user).save()
 
-        # also add to public groups so they may read public data
-        # if self.django_user is None:
-        #         raise ValueError("This user doesn't exist in django.contrib.auth yet.")
-        public_groups = get_public_groups()
-        for group in public_groups.select_for_update():
-            if group not in self.django_user.groups.all():
-                self.django_user.groups.add(group)
+        # # also add to public groups so they may read public data
+        # # if self.django_user is None:
+        # #         raise ValueError("This user doesn't exist in django.contrib.auth yet.")
+        # public_groups = get_public_groups()
+        # for group in public_groups.select_for_update():
+        #     if group not in self.django_user.groups.all():
+        #         self.django_user.groups.add(group)
 
     class Meta:
         db_table = 'users'

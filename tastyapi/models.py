@@ -4,7 +4,10 @@
 from __future__ import unicode_literals
 import uuid
 
-from django.db.models import Model, BigIntegerField, CharField, DateTimeField, FloatField, ForeignKey, IntegerField,ManyToManyField, SmallIntegerField, TextField, AutoField, OneToOneField
+from django.db.models import Model, BigIntegerField, CharField, DateTimeField,\
+                             FloatField, ForeignKey, IntegerField,\
+                             ManyToManyField, SmallIntegerField, TextField, \
+                             AutoField, OneToOneField
 from django.db.models import BooleanField, PositiveIntegerField
 from django.db.models import Field
 from django.db.models import Q
@@ -12,7 +15,8 @@ from django.contrib.auth.models import User as AuthUser
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
-from django.contrib.gis.db.models import GeoManager, PolygonField, PointField, GeometryField
+from django.contrib.gis.db.models import GeoManager, PolygonField, PointField,\
+                                         GeometryField
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.core.mail import EmailMessage
@@ -31,8 +35,8 @@ USER_GROUP_DEFAULT_PREFIX = 'user_group_'
 class GroupExtra(Model):
     group = OneToOneField(Group)
     group_type = CharField(max_length=10, choices=(('public', 'public'),
-                                                          ('u_uid', 'user'),
-                                                          ('p_pid', 'project')))
+                                                   ('u_uid', 'user'),
+                                                   ('p_pid', 'project')))
     owner = ForeignKey(AuthUser, blank=True, null=True)
 
 
@@ -71,7 +75,8 @@ def fix_user_groups(sender, instance, created, raw, **kwargs):
     #     ApiKey.objects.create(user=instance)
     # else
     #     print "bye"
-    """Ensure that the user has their own group and is in the public group(s)."""
+    """Ensure that the user has their own group and is in the public
+       group(s)."""
     return # TODO: Make this send email instead of fixing groups immediately
     if raw:
         # DB is in an inconsistent state; abort
@@ -139,8 +144,8 @@ class BinaryField(Field):
         return bytearray(value)
     def get_prep_lookup(self, lookup_type, value):
         if lookup_type in ['iexact', 'icontains', 'istartswith', 'iendswith',
-                           'year', 'month', 'day', 'week_day', 'hour', 'minute',
-                           'second', 'iregex']:
+                           'year', 'month', 'day', 'week_day', 'hour',
+                           'minute', 'second', 'iregex']:
             raise TypeError('%r is not a supported lookup type.' % lookup_type)
         else:
             return super(Field, self).get_prep_lookup(lookup_type, value)
@@ -195,9 +200,11 @@ class User(models.Model):
 
         Pass confirmation_code=None to bypass this check.
         """
-        if confirmation_code is None or confirmation_code == self.confirmation_code:
+        if confirmation_code is None or confirmation_code == \
+                                                    self.confirmation_code:
             if self.django_user is None:
-                raise ValueError("This user doesn't exist in django.contrib.auth yet.")
+                raise ValueError(
+                         "This user doesn't exist in django.contrib.auth yet.")
             public_groups = get_public_groups()
             for group in public_groups.select_for_update():
                 if group not in self.django_user.groups.all():
@@ -211,26 +218,22 @@ class User(models.Model):
         Adds the user to a personal group so they may upload and share data.
         """
         if self.django_user is None:
-            raise ValueError("This user doesn't exist in django.contrib.auth yet.")
+            raise ValueError(
+                    "This user doesn't exist in django.contrib.auth yet.")
         user_groups = Group.objects.filter(groupextra__group_type='u_uid',
                                            groupextra__owner=self.django_user)
         user_groups = user_groups.select_for_update()
         if user_groups.count() != 1:
-            # There isn't, so get rid of whichever do exist and create from scratch
+            """ There isn't, so get rid of whichever do exist and create from
+                scratch"""
             user_groups.delete()
-            user_group_name = USER_GROUP_DEFAULT_PREFIX + self.django_user.username
+            user_group_name = USER_GROUP_DEFAULT_PREFIX + \
+                              self.django_user.username
             user_group = Group.objects.create(name=user_group_name)
             user_group.user_set.add(self.django_user)
-            GroupExtra(group=user_group, group_type='u_uid', owner=self.django_user).save()
-
-        # # also add to public groups so they may read public data
-        # # if self.django_user is None:
-        # #         raise ValueError("This user doesn't exist in django.contrib.auth yet.")
-        # public_groups = get_public_groups()
-        # for group in public_groups.select_for_update():
-        #     if group not in self.django_user.groups.all():
-        #         self.django_user.groups.add(group)
-
+            GroupExtra(group=user_group,
+                       group_type='u_uid',
+                       owner=self.django_user).save()
     class Meta:
         db_table = 'users'
 
@@ -599,7 +602,8 @@ class ChemicalAnalyses(models.Model):
     class Meta:
         db_table = 'chemical_analyses'
         get_latest_by = 'chemical_analysis_id'
-        permissions = (('read_chemicalanalyses', 'Can read chemical analysis'),)
+        permissions = (('read_chemicalanalyses',
+                        'Can read chemical analysis'),)
 
     def save(self, **kwargs):
         # Assign an ID only for create requests

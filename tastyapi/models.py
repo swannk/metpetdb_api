@@ -81,38 +81,6 @@ def fix_user_groups(sender, instance, created, raw, **kwargs):
 
     # Verify there is precisely one uid group for this user.
 
-
-@receiver(pre_save)
-def fix_public(sender, instance, raw, **kwargs):
-    """Make public objects publicly accessible and private objects not."""
-    if raw:
-        # DB is in an inconsistent state; abort
-        return
-    if not hasattr(sender, 'public_data'):
-        # We don't need to fix this one; abort
-        return
-    try:
-        if sender.select_for_update().get(instance).public_data == instance.public_data:
-            # Did not change, abort
-            return
-    except sender.DoesNotExist:
-        pass
-    sender_type = ContentType.objects.get_for_model(sender)
-    public_groups = get_public_groups()
-    query = Q(groupaccess__object_id=instance.pk,
-              groupaccess__content_type=sender_type)
-    groups_with_item = public_groups.filter(query)
-    groups_without_item = public_groups.exclude(groups_with_item)
-    if instance.public_data == 'Y':
-        for group in groups_without_item.select_for_update():
-            group.groupaccess.create(read_access=True, write_access=False,
-                                     content_type=sender_type,
-                                     object_id=instance.pk)
-    else:
-        for group in groups_with_item.select_for_update():
-            group.groupaccess.delete(content_type=sender_type,
-                                     object_id=instance.pk)
-
 @receiver(post_save)
 def create_group_access(sender, instance, created, **kwargs):
     if sender in [Sample, Subsample, ChemicalAnalyses]:
@@ -143,7 +111,7 @@ def fix_public_post(sender, instance, created, **kwargs):
     sender_type = ContentType.objects.get_for_model(sender)
     public_groups = get_public_groups()
     if instance.public_data == 'Y':
-        for group in public_groups.select_for_update():
+        for group in public_groups:
             try:
                 GroupAccess.objects.get(group_id=group.id,
                                         content_type=sender_type,

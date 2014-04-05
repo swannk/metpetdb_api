@@ -40,9 +40,8 @@ class DACBackend(ModelBackend):
                 groupset = obj.group_access.filter(group__user=user_obj)
                 can_read = groupset.filter(read_access=True).exists()
                 can_write = groupset.filter(write_access=True).exists()
-                if hasattr(obj, 'public_data'):
-                    if obj.public_data == "Y":
-                        can_read = True
+                if hasattr(obj, 'public_data') and obj.public_data == "Y":
+                    can_read = True
                 if can_read:
                     results.add("%s.%s" % (read_perm.content_type.app_label,
                                            read_perm.codename))

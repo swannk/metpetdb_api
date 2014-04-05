@@ -49,7 +49,9 @@ url(r'^webservices/samples$', 'webservices.views.samples'),
 url(r'^webservices/chemicalanalyses$', 'webservices.views.chemical_analyses'),
 
 url(r'tastyapi/', include(api_v1.urls)),
+
 # url(r'tastyapi/views/access/(\d+)','tastyapi.views.access', name='access'),
+
 
     # Examples:
     # url(r'^$', 'metpetdb.views.home', name='home'),

@@ -15,45 +15,45 @@ import logging
 
 
 class SampleResourceReadTest(TestSetUp):
-    fixtures = ['auth_users.json', 'users.json', 'rock_types.json']
-    def setUp(self):
-        super(SampleResourceReadTest, self).setUp()
-        rock_type = RockType.objects.get(pk = 16)
-        Sample.objects.create(user = self.user,
-                              version = 1,
-                              sesar_number = 14342,
-                              public_data = 'Y',
-                              date_precision = '1',
-                              number = 'NL-67:2005-06290',
-                              rock_type = rock_type,
-                              description = 'Created by a test case',
-                              location_error = 2000,
-                              country = 'Brazil',
-                              location_text = 'anfdaf',
-                              location = 'POINT(-49.3400382995604971 \
-                                                -16.5187797546387003)')
+  fixtures = ['auth_users.json', 'users.json', 'rock_types.json']
+  def setUp(self):
+      super(SampleResourceReadTest, self).setUp()
+      rock_type = RockType.objects.get(pk = 16)
+      Sample.objects.create(user = self.user,
+                            version = 1,
+                            sesar_number = 14342,
+                            public_data = 'Y',
+                            date_precision = '1',
+                            number = 'NL-67:2005-06290',
+                            rock_type = rock_type,
+                            description = 'Created by a test case',
+                            location_error = 2000,
+                            country = 'Brazil',
+                            location_text = 'anfdaf',
+                            location = 'POINT(-49.3400382995604971 \
+                                              -16.5187797546387003)')
 
-    def test_finds_an_existing_sample(self):
-        credentials = self.get_credentials()
-        resp = client.get('/tastyapi/v1/sample/1/',
-                          authentication = credentials, format = 'json')
-        self.assertHttpOK(resp)
+  def test_finds_an_existing_sample(self):
+      credentials = self.get_credentials()
+      resp = client.get('/tastyapi/v1/sample/1/',
+                        authentication = credentials, format = 'json')
+      self.assertHttpOK(resp)
 
-    def test_some_other_user_can_read_a_public_sample(self):
-        credentials = self.get_credentials(user_id=2)
-        resp = client.get('/tastyapi/v1/sample/1/',
-                          authentication = credentials, format = 'json')
-        self.assertHttpOK(resp)
+  def test_some_other_user_can_read_a_public_sample(self):
+      credentials = self.get_credentials(user_id=2)
+      resp = client.get('/tastyapi/v1/sample/1/',
+                        authentication = credentials, format = 'json')
+      self.assertHttpOK(resp)
 
-    def test_does_not_find_a_non_existent_sample(self):
-        credentials = self.get_credentials()
-        resp = client.get('/tastyapi/v1/sample/1000/',
-                          authentication = credentials, format = 'json')
-        self.assertHttpNotFound(resp)
+  def test_does_not_find_a_non_existent_sample(self):
+      credentials = self.get_credentials()
+      resp = client.get('/tastyapi/v1/sample/1000/',
+                        authentication = credentials, format = 'json')
+      self.assertHttpNotFound(resp)
 
-    def test_cannot_read_a_sample_without_an_apikey(self):
-        resp = client.get('/tastyapi/v1/sample/1/', format = 'json')
-        self.assertHttpUnauthorized(resp)
+  def test_cannot_read_a_sample_without_an_apikey(self):
+      resp = client.get('/tastyapi/v1/sample/1/', format = 'json')
+      self.assertHttpUnauthorized(resp)
 
 
 valid_post_data = {
@@ -87,19 +87,19 @@ valid_post_data = {
 }
 
 class SampleResourceCreateTest(TestSetUp):
-    fixtures = ['auth_users.json', 'users.json', 'regions.json',
-                'references.json', 'metamorphic_grades.json', 'minerals.json',
-                'rock_types.json', 'metamorphic_regions.json']
+  fixtures = ['auth_users.json', 'users.json', 'regions.json',
+              'references.json', 'metamorphic_grades.json', 'minerals.json',
+              'rock_types.json', 'metamorphic_regions.json']
 
 
-    def test_authorized_user_can_create_a_sample(self):
-        nt.assert_equal(Sample.objects.count(), 0)
-        credentials = self.get_credentials()
-        resp = client.post('/tastyapi/v1/sample/', data = valid_post_data,
-                           authentication = credentials, format = 'json')
-        self.assertHttpCreated(resp)
+  def test_authorized_user_can_create_a_sample(self):
+      nt.assert_equal(Sample.objects.count(), 0)
+      credentials = self.get_credentials()
+      resp = client.post('/tastyapi/v1/sample/', data = valid_post_data,
+                         authentication = credentials, format = 'json')
+      self.assertHttpCreated(resp)
 
-        nt.assert_equal(Sample.objects.count(), 1)
+      nt.assert_equal(Sample.objects.count(), 1)
 
         sample = Sample.objects.get(pk=1)
         nt.assert_equal(sample.metamorphic_regions.all().count(), 4)
@@ -109,207 +109,84 @@ class SampleResourceCreateTest(TestSetUp):
         nt.assert_equal(sample.regions.all().count(), 3)
 
 
-    def test_unauthorized_user_cannot_create_a_sample(self):
-        nt.assert_equal(Sample.objects.count(), 0)
-        credentials = self.get_credentials(user_id = 3)
-        resp = client.post('/tastyapi/v1/sample/', data = valid_post_data,
-                           authentication = credentials, format = 'json')
-        self.assertHttpUnauthorized(resp)
-        nt.assert_equal(Sample.objects.count(), 0)
+
+  def test_unauthorized_user_cannot_create_a_sample(self):
+      nt.assert_equal(Sample.objects.count(), 0)
+      credentials = self.get_credentials(user_id = 3)
+      resp = client.post('/tastyapi/v1/sample/', data = valid_post_data,
+                         authentication = credentials, format = 'json')
+      self.assertHttpUnauthorized(resp)
+      nt.assert_equal(Sample.objects.count(), 0)
 
 
 class SampleResourceUpdateDeleteTest(TestSetUp):
-    fixtures = ['auth_users.json', 'users.json', 'rock_types.json']
-    def setUp(self):
-        super(SampleResourceUpdateDeleteTest, self).setUp()
-        rock_type = RockType.objects.get(pk = 16)
-        Sample.objects.create(user = self.user,
-                              version = 1,
-                              sesar_number = 14342,
-                              public_data = 'Y',
-                              date_precision = '1',
-                              number = 'NL-67:2005-06290',
-                              rock_type = rock_type,
-                              description = 'Created by a test case',
-                              location_error = 2000,
-                              country = 'Brazil',
-                              location_text = 'anfdaf',
-                              location = 'POINT(-49.3400382995604971 \
-                                                -16.5187797546387003)')
+  fixtures = ['auth_users.json', 'users.json', 'rock_types.json']
+  def setUp(self):
+      super(SampleResourceUpdateDeleteTest, self).setUp()
+      rock_type = RockType.objects.get(pk = 16)
+      Sample.objects.create(user = self.user,
+                            version = 1,
+                            sesar_number = 14342,
+                            public_data = 'Y',
+                            date_precision = '1',
+                            number = 'NL-67:2005-06290',
+                            rock_type = rock_type,
+                            description = 'Created by a test case',
+                            location_error = 2000,
+                            country = 'Brazil',
+                            location_text = 'anfdaf',
+                            location = 'POINT(-49.3400382995604971 \
+                                              -16.5187797546387003)')
 
-    def test_user_can_delete_own_sample(self):
-        credentials = self.get_credentials()
-        sample = self.deserialize(client.get('/tastyapi/v1/sample/1/',
-                                  authentication = credentials, format='json'))
-        nt.assert_equal(Sample.objects.count(), 1)
-        resp = client.delete('/tastyapi/v1/sample/1/',
-                             authentication = credentials, format = 'json')
-        self.assertHttpAccepted(resp)
-        nt.assert_equal(Sample.objects.count(), 0)
+  def test_user_can_delete_own_sample(self):
+      credentials = self.get_credentials()
+      sample = self.deserialize(client.get('/tastyapi/v1/sample/1/',
+                                authentication = credentials, format='json'))
+      nt.assert_equal(Sample.objects.count(), 1)
+      resp = client.delete('/tastyapi/v1/sample/1/',
+                           authentication = credentials, format = 'json')
+      self.assertHttpAccepted(resp)
+      nt.assert_equal(Sample.objects.count(), 0)
 
-    def test_user_cannot_delete_unowned_sample(self):
-        credentials = self.get_credentials(user_id = 2)
-        sample = self.deserialize(client.get('/tastyapi/v1/sample/1/',
-                                  authentication = credentials, format='json'))
-        nt.assert_equal(Sample.objects.count(), 1)
-        resp = client.delete('/tastyapi/v1/sample/1/',
-                             authentication = credentials, format = 'json')
-        self.assertHttpUnauthorized(resp)
-        nt.assert_equal(Sample.objects.count(), 1)
-
-
-    def test_user_can_update_own_sample(self):
-        credentials = self.get_credentials()
-        nt.assert_equal(Sample.objects.count(), 1)
-        sample = self.deserialize(client.get('/tastyapi/v1/sample/1/',
-                                  authentication = credentials, format='json'))
-        nt.assert_equal("Created by a test case", sample['description'])
-        sample['description'] = "Updated by a test case"
-
-        resp = client.put('/tastyapi/v1/sample/1/', data=sample,
-                           authentication=credentials, format='json')
-
-        self.assertHttpAccepted(resp)
-        sample = self.deserialize(client.get('/tastyapi/v1/sample/1/',
-                                  authentication = credentials, format='json'))
-        nt.assert_equal("Updated by a test case", sample['description'])
-        nt.assert_equal(Sample.objects.count(), 1)
+  def test_user_cannot_delete_unowned_sample(self):
+      credentials = self.get_credentials(user_id = 2)
+      sample = self.deserialize(client.get('/tastyapi/v1/sample/1/',
+                                authentication = credentials, format='json'))
+      nt.assert_equal(Sample.objects.count(), 1)
+      resp = client.delete('/tastyapi/v1/sample/1/',
+                           authentication = credentials, format = 'json')
+      self.assertHttpUnauthorized(resp)
+      nt.assert_equal(Sample.objects.count(), 1)
 
 
-    def test_user_cannot_update_unowned_sample(self):
-        credentials = self.get_credentials()
-        sample = self.deserialize(client.get('/tastyapi/v1/sample/1/',
-                                  authentication = credentials, format='json'))
-        nt.assert_equal("Created by a test case", sample['description'])
-        sample['description'] = "Updated by a test case"
+  def test_user_can_update_own_sample(self):
+      credentials = self.get_credentials()
+      nt.assert_equal(Sample.objects.count(), 1)
+      sample = self.deserialize(client.get('/tastyapi/v1/sample/1/',
+                                authentication = credentials, format='json'))
+      nt.assert_equal("Created by a test case", sample['description'])
+      sample['description'] = "Updated by a test case"
 
-        credentials = self.get_credentials(user_id = 2)
-        resp = client.put('/tastyapi/v1/sample/1/', data=sample,
-                           authentication=credentials, format='json')
+      resp = client.put('/tastyapi/v1/sample/1/', data=sample,
+                         authentication=credentials, format='json')
 
-        self.assertHttpUnauthorized(resp)
-
-
-# class RegionReadTest(TestSetUp):
-#     fixtures = ['auth_users.json', 'users.json', 'regions.json']
-#     def setUp(self):
-#         super(RegionReadTest, self).setUp()
-
-#     def test_reads_an_existing_region(self):
-#         credentials = self.get_credentials()
-#         resp = client.get('/tastyapi/v1/region/1/',
-#                           authentication = credentials, format = 'json')
-#         self.assertHttpOK(resp)
-
-# class RegionCreateTest(TestSetUp):
-#     fixtures = ['auth_users.json', 'users.json']
-#     def test_creates_a_region(self):
-#         post_data = {
-#                   'region_id': '1',
-#                   'name': 'Mineral 1'
-#         }
-
-#         credentials = self.get_credentials()
-#         resp = client.post('/tastyapi/v1/region/', data = post_data,
-#                             authentication = credentials, format = 'json')
-#         self.assertHttpCreated(resp)
-#         nt.assert_equal(Region.objects.count(), 1)
+      self.assertHttpAccepted(resp)
+      sample = self.deserialize(client.get('/tastyapi/v1/sample/1/',
+                                authentication = credentials, format='json'))
+      nt.assert_equal("Updated by a test case", sample['description'])
+      nt.assert_equal(Sample.objects.count(), 1)
 
 
+  def test_user_cannot_update_unowned_sample(self):
+      credentials = self.get_credentials()
+      sample = self.deserialize(client.get('/tastyapi/v1/sample/1/',
+                                authentication = credentials, format='json'))
+      nt.assert_equal("Created by a test case", sample['description'])
+      sample['description'] = "Updated by a test case"
 
-# class RockTypeResourceTest(TestSetUp):
+      credentials = self.get_credentials(user_id = 2)
+      resp = client.put('/tastyapi/v1/sample/1/', data=sample,
+                         authentication=credentials, format='json')
 
-#     def test_finds_an_existing_rock_type(self):
-#         credentials = self.get_credentials()
-#         resp = client.get('/tastyapi/v1/rock_type/1/',
-#                           authentication=credentials, format='json')
-#         self.assertHttpOK(resp)
+      self.assertHttpUnauthorized(resp)
 
-#     def test_does_not_find_a_non_existant_rock_type(self):
-#         credentials = self.get_credentials()
-#         resp = client.get('/tastyapi/v1/rock_type/100/',
-#                           authentication=credentials, format='json')
-#         self.assertHttpNotFound(resp)
-
-
-# class SubSampleTypeResourceTest(TestSetUp):
-
-#     def test_finds_an_existing_sub_sample(self):
-#         credentials = self.get_credentials()
-#         resp = client.get('/tastyapi/v1/subsample_type/4/',
-#                           authentication=credentials, format='json')
-#         self.assertHttpOK(resp)
-
-#     def test_does_not_find_a_non_existant_subsample_type(self):
-#         credentials = self.get_credentials()
-#         resp = client.get('/tastyapi/v1/subsample_type/100/',
-#                           authentication=credentials, format='json')
-#         self.assertHttpNotFound(resp)
-
-# class SubSampleResourceTest(TestSetUp):
-
-#     def test_finds_an_existing_sub_sample(self):
-#         credentials = self.get_credentials()
-#         resp = client.get('/tastyapi/v1/subsample/4/',
-#                           authentication=credentials, format='json')
-#         self.assertHttpOK(resp)
-
-#     def test_does_not_find_a_non_existant_subsample(self):
-#         credentials = self.get_credentials()
-#         resp = client.get('/tastyapi/v1/subsample/100/',
-#                           authentication=credentials, format='json')
-#         self.assertHttpNotFound(resp)
-
-
-
-
-
-# class RegionResourceTest(TestSetUp):
-
-#     def test_finds_an_existing_region(self):
-#         credentials = self.get_credentials()
-#         resp = client.get('/tastyapi/v1/region/1/',
-#                           authentication=credentials, format='json')
-#         self.assertHttpOK(resp)
-
-#     def test_does_not_find_an_non_existant_region(self):
-#         credentials = self.get_credentials()
-#         resp = client.get('/tastyapi/v1/region/100/',
-#                           authentication=credentials, format='json')
-#         self.assertHttpNotFound(resp)
-
-#     # def test_read_sample(self):
-#     #     from clientlib.single import read_sample
-#     #     resp = read_sample(6336)
-#     #     self.assertValidJSONResponse(resp)
-
-
-# class TestModels(object):
-
-#     def setup(self):
-#         self.users = {
-#             "tej": User(),
-#             "cow": User()
-#         }
-#         self.users["tej"].first_name = "Tej"
-#         self.users["tej"].email_address = "fail@example.com"
-
-#     def test_name(self):
-#         nt.assert_equal(self.users["tej"].first_name, "Tej")
-
-#     def test_valid_registration(self):
-#         self.users["tej"].send_email()
-#         nt.assert_equal(len(self.users["tej"].groups.all()), 0)
-#         self.users["tej"].auto_verify(self.confirmation_code)
-
-#         nt.assert_equal(len(self.users["tej"].django_user.groups.all()), 1)
-#         tej_group = self.users["tej"].django_user.groups.all()[0]
-#         public_groups = get_public_groups()
-#         nt.assert_in(tej_group, public_groups)
-
-
-#     def test_invalid_registration(self):
-#         pass
-
-#     def teardown(self):
-#       pass

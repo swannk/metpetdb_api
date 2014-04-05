@@ -104,7 +104,7 @@ def create_group_access(sender, instance, created, **kwargs):
                 object_id = instance.pk)
 
 @receiver(post_save)
-def fix_public_post(sender, instance, created, **kwargs):
+def fix_public(sender, instance, created, **kwargs):
     if not hasattr(instance, 'public_data'):
         # We don't need to fix this one; abort
         return

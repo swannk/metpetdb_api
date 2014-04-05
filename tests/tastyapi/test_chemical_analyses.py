@@ -48,8 +48,6 @@ class ChemAnalysesCreateTest(ChemAnalysesTestSetUp):
 
     def test_authorized_user_can_create_a_chemical_analysis(self):
         credentials = self.get_credentials()
-        nt.assert_equal(1, Sample.objects.count())
-        nt.assert_equal(1, Subsample.objects.count())
 
         valid_post_data = {
             'user': '/tastyapi/v1/user/1/',

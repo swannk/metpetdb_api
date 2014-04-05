@@ -103,18 +103,9 @@ class SampleResourceCreateTest(TestSetUp):
 
         sample = Sample.objects.get(pk=1)
         nt.assert_equal(sample.metamorphic_regions.all().count(), 4)
-        nt.assert_equal(SampleMetamorphicRegion.objects.count(), 4)
-
-        nt.assert_equal(SampleMetamorphicGrade.objects.count(), 4)
         nt.assert_equal(sample.metamorphic_grades.all().count(), 4)
-
-        nt.assert_equal(SampleReference.objects.count(), 2)
         nt.assert_equal(sample.references.all().count(), 2)
-
-        nt.assert_equal(SampleMineral.objects.count(), 4)
         nt.assert_equal(sample.minerals.all().count(), 4)
-
-        nt.assert_equal(SampleRegion.objects.count(), 3)
         nt.assert_equal(sample.regions.all().count(), 3)
 
 

@@ -23,19 +23,19 @@ class ChemAnalysesTestSetUp(TestSetUp):
         rock_type = RockType.objects.get(pk = 16)
         user = User.objects.get(pk=1)
         subsample_type = SubsampleType.objects.get(pk=2)
-        sample = Sample.objects.create(user = self.user,
-                              version = 1,
-                              sesar_number = 14342,
-                              public_data = 'Y',
-                              date_precision = '1',
-                              number = 'NL-67:2005-06290',
-                              rock_type = rock_type,
-                              description = 'Created by a test case',
-                              location_error = 2000,
-                              country = 'Brazil',
-                              location_text = 'anfdaf',
-                              location = 'POINT(-49.3400382995604971 \
-                                                -16.5187797546387003)')
+        sample = Sample.objects.create(user=self.user,
+                                       version=1,
+                                       sesar_number=14342,
+                                       public_data='Y',
+                                       date_precision='1',
+                                       number='NL-67:2005-06290',
+                                       rock_type=rock_type,
+                                       description='Created by a test case',
+                                       location_error=2000,
+                                       country='Brazil',
+                                       location_text='anfdaf',
+                                       location='POINT(-49.3400382995604971 \
+                                                       -16.5187797546387003)')
         Subsample.objects.create(version=1,
                                  public_data='Y',
                                  sample=sample,

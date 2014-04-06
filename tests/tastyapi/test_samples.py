@@ -14,48 +14,6 @@ from .base_class import TestSetUp, client
 import logging
 
 
-class SampleResourceReadTest(TestSetUp):
-    fixtures = ['auth_users.json', 'users.json', 'rock_types.json']
-    def setUp(self):
-        super(SampleResourceReadTest, self).setUp()
-        rock_type = RockType.objects.get(pk = 16)
-        Sample.objects.create(user = self.user,
-                              version = 1,
-                              sesar_number = 14342,
-                              public_data = 'Y',
-                              date_precision = '1',
-                              number = 'NL-67:2005-06290',
-                              rock_type = rock_type,
-                              description = 'Created by a test case',
-                              location_error = 2000,
-                              country = 'Brazil',
-                              location_text = 'anfdaf',
-                              location = 'POINT(-49.3400382995604971 \
-                                                -16.5187797546387003)')
-
-    def test_finds_an_existing_sample(self):
-        credentials = self.get_credentials()
-        resp = client.get('/tastyapi/v1/sample/1/',
-                          authentication = credentials, format = 'json')
-        self.assertHttpOK(resp)
-
-    def test_some_other_user_can_read_a_public_sample(self):
-        credentials = self.get_credentials(user_id=2)
-        resp = client.get('/tastyapi/v1/sample/1/',
-                          authentication = credentials, format = 'json')
-        self.assertHttpOK(resp)
-
-    def test_does_not_find_a_non_existent_sample(self):
-        credentials = self.get_credentials()
-        resp = client.get('/tastyapi/v1/sample/1000/',
-                          authentication = credentials, format = 'json')
-        self.assertHttpNotFound(resp)
-
-    def test_cannot_read_a_sample_without_an_apikey(self):
-        resp = client.get('/tastyapi/v1/sample/1/', format = 'json')
-        self.assertHttpUnauthorized(resp)
-
-
 valid_post_data = {
     'user': '/tastyapi/v1/user/1/',
     'sesar_number': '14342',
@@ -118,7 +76,7 @@ class SampleResourceCreateTest(TestSetUp):
         nt.assert_equal(Sample.objects.count(), 0)
 
 
-class SampleResourceUpdateDeleteTest(TestSetUp):
+class SampleResourceReadUpdateDeleteTest(TestSetUp):
     fixtures = ['auth_users.json', 'users.json', 'rock_types.json']
     def setUp(self):
         super(SampleResourceUpdateDeleteTest, self).setUp()
@@ -136,11 +94,30 @@ class SampleResourceUpdateDeleteTest(TestSetUp):
                               location_text = 'anfdaf',
                               location = 'POINT(-49.3400382995604971 \
                                                 -16.5187797546387003)')
+    def test_finds_an_existing_sample(self):
+        credentials = self.get_credentials()
+        resp = client.get('/tastyapi/v1/sample/1/',
+                          authentication = credentials, format = 'json')
+        self.assertHttpOK(resp)
+
+    def test_user_can_read_unowned_public_sample(self):
+        credentials = self.get_credentials(user_id=2)
+        resp = client.get('/tastyapi/v1/sample/1/',
+                          authentication = credentials, format = 'json')
+        self.assertHttpOK(resp)
+
+    def test_does_not_find_a_non_existent_sample(self):
+        credentials = self.get_credentials()
+        resp = client.get('/tastyapi/v1/sample/1000/',
+                          authentication = credentials, format = 'json')
+        self.assertHttpNotFound(resp)
+
+    def test_cannot_read_a_sample_without_an_apikey(self):
+        resp = client.get('/tastyapi/v1/sample/1/', format = 'json')
+        self.assertHttpUnauthorized(resp)
 
     def test_user_can_delete_own_sample(self):
         credentials = self.get_credentials()
-        sample = self.deserialize(client.get('/tastyapi/v1/sample/1/',
-                                  authentication = credentials, format='json'))
         nt.assert_equal(Sample.objects.count(), 1)
         resp = client.delete('/tastyapi/v1/sample/1/',
                              authentication = credentials, format = 'json')
@@ -149,8 +126,6 @@ class SampleResourceUpdateDeleteTest(TestSetUp):
 
     def test_user_cannot_delete_unowned_sample(self):
         credentials = self.get_credentials(user_id = 2)
-        sample = self.deserialize(client.get('/tastyapi/v1/sample/1/',
-                                  authentication = credentials, format='json'))
         nt.assert_equal(Sample.objects.count(), 1)
         resp = client.delete('/tastyapi/v1/sample/1/',
                              authentication = credentials, format = 'json')

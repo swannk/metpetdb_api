@@ -23,19 +23,19 @@ class ChemAnalysesTestSetUp(TestSetUp):
         rock_type = RockType.objects.get(pk = 16)
         user = User.objects.get(pk=1)
         subsample_type = SubsampleType.objects.get(pk=2)
-        sample = Sample.objects.create(user = self.user,
-                              version = 1,
-                              sesar_number = 14342,
-                              public_data = 'Y',
-                              date_precision = '1',
-                              number = 'NL-67:2005-06290',
-                              rock_type = rock_type,
-                              description = 'Created by a test case',
-                              location_error = 2000,
-                              country = 'Brazil',
-                              location_text = 'anfdaf',
-                              location = 'POINT(-49.3400382995604971 \
-                                                -16.5187797546387003)')
+        sample = Sample.objects.create(user=self.user,
+                                       version=1,
+                                       sesar_number=14342,
+                                       public_data='Y',
+                                       date_precision='1',
+                                       number='NL-67:2005-06290',
+                                       rock_type=rock_type,
+                                       description='Created by a test case',
+                                       location_error=2000,
+                                       country='Brazil',
+                                       location_text='anfdaf',
+                                       location='POINT(-49.3400382995604971 \
+                                                       -16.5187797546387003)')
         Subsample.objects.create(version=1,
                                  public_data='Y',
                                  sample=sample,
@@ -93,21 +93,24 @@ class ChemAnalysesReadUpdateDeleteTest(ChemAnalysesTestSetUp):
     def test_authorized_user_can_read_chem_analysis(self):
         credentials = self.get_credentials()
         resp = client.get('/tastyapi/v1/chemical_analysis/1/',
-                          authentication = credentials, format = 'json')
+                          authentication=credentials,
+                          format='json')
         print GroupAccess.objects.all().count()
         self.assertHttpOK(resp)
 
     def test_user_can_read_unowned_public_chemical_analysis(self):
         credentials = self.get_credentials(user_id=2)
         resp = client.get('/tastyapi/v1/chemical_analysis/1/',
-                          authentication = credentials, format = 'json')
+                          authentication=credentials,
+                          format='json')
         print GroupAccess.objects.all().count()
         self.assertHttpOK(resp)
 
     def test_user_cannot_read_unowned_private_chemical_analysis(self):
         credentials = self.get_credentials(user_id=2)
         resp = client.get('/tastyapi/v1/chemical_analysis/2/',
-                        authentication = credentials, format = 'json')
+                          authentication=credentials,
+                          format='json')
         print GroupAccess.objects.all().count()
         self.assertHttpUnauthorized(resp)
 
@@ -115,7 +118,7 @@ class ChemAnalysesReadUpdateDeleteTest(ChemAnalysesTestSetUp):
         credentials = self.get_credentials()
         chem_a = self.deserialize(client.get(
                                            '/tastyapi/v1/chemical_analysis/1/',
-                                           authentication = credentials,
+                                           authentication=credentials,
                                            format='json'))
         nt.assert_equal(chem_a['spot_id'], '18')
         chem_a['spot_id'] = 25
@@ -126,7 +129,7 @@ class ChemAnalysesReadUpdateDeleteTest(ChemAnalysesTestSetUp):
 
         chem_a = self.deserialize(client.get(
                                            '/tastyapi/v1/chemical_analysis/1/',
-                                           authentication = credentials,
+                                           authentication=credentials,
                                            format='json'))
         self.assertHttpAccepted(resp)
         nt.assert_equal(chem_a['spot_id'], '25')

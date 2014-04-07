@@ -120,10 +120,12 @@ class SampleResourceReadUpdateDeleteTest(TestSetUp):
     def test_user_can_delete_own_sample(self):
         credentials = self.get_credentials()
         nt.assert_equal(Sample.objects.count(), 1)
+        nt.assert_equal(GroupAccess.objects.count(), 2)
         resp = client.delete('/tastyapi/v1/sample/1/',
                              authentication = credentials, format = 'json')
         self.assertHttpAccepted(resp)
         nt.assert_equal(Sample.objects.count(), 0)
+        nt.assert_equal(GroupAccess.objects.count(), 0)
 
     def test_user_cannot_delete_unowned_sample(self):
         credentials = self.get_credentials(user_id = 2)

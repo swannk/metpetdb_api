@@ -80,7 +80,7 @@ class SampleResourceCreateTest(TestSetUp):
 class SampleResourceReadUpdateDeleteTest(TestSetUp):
     fixtures = ['auth_users.json', 'users.json', 'rock_types.json']
     def setUp(self):
-        super(SampleResourceUpdateDeleteTest, self).setUp()
+        super(SampleResourceReadUpdateDeleteTest, self).setUp()
         rock_type = RockType.objects.get(pk = 16)
         Sample.objects.create(user = self.user,
                               version = 1,

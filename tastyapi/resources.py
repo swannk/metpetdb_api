@@ -315,21 +315,22 @@ class UserResource(BaseResource):
         excludes = ['password', 'confirmation_code']
 
 class SampleResource(VersionedResource, FirstOrderResource):
-    user = fields.ToOneField("tastyapi.resources.UserResource", "user")
+    user = fields.ToOneField("tastyapi.resources.UserResource", "user",
+                             full=True)
     rock_type = fields.ToOneField("tastyapi.resources.RockTypeResource",
-                                  "rock_type")
+                                  "rock_type", full=True)
     minerals = fields.ToManyField("tastyapi.resources.MineralResource",
-                                  "minerals")
+                                  "minerals", full=True)
     metamorphic_grades = fields.ToManyField(
                                 "tastyapi.resources.MetamorphicGradeResource",
-                                "metamorphic_grades")
+                                "metamorphic_grades", full=True)
     metamorphic_regions = fields.ToManyField(
                                 "tastyapi.resources.MetamorphicRegionResource",
-                                "metamorphic_regions")
+                                "metamorphic_regions", full=True)
     regions = fields.ToManyField("tastyapi.resources.RegionResource",
-                                 "regions", null=True)
+                                 "regions", null=True, full=True)
     references = fields.ToManyField("tastyapi.resources.ReferenceResource",
-                                    "references", null=True)
+                                    "references", null=True, full=True)
 
     class Meta:
         queryset = Sample.objects.all()
@@ -417,7 +418,6 @@ class RegionResource(BaseResource):
         filtering = { 'region': ALL }
 
 class RockTypeResource(BaseResource):
-    samples = fields.ToManyField(SampleResource, "sample_set")
     class Meta:
         resource_name = "rock_type"
         authentication = ApiKeyAuthentication()
@@ -428,8 +428,6 @@ class RockTypeResource(BaseResource):
 class MineralResource(BaseResource):
     real_mineral = fields.ToOneField('tastyapi.resources.MineralResource',
                                      'real_mineral')
-    # analyses = fields.ToManyField('tastyapi.resources.ChemicalAnalysisResource',
-    #                               'chemicalanalysis_set')
     class Meta:
         resource_name = 'mineral'
         queryset = Mineral.objects.all()
@@ -457,8 +455,6 @@ class MetamorphicRegionResource(BaseResource):
         filtering = { 'name': ALL }
 
 class SubsampleTypeResource(BaseResource):
-    # subsamples = fields.ToManyField("tastyapi.resources.SubsampleResource",
-    #                              "subsample_set")
     class Meta:
         resource_name = 'subsample_type'
         allowed_methods = ['get']
@@ -486,8 +482,6 @@ class SubsampleResource(VersionedResource, FirstOrderResource):
 
 
 class ReferenceResource(BaseResource):
-    # analyses = fields.ToManyField('tastyapi.resources.ChemicalAnalysisResource',
-    #                                 'chemicalanalysis_set')
     class Meta:
         resource_name = 'reference'
         queryset = Reference.objects.all()

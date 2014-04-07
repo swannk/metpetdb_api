@@ -359,7 +359,8 @@ class SampleResource(VersionedResource, FirstOrderResource):
 
         """ Remove free-text fields "regions" and "references" from the bundle
         and save them for later, so that Tastypie doesn't try to save them
-        on its own and fail"""
+        on its own and fail
+        """
         free_text_fields = {'regions': bundle.data.pop('regions'),
                            'references': bundle.data.pop('references')}
         super(SampleResource, self).obj_create(bundle, **kwargs)
@@ -419,10 +420,11 @@ class RegionResource(BaseResource):
 
 class RockTypeResource(BaseResource):
     class Meta:
-        resource_name = "rock_type"
-        authentication = ApiKeyAuthentication()
         queryset = RockType.objects.all()
-        allowed_methods = ['get', 'post', 'put']
+        resource_name = "rock_type"
+        authorization = Authorization()
+        authentication = ApiKeyAuthentication()
+        allowed_methods = ['get']
         filtering = { 'rock_type': ALL }
 
 class MineralResource(BaseResource):

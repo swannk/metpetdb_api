@@ -52,3 +52,4 @@ ALTER TABLE "auth_user_user_permissions" ADD CONSTRAINT "user_id_refs_id_f204548
 ALTER TABLE "auth_user_groups" ADD CONSTRAINT "user_id_refs_id_831107f1" FOREIGN KEY ("user_id") REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED;
 CREATE INDEX "auth_permission_content_type_id" ON "auth_permission" ("content_type_id");
 COMMIT;
+ALTER TABLE users ADD COLUMN django_user_id int UNIQUE REFERENCES auth_user(id);

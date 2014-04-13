@@ -163,5 +163,3 @@ ALTER TABLE sample_regions ADD PRIMARY KEY (id);
 ALTER TABLE project_samples ADD COLUMN id SERIAL;
 
 ALTER TABLE project_samples ADD PRIMARY KEY (id);
-
-ALTER TABLE users ADD COLUMN django_user_id int UNIQUE REFERENCES auth_user(id);

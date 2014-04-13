@@ -11,7 +11,7 @@ from .models import get_public_groups
 from .models import User as MetpetUser
 from .models import Group, GroupExtra, GroupAccess
 from .models import Sample, Image
-from .models import Subsample, ChemicalAnalysis, Grids
+from .models import Subsample, ChemicalAnalyses, Grid
 
 def translate(raw_crypt):
     """Translates a metpetdb salted password into a Django salted password."""
@@ -71,7 +71,7 @@ def main():
             metpet_user.manual_verify()
         metpet_user.save()
     models_with_owners = [Sample, Image]
-    models_with_public_data = [Sample, Image, Subsample, ChemicalAnalysis, Grids]
+    models_with_public_data = [Sample, Image, Subsample, ChemicalAnalyses, Grid]
     public_groups = get_public_groups()
     for Model in models_with_owners:
         ctype = ContentType.objects.get_for_model(Model)

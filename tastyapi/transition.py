@@ -7,11 +7,11 @@ from django.contrib.auth.models import User as AuthUser
 from django.contrib.auth.models import Group
 from django.db import transaction
 
-from .models import get_public_groups
-from .models import User as MetpetUser
-from .models import Group, GroupExtra, GroupAccess
-from .models import Sample, Image
-from .models import Subsample, ChemicalAnalyses, Grid
+from tastyapi.models import get_public_groups
+from tastyapi.models import User as MetpetUser
+from tastyapi.models import Group, GroupExtra, GroupAccess
+from tastyapi.models import Sample, Image
+from tastyapi.models import Subsample, ChemicalAnalyses, Grid
 
 def translate(raw_crypt):
     """Translates a metpetdb salted password into a Django salted password."""

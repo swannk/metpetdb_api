@@ -31,11 +31,11 @@ def translate(raw_crypt):
 @transaction.commit_on_success
 def main():
     """Imports metpetdb's various tables into Django for auth purposes.
-    
+
     BEFORE RUNNING THIS SCRIPT, execute the following SQL:
 
         ALTER TABLE users ADD COLUMN django_user_id int UNIQUE REFERENCES
-        auth_user(id); 
+        auth_user(id);
 
     This function is idempotent, but shouldn't need to be run multiple times.
     """
@@ -44,7 +44,7 @@ def main():
         email = metpet_user.email
         logger.debug("Email = %s", email)
         # Use the email for the username, but strip out disallowed characters
-        # and cap total length at 30 characters to comply with Django's 
+        # and cap total length at 30 characters to comply with Django's
         # requirements:
         username = ''.join(c for c in email if c.isalnum() or c in ['_', '@',
                                                                     '+', '.',
@@ -59,6 +59,7 @@ def main():
                           is_staff=False, is_active=True, is_superuser=False)
         result.save()
         metpet_user.django_user = result
+        metpet_user.password = password
         metpet_user.save()
         if metpet_user.enabled.upper() == 'Y':
             # Add user to public group(s), so (s)he can read public things

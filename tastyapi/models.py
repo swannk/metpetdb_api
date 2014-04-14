@@ -479,8 +479,7 @@ class Sample(models.Model):
     location_error = models.FloatField(null=True, blank=True)
     country = models.CharField(max_length=100, blank=True)
     description = models.TextField(blank=True)
-    # collector = models.ForeignKey(User, related_name='+', null=True,
-    #                               db_column='collector_id', blank=True)
+    collector_name = models.CharField(max_length=50, blank=True)
     location_text = models.CharField(max_length=50, blank=True)
     location = models.PointField()
     objects = models.GeoManager()

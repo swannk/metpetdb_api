@@ -7,6 +7,7 @@ from django.contrib.auth.models import User as AuthUser
 from django.contrib.auth.models import Group
 from django.db import transaction
 
+from tastypie.models import ApiKey
 from tastyapi.models import get_public_groups
 from tastyapi.models import User as MetpetUser
 from tastyapi.models import Group, GroupExtra, GroupAccess
@@ -58,6 +59,7 @@ def main():
         result = AuthUser(username=username, password=password, email=email,
                           is_staff=False, is_active=True, is_superuser=False)
         result.save()
+        ApiKey.objects.create(user=result)
         metpet_user.django_user = result
         metpet_user.password = password
         metpet_user.save()
@@ -76,7 +78,7 @@ def main():
     for Model in models_with_owners:
         ctype = ContentType.objects.get_for_model(Model)
         for item in Model.objects.all():
-            owner = item.owner
+            owner = item.user
             owner_django = owner.django_user
             try:
                 owner_group = Group.objects.get(groupextra__owner=owner_django,
@@ -99,3 +101,6 @@ def main():
                     continue # Object is already in this group
                 GroupAccess(group=group, content_type=ctype, object_id=item.pk,
                             read_access=True, write_access=False).save()
+
+if __name__ == "__main__":
+    main()

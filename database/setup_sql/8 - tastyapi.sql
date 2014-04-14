@@ -19,3 +19,4 @@ CREATE TABLE "tastyapi_groupaccess" (
 CREATE INDEX "tastyapi_groupextra_owner_id" ON "tastyapi_groupextra" ("owner_id");
 CREATE INDEX "tastyapi_groupaccess_group_id" ON "tastyapi_groupaccess" ("group_id");
 CREATE INDEX "tastyapi_groupaccess_content_type_id" ON "tastyapi_groupaccess" ("content_type_id");
+COMMIT;

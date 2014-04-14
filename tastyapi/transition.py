@@ -7,11 +7,11 @@ from django.contrib.auth.models import User as AuthUser
 from django.contrib.auth.models import Group
 from django.db import transaction
 
-from .models import get_public_groups
-from .models import User as MetpetUser
-from .models import Group, GroupExtra, GroupAccess
-from .models import Sample, Image
-from .models import Subsample, ChemicalAnalysis, Grids
+from tastyapi.models import get_public_groups
+from tastyapi.models import User as MetpetUser
+from tastyapi.models import Group, GroupExtra, GroupAccess
+from tastyapi.models import Sample, Image
+from tastyapi.models import Subsample, ChemicalAnalyses, Grid
 
 def translate(raw_crypt):
     """Translates a metpetdb salted password into a Django salted password."""
@@ -59,6 +59,7 @@ def main():
                           is_staff=False, is_active=True, is_superuser=False)
         result.save()
         metpet_user.django_user = result
+        metpet_user.password = translate(bytearray(metpet_user.password))
         metpet_user.save()
         if metpet_user.enabled.upper() == 'Y':
             # Add user to public group(s), so (s)he can read public things
@@ -70,7 +71,7 @@ def main():
             metpet_user.manual_verify()
         metpet_user.save()
     models_with_owners = [Sample, Image]
-    models_with_public_data = [Sample, Image, Subsample, ChemicalAnalysis, Grids]
+    models_with_public_data = [Sample, Image, Subsample, ChemicalAnalyses, Grid]
     public_groups = get_public_groups()
     for Model in models_with_owners:
         ctype = ContentType.objects.get_for_model(Model)
@@ -98,3 +99,6 @@ def main():
                     continue # Object is already in this group
                 GroupAccess(group=group, content_type=ctype, object_id=item.pk,
                             read_access=True, write_access=False).save()
+
+if __name__ == "__main__":
+    main()

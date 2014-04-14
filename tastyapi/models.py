@@ -189,6 +189,9 @@ class User(models.Model):
     request_contributor = models.CharField(max_length=1, blank=True)
     django_user = OneToOneField(AuthUser, blank=True, null=True)
 
+    def __unicode__(self):
+        return str(self.user_id) + ' ' + self.name + ' ' + str(self.django_user)
+
     def auto_verify(self, confirmation_code):
         """Called to perform email verification.
 

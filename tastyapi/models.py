@@ -629,6 +629,8 @@ class ChemicalAnalyses(models.Model):
     total = models.FloatField(null=True, blank=True)
     spot_id = models.BigIntegerField()
     group_access = generic.GenericRelation(GroupAccess)
+    def __unicode__(self):
+        return u'ChemicalAnalysis #' + unicode(self.chemical_analysis_id)
     class Meta:
         # managed = False
         db_table = 'chemical_analyses'
@@ -691,6 +693,8 @@ class Image(models.Model):
     checksum_half = models.CharField(max_length=50)
     filename = models.CharField(max_length=256)
     checksum_mobile = models.CharField(max_length=50, blank=True)
+    def __unicode__(self):
+        return u'Image #' + unicode(self.image_id)
     class Meta:
         # managed = False
         db_table = u'images'

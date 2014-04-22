@@ -225,7 +225,7 @@ And then run the script
     cd ../tastyapi
     python transition.py
 
-If you are developing locally, you can now start the server and start hacking:
+If you are developing locally, you can now fire up the server and start hacking:
 
     python manage.py runserver
 

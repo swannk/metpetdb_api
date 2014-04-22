@@ -38,11 +38,11 @@ Install the virtualenv package into our new base environment
 Add the following lines to ~/.bashrc
 ```bash
 function mkvirtualenv {
-~/.virtualenvs/env0/bin/virtualenv ~/.virtualenvs/$1
+    ~/.virtualenvs/env0/bin/virtualenv ~/.virtualenvs/$1
 }
 
 function workon {
-source ~/.virtualenvs/$1/bin/activate
+    source ~/.virtualenvs/$1/bin/activate
 }
 ```
 
@@ -298,7 +298,7 @@ You can now start interacting with the API at `http://hostname/api/vi/`
 
 Server setup instructions end here, what follows are legacy instructions and will eventually either be edited/deleted.
 
-if interested check out the existing webservices for faceted search from Git
+if interested check out the existing webservices for faceted sapache/wsgi.pyearch from Git
 https://github.com/metpetdb/metpetdb-py
  documentation regarding this is here https://github.com/metpetdb/metpetdb-py/tree/master/docs
 

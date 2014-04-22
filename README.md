@@ -275,11 +275,9 @@ Paste the following lines in ~/code/apache/wsgi.py
     import os
     import sys
 
-    path = '/home/metpetdb_py/code'
-    if path not in sys.path:
-        sys.path.append(path)
+    sys.path.append('/home/metpetdb_py/code')
     sys.path.append('/home/metpetdb_py')
-    sys.path.append('/home/metpetdb_py/.virtualenvs/mpdb/lib/python2.7/site-packages')
+    sys.path.append('/home/metpetdb_py/.virtualenvs/api/lib/python2.7/site-packages')
     os.environ['DJANGO_SETTINGS_MODULE'] = 'metpetdb.settings'
 
     activate_this = '/home/metpetdb_py/.virtualenvs/mpdb/bin/activate_this.py'

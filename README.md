@@ -296,7 +296,7 @@ You can now start interacting with the API at `http://hostname/api/vi/`
 
 
 
-Server setup instructions end here. What follows are legacy instructions and will eventually either be edited/deleted.
+Server setup instructions end here, what follows are legacy instructions and will eventually either be edited/deleted.
 
 if interested check out the existing webservices for faceted search from Git
 https://github.com/metpetdb/metpetdb-py

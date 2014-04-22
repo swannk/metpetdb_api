@@ -185,7 +185,7 @@ Codebase setup
 
     git clone git@github.com:metpetdb/metpetdb-py.git code
     cd code
-    mkvirtualenv mpdb
+    mkvirtualenv api
     pip install -r requirements.txt
 
 ####Database migration scripts
@@ -254,14 +254,14 @@ Setup Apache to serve the application
 Add read and execute for "others" on the codebase and the Python virtual environment
 
     chmod -R o+rx ~/code
-    chmod -R o+rx ~/.virtualenvs/mpdb
+    chmod -R o+rx ~/.virtualenvs/api
 
     sudo vi /etc/apache2/httpd.conf
 
 Paste the following lines in `http.conf`
 
     WSGIScriptAlias / /home/metpetdb_py/code/apache/wsgi.py
-    WSGIPythonPath /home/metpetdb_py/code:/home/metpetdb_py/.virtualenvs/mpdb/lib/python2.7/site-packages
+    WSGIPythonPath /home/metpetdb_py/code:/home/metpetdb_py/.virtualenvs/api/lib/python2.7/site-packages
 
     <Directory /home/metpetdb_py/code/apache>
     <Files wsgi.py>
@@ -280,7 +280,7 @@ Paste the following lines in ~/code/apache/wsgi.py
     sys.path.append('/home/metpetdb_py/.virtualenvs/api/lib/python2.7/site-packages')
     os.environ['DJANGO_SETTINGS_MODULE'] = 'metpetdb.settings'
 
-    activate_this = '/home/metpetdb_py/.virtualenvs/mpdb/bin/activate_this.py'
+    activate_this = '/home/metpetdb_py/.virtualenvs/api/bin/activate_this.py'
     execfile(activate_this, dict(__file__=activate_this))
 
     import django.core.handlers.wsgi

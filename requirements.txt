@@ -1,7 +1,7 @@
-git+git://github.com/kristallizer/django-1.4.2.git
+django==1.6.3
 argparse==1.2.1
 constants==0.6.0
-django-devserver==0.7.0
+git+git://github.com/dcramer/django-devserver#egg=django-devserver
 django-nose==1.2
 mimeparse==0.1.3
 nose==1.3.0

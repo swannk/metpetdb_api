@@ -3,7 +3,8 @@
 # into your database.
 from __future__ import unicode_literals
 import uuid
-
+import hashlib
+import random
 from django.db.models import Model, BigIntegerField, CharField, DateTimeField,\
                              FloatField, ForeignKey, IntegerField,\
                              ManyToManyField, SmallIntegerField, TextField, \
@@ -177,6 +178,16 @@ PUBLIC_DATA_CHOICES = (('Y', 'Yes'),('N', 'No'))
 #     class Meta:
 #         db_table = 'geometry_columns'
 
+def generate_confirmation_code(name):
+    """
+     The confirmation code will be a SHA1 hash, generated from a combination
+     of the user's name and a random salt.
+    """
+    salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
+    if isinstance(name, unicode):
+        name = name.encode('utf-8')
+    confirmation_code = hashlib.sha1(salt+name).hexdigest()
+    return confirmation_code[:32]
 
 class User(models.Model):
     user_id = models.IntegerField(primary_key=True)
@@ -200,6 +211,18 @@ class User(models.Model):
     research_interests = models.CharField(max_length=1024, blank=True)
     request_contributor = models.CharField(max_length=1, blank=True)
     django_user = OneToOneField(AuthUser, blank=True, null=True)
+
+    class Meta:
+        # managed = False
+        db_table = 'users'
+        get_latest_by = "user_id"
+
+    def save(self, **kwargs):
+        if self.pk is None:
+            self.pk = utils.get_next_id(User)
+            self.confirmation_code = generate_confirmation_code(self.name)
+        super(User, self).save(**kwargs)
+
 
     def auto_verify(self, confirmation_code):
         """Called to perform email verification.
@@ -246,9 +269,6 @@ class User(models.Model):
             GroupExtra(group=user_group,
                        group_type='u_uid',
                        owner=self.django_user).save()
-    class Meta:
-        # managed = False
-        db_table = 'users'
 
 
 class UsersRole(models.Model): #needs primary ID?
@@ -503,7 +523,7 @@ class Sample(models.Model):
     def save(self, **kwargs):
         # Assign a sample ID only for create requests
         self.sample_id = self.sample_id or utils.get_next_id(Sample)
-        super(Sample, self).save()
+        super(Sample, self).save(**kwargs)
 
 
 class SampleMetamorphicGrade(models.Model):
@@ -591,7 +611,7 @@ class Subsample(models.Model):
     def save(self, **kwargs):
         # Assign an ID only for create requests
         self.subsample_id = self.subsample_id or utils.get_next_id(Subsample)
-        super(Subsample, self).save()
+        super(Subsample, self).save(**kwargs)
 
 class Grid(models.Model):
     grid_id = models.BigIntegerField(primary_key=True)
@@ -641,7 +661,7 @@ class ChemicalAnalyses(models.Model):
         # Assign an ID only for create requests
         self.chemical_analysis_id = self.chemical_analysis_id or \
                                     utils.get_next_id(ChemicalAnalyses)
-        super(ChemicalAnalyses, self).save()
+        super(ChemicalAnalyses, self).save(**kwargs)
 
 class ChemicalAnalysisElement(models.Model):
     chemical_analysis = models.ForeignKey(ChemicalAnalyses)

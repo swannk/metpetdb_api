@@ -1,4 +1,3 @@
-from django.contrib.auth.hashers import make_password
 from django.db import transaction, IntegrityError
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
@@ -9,7 +8,6 @@ from tastypie.validation import Validation
 from tastypie.authorization import Authorization
 from tastypie.authentication import ApiKeyAuthentication
 from tastypie.exceptions import Unauthorized, InvalidFilterError, ImmediateHttpResponse
-from tastypie.exceptions import BadRequest
 
 from .models import User, Sample, MetamorphicGrade, MetamorphicRegion, Region,\
                     RockType, Subsample, SubsampleType, Mineral, Reference, \
@@ -161,7 +159,6 @@ class ObjectAuthorization(Authorization):
     delete_detail = _check_perm_closure(lambda self: self.change_perm)
 
 
-
 class FirstOrderResource(ModelResource):
     """Resource that can only be filtered with "first-order" filters.
 
@@ -310,52 +307,12 @@ class FirstOrderResource(ModelResource):
                 bundle.data[field_name] = None
         return bundle
 
-
-class UserAuthorization(ObjectAuthorization):
-    """Tastypie custom user Authorization class.
-
-    Disables all authorization checks while creating a user"""
-    def create_detail(self, object_list, bundle):
-        return True
-
-class UserAuthentication(ApiKeyAuthentication):
-
-    def is_authenticated(self, request, **kwargs):
-        """
-        Allows POST requests to go through without any authentication
-        """
-        if request.method == "POST":
-            return True
-
-class UserResource(VersionedResource):
-    django_user = fields.ToOneField("tastyapi.resources.AuthUserResource",
-                                    "django_user")
+class UserResource(BaseResource):
     class Meta:
         queryset = User.objects.all()
-        allowed_methods = ['get', 'post']
-        authorization = UserAuthorization('tastyapi', 'user')
-        authentication = UserAuthentication()
+        authorization = Authorization()
+        authentication = ApiKeyAuthentication()
         excludes = ['password', 'confirmation_code']
-        validation = VersionValidation(queryset, 'user_id')
-
-    def obj_create(self, bundle, **kwargs):
-        if not (bundle.data['name'] and
-                bundle.data['password'] and
-                bundle.data['email']):
-            raise BadRequest('Name, password, and email are required fields')
-
-        bundle.data['password'] = make_password(bundle.data['password'])
-        if bundle.request.META['REQUEST_METHOD'] == 'POST':
-            """
-            Explicitly set a few fields here so that we can get rid of any
-            undesirable values passed in the POST request
-            """
-            bundle.data['enabled'] = 'N'
-            bundle.data['contributor_enabled'] = 'N'
-            bundle.data['contributor_code'] = ''
-            bundle.data['django_user'] = None
-        super(UserResource, self).obj_create(bundle, **kwargs)
-
 
 class SampleResource(VersionedResource, FirstOrderResource):
     user = fields.ToOneField("tastyapi.resources.UserResource", "user")

@@ -1,24 +1,19 @@
-from django.contrib.contenttypes.models import ContentType
-from tastyapi.models import Group, GroupExtra, GroupAccess
 from tastyapi.models import User, Sample, Subsample, SubsampleType, \
-                            RockType, ChemicalAnalyses, Region, SampleRegion,\
-                            SampleReference, SampleMetamorphicGrade, \
-                            SampleMineral, SampleMetamorphicRegion, \
-                            GroupExtra, Subsample, Reference, Mineral, \
-                            get_public_groups
+                            RockType, ChemicalAnalyses, Subsample, Reference, \
+                            Mineral, GroupAccess
 
 from django.contrib.auth.models import User as AuthUser
 from tastypie.test import ResourceTestCase
 from tastypie.models import ApiKey
 import nose.tools as nt
 from .base_class import TestSetUp, client
-import logging
 
 
 class ChemAnalysesTestSetUp(TestSetUp):
     fixtures = ['users.json', 'regions.json',
                 'references.json', 'minerals.json', 'rock_types.json',
                 'subsample_types.json']
+
     def setUp(self):
         super(ChemAnalysesTestSetUp, self).setUp()
         rock_type = RockType.objects.get(pk = 16)

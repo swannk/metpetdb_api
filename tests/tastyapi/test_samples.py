@@ -1,17 +1,9 @@
-from django.contrib.contenttypes.models import ContentType
-from tastyapi.models import Group, GroupExtra, GroupAccess
-from tastyapi.models import User, Sample, Subsample, SubsampleType, \
-                            RockType, ChemicalAnalyses, Region, SampleRegion,\
-                            SampleReference, SampleMetamorphicGrade, \
-                            SampleMineral, SampleMetamorphicRegion, \
-                            GroupExtra, get_public_groups
-
+from tastyapi.models import GroupAccess
+from tastyapi.models import User, Sample, RockType
 from django.contrib.auth.models import User as AuthUser
 from tastypie.test import ResourceTestCase
-from tastypie.models import ApiKey
 import nose.tools as nt
 from .base_class import TestSetUp, client
-import logging
 
 
 valid_post_data = {
@@ -49,7 +41,6 @@ class SampleResourceCreateTest(TestSetUp):
                 'references.json', 'metamorphic_grades.json', 'minerals.json',
                 'rock_types.json', 'metamorphic_regions.json']
 
-
     def test_authorized_user_can_create_a_sample(self):
         nt.assert_equal(Sample.objects.count(), 0)
         credentials = self.get_credentials()
@@ -66,8 +57,6 @@ class SampleResourceCreateTest(TestSetUp):
         nt.assert_equal(sample.minerals.all().count(), 4)
         nt.assert_equal(sample.regions.all().count(), 3)
 
-
-
     def test_unauthorized_user_cannot_create_a_sample(self):
         nt.assert_equal(Sample.objects.count(), 0)
         credentials = self.get_credentials(user_id = 3)
@@ -79,6 +68,7 @@ class SampleResourceCreateTest(TestSetUp):
 
 class SampleResourceReadUpdateDeleteTest(TestSetUp):
     fixtures = ['users.json', 'rock_types.json']
+
     def setUp(self):
         super(SampleResourceReadUpdateDeleteTest, self).setUp()
         rock_type = RockType.objects.get(pk = 16)

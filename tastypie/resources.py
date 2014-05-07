@@ -1318,12 +1318,14 @@ class Resource(six.with_metaclass(DeclarativeMetaclass)):
         deserialized = self.alter_deserialized_detail_data(request, deserialized)
         bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized), request=request)
         updated_bundle = self.obj_create(bundle, **self.remove_api_resource_names(kwargs))
-        location = self.get_resource_uri(updated_bundle)
+        # Note: updated_bundle is always None for some reason, so we are just
+        # using `bundle` below
+        location = self.get_resource_uri(bundle)
 
         if not self._meta.always_return_data:
             return http.HttpCreated(location=location)
         else:
-            updated_bundle = self.full_dehydrate(updated_bundle)
+            updated_bundle = self.full_dehydrate(bundle)
             updated_bundle = self.alter_detail_data_to_serialize(request, updated_bundle)
             return self.create_response(request, updated_bundle, response_class=http.HttpCreated, location=location)
 
@@ -2082,6 +2084,7 @@ class BaseModelResource(Resource):
 
         bundle = self.full_hydrate(bundle)
         return self.save(bundle)
+
 
     def lookup_kwargs_with_identifiers(self, bundle, kwargs):
         """

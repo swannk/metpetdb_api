@@ -30,6 +30,9 @@ def main(argv):
 
     response = api_resource.post(data[resource_name + '_post_data'])
     resource_id = response.data[resource_name + '_id']
+    if response.status == 201:
+        print("POST request was successful")
+
     pp.pprint(response.headers)
 
     print("-----------------------------------------------------------")
@@ -42,6 +45,8 @@ def main(argv):
     print("-----------------------------------------------------------")
 
     response = api_resource.get(resource_id)
+    if response.status == 200:
+        print('GET request was successful')
     pp.pprint(response.data)
 
     print("-----------------------------------------------------------")

@@ -349,7 +349,7 @@ class SampleResource(VersionedResource, FirstOrderResource):
         always_return_data = True
         authentication = CustomApiKeyAuth()
         authorization = ObjectAuthorization('tastyapi', 'sample')
-        excludes = ['user', 'collector']
+        excludes = ['user']
         filtering = {
                 'version': ALL,
                 'number': ALL,
@@ -357,6 +357,13 @@ class SampleResource(VersionedResource, FirstOrderResource):
                 'collection_date': ALL,
                 'rock_type': ALL_WITH_RELATIONS,
                 'regions': ALL_WITH_RELATIONS,
+                'minerals': ALL_WITH_RELATIONS,
+                'metamorphic_grades': ALL_WITH_RELATIONS,
+                'metamorphic_regions': ALL_WITH_RELATIONS,
+                'collector': ALL,
+                'number': ALL,
+                'references': ALL_WITH_RELATIONS,
+                'sample_id': ALL
                 }
         validation = VersionValidation(queryset, 'sample_id')
 
@@ -428,7 +435,10 @@ class RegionResource(BaseResource):
         authentication = ApiKeyAuthentication()
         allowed_methods = ['get']
         resource_name = "region"
-        filtering = { 'region': ALL }
+        filtering = { 
+            'region': ALL,
+            'name': ALL 
+        }
 
 class RockTypeResource(BaseResource):
     class Meta:
@@ -492,6 +502,7 @@ class SubsampleResource(VersionedResource, FirstOrderResource):
                 'grid_id': ALL,
                 'name': ALL,
                 'subsample_type': ALL_WITH_RELATIONS,
+                'sample': ALL_WITH_RELATIONS
                 }
         validation = VersionValidation(queryset, 'subsample_id')
 

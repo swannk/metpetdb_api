@@ -62,7 +62,7 @@ def main():
         result.save()
         ApiKey.objects.create(user=result)
         metpet_user.django_user = result
-        metpet_user.password = password
+        metpet_user.password = translate(bytearray(metpet_user.password))
         metpet_user.save()
         if metpet_user.enabled.upper() == 'Y':
             # Add user to public group(s), so (s)he can read public things

@@ -1,4 +1,5 @@
 from django.db import transaction, IntegrityError
+from django.contrib.auth.models import AnonymousUser
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from tastypie.resources import ModelResource
@@ -166,7 +167,11 @@ class CustomApiKeyAuth(ApiKeyAuthentication):
 
     def is_authenticated(self, request, **kwargs):
         if request.method == 'GET':
-            return True
+            try:
+                return super(CustomApiKeyAuth, self).is_authenticated(
+                                                            request, **kwargs)
+            except:
+                request.user = AnonymousUser()
         else:
             return super(CustomApiKeyAuth, self).is_authenticated(request,
                                                                   **kwargs)
@@ -405,7 +410,7 @@ class SampleResource(VersionedResource, FirstOrderResource):
                 except IntegrityError: continue
 
     def save_m2m(self, bundle):
-        for field_name, field_object in self.fields.items():
+        for field_name, field_object in self.fields.iteritems():
             if not getattr(field_object, 'is_m2m', False):
                 continue
 

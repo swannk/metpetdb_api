@@ -164,12 +164,22 @@ class CustomApiKeyAuth(ApiKeyAuthentication):
     Let anybody access resources with public_data == 'Y'
     """
 
+    # def is_authenticated(self, request, **kwargs):
+    #     if request.method == 'GET':
+    #         return True
+    #     else:
+    #         return super(CustomApiKeyAuth, self).is_authenticated(request,
+    #                                                               **kwargs)
     def is_authenticated(self, request, **kwargs):
         if request.method == 'GET':
-            return True
+            try:
+                return super(CustomApiKeyAuth, self).is_authenticated(
+                             request, **kwargs)
+            except:
+                request.user = AnonymousUser()
         else:
             return super(CustomApiKeyAuth, self).is_authenticated(request,
-                                                                  **kwargs)
+                         **kwargs)
 
 class FirstOrderResource(ModelResource):
     """Resource that can only be filtered with "first-order" filters.

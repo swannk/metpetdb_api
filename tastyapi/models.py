@@ -445,15 +445,15 @@ class Role(models.Model):
         db_table = 'roles'
 
 
-class SpatialRefSys(models.Model):
-    srid = models.IntegerField(primary_key=True)
-    auth_name = models.CharField(max_length=256, blank=True)
-    auth_srid = models.IntegerField(null=True, blank=True)
-    srtext = models.CharField(max_length=2048, blank=True)
-    proj4text = models.CharField(max_length=2048, blank=True)
-    class Meta:
-        # managed = False
-        db_table = 'spatial_ref_sys'
+# class SpatialRefSys(models.Model):
+#     srid = models.IntegerField(primary_key=True)
+#     auth_name = models.CharField(max_length=256, blank=True)
+#     auth_srid = models.IntegerField(null=True, blank=True)
+#     srtext = models.CharField(max_length=2048, blank=True)
+#     proj4text = models.CharField(max_length=2048, blank=True)
+#     class Meta:
+#         # managed = False
+#         db_table = 'spatial_ref_sys'
 
 class SubsampleType(models.Model):
     subsample_type_id = models.SmallIntegerField(primary_key=True)

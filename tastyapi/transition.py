@@ -1,7 +1,5 @@
 import base64
 import logging
-import dotenv
-dotenv.read_dotenv('../../env_variables.env')
 logger = logging.getLogger(__name__)
 
 from django.contrib.contenttypes.models import ContentType
@@ -9,6 +7,7 @@ from django.contrib.auth.models import User as AuthUser
 from django.contrib.auth.models import Group
 from django.db import transaction
 
+from tastypie.models import ApiKey
 from tastyapi.models import get_public_groups
 from tastyapi.models import User as MetpetUser
 from tastyapi.models import Group, GroupExtra, GroupAccess
@@ -62,7 +61,7 @@ def main():
         result.save()
         ApiKey.objects.create(user=result)
         metpet_user.django_user = result
-        metpet_user.password = translate(bytearray(metpet_user.password))
+        metpet_user.password = password
         metpet_user.save()
         if metpet_user.enabled.upper() == 'Y':
             # Add user to public group(s), so (s)he can read public things

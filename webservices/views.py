@@ -45,13 +45,12 @@ def search(request):
 	error = False
 	#Loop through search terms from search GET request in search form
 	#Prepare dictionary of filters for api request
-	print request.GET
-	for search_term in request.GET:
-		print search_term
-		print request.GET[search_term]
-		if request.GET[search_term]:
-			if search_term != 'resource':
-				search_terms[search_term] = request.GET[search_term]
+	for k,v in request.GET.iterlists():
+		for listitem in v:
+			if k:
+				if k != 'resource':
+					search_terms[k] = []
+					search_terms[k].append(listitem)
 	#Temporary credentials for api
 	username = "anonymous0@cs.rpi.edu"
 	api_key = "24809ab2c593b544a491748094ed10d3cbffc699"
@@ -59,13 +58,13 @@ def search(request):
 	#determine what resource to search for
 	if search_terms:
 		if request.GET['resource'] == 'sample':
-			data = api.searchSamples(filters=search_terms)
+			data = api.searchSamples(filters=dict(request.GET.iterlists()))
 			search_results = data.data['objects']
 			return render(request, 'search_results.html',
 				{'samples': search_results, 'query': ''})
 		if request.GET['resource'] == 'chemicalanalysis':
 			#search for chemical analyses
-			data = api.searchChemicals(filters=search_terms)
+			data = api.searchChemicals(filters=dict(request.GET.iterlists()))
 			search_results = data.data['objects']
 			return render(request, 'search_results.html',
 				{'chemicals': search_results, 'query': ''})
@@ -78,13 +77,16 @@ def search(request):
 	return render(request, 'search_form.html', {'error': error})
 
 
-#just a list of samples
+#Pagination function that could use a better implementation
+#This function handles the previous link for pagination
 def previous(request, pagenum=1, optional=''):
 	pagenum = int(pagenum) - 40
+	#Temporary User (may be different on production)
 	api = MetPet("anonymous0@cs.rpi.edu",
 				 "24809ab2c593b544a491748094ed10d3cbffc699")
 	user = "anonymous0@cs.rpi.edu"
 	api_key = "24809ab2c593b544a491748094ed10d3cbffc699"
+	#More than 20 reources were found
 	if pagenum > 1:
 		data = api.getAllSamples(pagenum, user, api_key)
 	else:
@@ -106,6 +108,7 @@ def previous(request, pagenum=1, optional=''):
 	return render(request,'samplelist.html', {'samples':samplelist,
 	 			  'nextURL': nextlist, 'total': total_count,
 	 			  'offsets': offsets, 'pagenum':pagenum, 'pageprev': pageprev})
+#List all samples
 def samplelist(request, pagenum=1):
 	api = MetPet("anonymous0@cs.rpi.edu",
 		"24809ab2c593b544a491748094ed10d3cbffc699")
@@ -210,6 +213,7 @@ def sample(request, sample_id):
 	else:
 		return HttpResponse("Sample does not Exist")
 
+# List Subsamples
 def subsample(request, subsample_id):
 
 	api = MetPet("anonymous0@cs.rpi.edu","24809ab2c593b544a491748094ed10d3cbffc699")

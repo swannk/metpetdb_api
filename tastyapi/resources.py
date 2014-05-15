@@ -199,7 +199,7 @@ class FirstOrderResource(ModelResource):
         extra_filter_prefixes = []
         if filters is None:
             filters = {}
-        for filter_expr, value in filters.iteritems():
+        for filter_expr, value in filters.iterlists():
             # For each filter, break it apart by double underscores...
             filter_bits = filter_expr.split("__")
             if len(filter_bits) == 0:

@@ -19,6 +19,7 @@
 		{% endif %}
 		{% if samples %}
 	    <p>Found {{ total }} sample{{ samples|pluralize }}.</p>
+	    {{ nextURL }}
 		{% for sample in samples %}
 		<tr>
 			<td class="sample_label"><a href="{% url 'sample' sample.sample_id %}" target="_blank" >{{sample.number}}</a></td>

@@ -55,8 +55,8 @@ def search(request):
 					search_terms[k] = []
 					search_terms[k].append(listitem)
 	#Temporary credentials for api
-	username = env('')
-	api_key = env('')
+	username = env('API_USER')
+	api_key = env('API_KEY')
 	api = MetPet(username,api_key)
 	#determine what resource to search for
 	if search_terms:
@@ -72,7 +72,7 @@ def search(request):
 			return render(request, 'search_results.html',
 				{'chemicals': search_results, 'query': ''})
 	else:
-		data = api.searchSamples()
+		# data = api.searchSamples()
 		return render(request, 'search_form.html',
 			{'samples': [], 'query': '', 'regions':region_list,
 			 'provenenances': collector_list, "references": reference_list,

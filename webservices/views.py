@@ -37,8 +37,7 @@ def search(request):
 		region_list.append(region.name)
 	for sample in all_samples:
 		if sample.collector and sample.collector not in collector_list:
-			#print sample.collector
-			collector_list.append(sample.collector)
+			collector_list.append(unicode(sample.collector))
 	for ref in all_references:
 		reference_list.append(ref.name)
 	for mmr in all_metamorphic_regions:

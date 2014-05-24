@@ -24,6 +24,7 @@ def index(request):
 
 #Request to serve search.html
 def search(request):
+    #TODO: Authenticate logged-in users against the API
     #Lists for filtering in search
     region_list = []
     collector_list = []
@@ -55,9 +56,7 @@ def search(request):
                     search_terms[k] = []
                     search_terms[k].append(listitem)
     #Temporary credentials for api
-    username = env('API_USER')
-    api_key = env('API_KEY')
-    api = MetPet(username,api_key)
+    api = MetPet(None, None)
     #determine what resource to search for
     if search_terms:
         if request.GET['resource'] == 'sample':
@@ -81,7 +80,8 @@ def search(request):
 
 
 #List all samples
-def samplelist(request):
+def samples(request):
+    #TODO: Authenticate logged-in users against the API
     api = MetPet(None, None).api
     offset = request.GET.get('offset', 0)
     data = api.sample.get(params={'offset': offset})
@@ -115,6 +115,7 @@ def samplelist(request):
 
 
 def chemical_analyses(request):
+    #TODO: Authenticate logged-in users against the API
     api = MetPet(None, None)
     data = api.getAllChemicalAnalysis()
     chemicallist =[]
@@ -124,7 +125,8 @@ def chemical_analyses(request):
     return render(request,'chemical_analyses.html', {'chemicals':chemicallist})
 
 
-def subsamplelist(request):
+def subsamples(request):
+    #TODO: Authenticate logged-in users against the API
     api = MetPet(None, None)
     data = api.getAllSubSamples()
     subsamplelist =[]
@@ -135,6 +137,7 @@ def subsamplelist(request):
     return render(request,'subsamples.html', {'subsamples':subsamplelist})
 
 def user(request, user_id):
+    #TODO: Authenticate logged-in users against the API
     api = MetPet(None, None).api
     user = api.user.get(user_id).data
     if sample:
@@ -145,6 +148,7 @@ def user(request, user_id):
 
 # view function renders sampleview.html
 def sample(request, sample_id):
+    #TODO: Authenticate logged-in users against the API
     api = MetPet(None, None).api
     sample = api.sample.get(sample_id).data
     user = api.user.get(sample['user'].split("/")[-2]).data
@@ -166,6 +170,7 @@ def sample(request, sample_id):
 
 # List Subsamples
 def subsample(request, subsample_id):
+    #TODO: Authenticate logged-in users against the API
     api = MetPet(None, None).api
     subsample = api.subsample.get(subsample_id).data
     user = api.user.get(subsample['user']['user_id']).data
@@ -176,6 +181,7 @@ def subsample(request, subsample_id):
 
 # view function renders chemanalysisview.html/json data depending on the request
 def chemical_analysis(request, chemical_analysis_id):
+    #TODO: Authenticate logged-in users against the API
     chemanalysisobj =ChemicalAnalysisObject(chemical_analysis_id)
     if chemanalysisobj.exists():
         return render(request, 'chemical_analysis.html',{'chemicalanalysis':chemanalysisobj,})
@@ -184,6 +190,7 @@ def chemical_analysis(request, chemical_analysis_id):
 
 
 def sample_images(request, sample_id):
+    #TODO: Authenticate logged-in users against the API
     sampleimagesobj = SampleImagesObject(sample_id)
 
     if sampleimagesobj.exists():

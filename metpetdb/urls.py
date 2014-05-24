@@ -44,10 +44,10 @@ urlpatterns = patterns('',
   url(r'^$', 'webservices.views.index', name='index'),
   url(r'^search/$', 'webservices.views.search', name='search'),
 
-  url(r'^samples/$', 'webservices.views.samplelist', name='samples'),
+  url(r'^samples/$', 'webservices.views.samples', name='samples'),
   url(r'^sample/(\d+)/$','webservices.views.sample', name='sample'),
 
-  url(r'^subsamples/$', 'webservices.views.subsamplelist', name="subsamples"),
+  url(r'^subsamples/$', 'webservices.views.subsamples', name="subsamples"),
   url(r'^subsample/(\d+)/$','webservices.views.subsample', name='subsample'),
 
   url(r'^chemical_analyses/$', 'webservices.views.chemical_analyses',

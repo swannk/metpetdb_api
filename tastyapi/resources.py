@@ -531,6 +531,7 @@ class SubsampleResource(VersionedResource, FirstOrderResource):
         authorization = ObjectAuthorization('tastyapi', 'subsample')
         authentication = CustomApiKeyAuth()
         filtering = {
+                'subsample_id': ALL,
                 'public_data': ALL,
                 'grid_id': ALL,
                 'name': ALL,
@@ -555,7 +556,7 @@ class ChemicalAnalysisResource(VersionedResource, FirstOrderResource):
     reference = fields.ToOneField(ReferenceResource, "reference", null=True)
     mineral = fields.ToOneField(MineralResource, "mineral", null=True)
     class Meta:
-        queryset = ChemicalAnalyses.objects.all()
+        queryset = ChemicalAnalyses.objects.all().distinct('chemical_analysis_id')
         resource_name = 'chemical_analysis'
         allowed_methods = ['get', 'post', 'put', 'delete']
         always_return_data = True

@@ -124,12 +124,31 @@ def sample(request, sample_id):
     latitude = location[2].replace(")","")
     loc = [longtitude, latitude]
 
-    subsamples_filter = {"sample__sample_id": sample['sample_id'], "limit": "0"}
-    subsamples_data = api.subsample.get(params=subsamples_filter)
+    generic_filter = {"sample__sample_id": sample['sample_id'], "limit": "0"}
+
+    subsamples = api.subsample.get(params=generic_filter).data['objects']
+
+    aliases = api.sample_alias.get(params=generic_filter).data['objects']
+    aliases_str = [alias['alias'] for alias in aliases]
+
+    regions = [region['name'] for region in sample['regions']]
+    metamorphic_regions = [metamorphic_region['name'] for metamorphic_region in sample['metamorphic_regions']]
+    metamorphic_grades = [metamorphic_grade['name'] for metamorphic_grade in sample['metamorphic_grades']]
+    references = [reference['name'] for reference in sample['references']]
+    minerals = [mineral['name'] for mineral in sample['minerals']]
 
     if sample:
-        return render(request, 'sample.html',{'sample':sample, 'user':user,
-            'location': loc, 'subsamples': subsamples_data.data['objects']})
+        return render(request, 'sample.html',
+                     {'sample':sample,
+                      'user':user,
+                      'location': loc,
+                      'minerals': (', ').join(minerals),
+                      'regions': (', ').join(regions),
+                      'references': (', ').join(references),
+                      'metamorphic_grades': (', ').join(metamorphic_grades),
+                      'metamorphic_regions': (', ').join(metamorphic_regions),
+                      'aliases': (', ').join(aliases_str),
+                      'subsamples': subsamples})
     else:
         return HttpResponse("Sample does not Exist")
 
@@ -151,8 +170,18 @@ def subsample(request, subsample_id):
     api = MetPet(None, None).api
     subsample = api.subsample.get(subsample_id).data
     user = api.user.get(subsample['user']['user_id']).data
+
+    filter = {"subsample__subsample_id": subsample['subsample_id'],
+              "limit": "0"}
+    chemical_analyses = api.chemical_analysis.get(params=filter).data['objects']
+
+    print(chemical_analyses)
+
     if subsample:
-        return render(request, 'subsample.html',{'subsample': subsample, 'user':user})
+        return render(request, 'subsample.html',
+                      {'subsample': subsample,
+                       'user':user,
+                       'chemical_analyses': chemical_analyses})
     else:
         return HttpResponse("Subsample does not Exist")
 

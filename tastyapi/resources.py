@@ -13,7 +13,7 @@ from tastypie.exceptions import Unauthorized, InvalidFilterError, ImmediateHttpR
 from .models import User, Sample, MetamorphicGrade, MetamorphicRegion, Region,\
                     RockType, Subsample, SubsampleType, Mineral, Reference, \
                     ChemicalAnalyses, SampleRegion, SampleReference, \
-                    SampleMineral, SampleMetamorphicGrade, \
+                    SampleMineral, SampleMetamorphicGrade, SampleAliase, \
                     SampleMetamorphicRegion
 from . import auth
 from . import utils
@@ -449,16 +449,27 @@ class SampleResource(VersionedResource, FirstOrderResource):
                 except IntegrityError: continue
 
 
+class SampleAliasResource(BaseResource):
+    sample = fields.ToOneField("tastyapi.resources.SampleResource",
+                                  "sample")
+    class Meta:
+        queryset = SampleAliase.objects.all()
+        resource_name = "sample_alias"
+        authorization = Authorization()
+        authentication = CustomApiKeyAuth()
+        allowed_methods = ['get']
+        filtering = { 'sample': ALL_WITH_RELATIONS,
+                      'alias': ALL }
+
+
 class RegionResource(BaseResource):
     class Meta:
         queryset = Region.objects.all()
         authentication = ApiKeyAuthentication()
         allowed_methods = ['get']
         resource_name = "region"
-        filtering = {
-            'region': ALL,
-            'name': ALL
-        }
+        filtering = { 'region': ALL,
+                      'name': ALL }
 
 class RockTypeResource(BaseResource):
     class Meta:

@@ -673,7 +673,8 @@ class SampleRegion(models.Model):
 
 class SampleAliase(models.Model):
     sample_alias_id = models.BigIntegerField(primary_key=True)
-    sample = models.ForeignKey('Sample', null=True, blank=True)
+    sample = models.ForeignKey('Sample', null=True, blank=True,
+                               related_name='aliases')
     alias = models.CharField(max_length=35)
     def __unicode__(self):
         return self.alias

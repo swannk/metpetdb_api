@@ -181,7 +181,8 @@ def subsample(request, subsample_id):
         return render(request, 'subsample.html',
                       {'subsample': subsample,
                        'user':user,
-                       'chemical_analyses': chemical_analyses})
+                       'chemical_analyses': chemical_analyses,
+                       'sample_id': subsample['sample'].split('/')[-2]})
     else:
         return HttpResponse("Subsample does not Exist")
 

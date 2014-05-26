@@ -114,11 +114,11 @@ def sample(request, sample_id):
     latitude = location[2].replace(")","")
     loc = [longtitude, latitude]
 
-    generic_filter = {"sample__sample_id": sample['sample_id'], "limit": "0"}
+    filter = {"sample__sample_id": sample['sample_id'], "limit": "0"}
 
-    subsamples = api.subsample.get(params=generic_filter).data['objects']
+    subsamples = api.subsample.get(params=filter).data['objects']
 
-    aliases = api.sample_alias.get(params=generic_filter).data['objects']
+    aliases = api.sample_alias.get(params=filter).data['objects']
     aliases_str = [alias['alias'] for alias in aliases]
 
     regions = [region['name'] for region in sample['regions']]

@@ -63,7 +63,7 @@
 			<table id="chemtable_canvas">
 				<thead>
 					<tr>
-						<th>ID</th>
+						<th>Point Number</th>
 						<th>Public</th>
 						<th>Analysis Method</th>
 						<th>Analysis Material</th>
@@ -78,7 +78,7 @@
 				<tbody>
 					{%for analysis in chemical_analyses%}
 					<tr><!-- URL needs to be changed to named url+ generic view type -->
-						<td><a href="{% url 'chemical_analysis' analysis.chemical_analysis_id %}" target="_blank">{{analysis.chemical_analysis_id}}</a></td>
+						<td><a href="{% url 'chemical_analysis' analysis.chemical_analysis_id %}" target="_blank">{{analysis.spot_id}}</a></td>
 						<td>{{analysis.public_data}}</td>
 						<td>{{analysis.analysis_method}}</td>
 						<td>{{analysis.analysis_material}}</td>

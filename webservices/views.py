@@ -158,9 +158,7 @@ def subsamples(request):
     api = MetPet(None, None)
     data = api.getAllSubSamples()
     subsamplelist =[]
-    # print dir(samplelist)
     for subsample in data.data['objects']:
-        # print sample['sample_id']
         subsamplelist.append([subsample['subsample_id'],subsample['name']] )
     return render(request,'subsamples.html', {'subsamples':subsamplelist})
 
@@ -174,8 +172,6 @@ def subsample(request, subsample_id):
     filter = {"subsample__subsample_id": subsample['subsample_id'],
               "limit": "0"}
     chemical_analyses = api.chemical_analysis.get(params=filter).data['objects']
-
-    print(chemical_analyses)
 
     if subsample:
         return render(request, 'subsample.html',
@@ -200,9 +196,17 @@ def chemical_analyses(request):
 
 def chemical_analysis(request, chemical_analysis_id):
     #TODO: Authenticate logged-in users against the API
-    chemanalysisobj =ChemicalAnalysisObject(chemical_analysis_id)
-    if chemanalysisobj.exists():
-        return render(request, 'chemical_analysis.html',{'chemicalanalysis':chemanalysisobj,})
+    chem_analysis =ChemicalAnalysisObject(chemical_analysis_id)
+    api = MetPet(None, None).api
+    chem_analysis_obj = api.chemical_analysis.get(chemical_analysis_id).data
+
+    subsample = api.subsample.get_by_uri(chem_analysis_obj['subsample']).data
+
+    if chem_analysis:
+        return render(request, 'chemical_analysis.html',
+                      {'chemicalanalysis':chem_analysis,
+                       'subsample_id': subsample['subsample_id'],
+                       'sample_id': subsample['sample'].split('/')[-2]})
     else:
         return HttpResponse("Chemical Analysis does not exist")
 

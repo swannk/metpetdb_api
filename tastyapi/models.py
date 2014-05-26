@@ -746,6 +746,7 @@ class ChemicalAnalyses(models.Model):
     large_rock = models.CharField(max_length=1)
     total = models.FloatField(null=True, blank=True)
     spot_id = models.BigIntegerField()
+    oxides = ManyToManyField(Oxide, through='ChemicalAnalysisOxide')
     group_access = generic.GenericRelation(GroupAccess)
     def __unicode__(self):
         return u'ChemicalAnalysis #' + unicode(self.chemical_analysis_id)

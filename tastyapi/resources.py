@@ -14,7 +14,7 @@ from .models import User, Sample, MetamorphicGrade, MetamorphicRegion, Region,\
                     RockType, Subsample, SubsampleType, Mineral, Reference, \
                     ChemicalAnalyses, SampleRegion, SampleReference, \
                     SampleMineral, SampleMetamorphicGrade, SampleAliase, \
-                    SampleMetamorphicRegion
+                    SampleMetamorphicRegion, Oxide, ChemicalAnalysisOxide
 from . import auth
 from . import utils
 import logging
@@ -555,6 +555,9 @@ class ChemicalAnalysisResource(VersionedResource, FirstOrderResource):
     subsample = fields.ToOneField(SubsampleResource, "subsample")
     reference = fields.ToOneField(ReferenceResource, "reference", null=True)
     mineral = fields.ToOneField(MineralResource, "mineral", null=True)
+    # oxides = fields.ToManyField("tastyapi.resources.OxideResource",
+    #                              "oxides", null=True, full=True)
+
     class Meta:
         queryset = ChemicalAnalyses.objects.all().distinct('chemical_analysis_id')
         resource_name = 'chemical_analysis'
@@ -579,3 +582,18 @@ class ChemicalAnalysisResource(VersionedResource, FirstOrderResource):
                 'total': ALL,
                 }
         validation = VersionValidation(queryset, 'chemical_analysis_id')
+
+# class OxideResource(BaseResource):
+#     class Meta:
+#         queryset = Oxide.objects.all()
+#         resource_name = "oxide"
+#         authorization = Authorization()
+#         authentication = CustomApiKeyAuth()
+#         allowed_methods = ['get']
+#         filtering = {}
+
+# class ChemicalAnalysisOxideResource(BaseResource):
+#     oxide = fields.ToOneField(OxideResource, 'oxide', full=True)
+#     class Meta:
+#         queryset = ChemicalAnalysisOxide.objects.all()
+#         resource_name = 'chemical_analysis_oxide'

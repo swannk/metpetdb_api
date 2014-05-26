@@ -80,7 +80,11 @@ def samples(request):
     next, previous, last, total_count = paginate_model('samples', data, filters)
 
     samplelist =[]
-    for sample in data.data['objects']:
+
+    samples = data.data['objects']
+    for sample in samples:
+        mineral_names = [mineral['name'] for mineral in sample['minerals']]
+        sample['mineral_list'] = (', ').join(mineral_names)
         samplelist.append([sample['sample_id'],sample['number']] )
 
     first_page_filters = filters
@@ -89,7 +93,7 @@ def samples(request):
     return render(request,
                  'samples.html',
                  {
-                      'samples':samplelist,
+                      'samples': samples,
                       'nextURL': next,
                       'prevURL': previous,
                       'total': total_count,

@@ -85,17 +85,7 @@ def samples(request):
     offset = request.GET.get('offset', 0)
     data = api.sample.get(params={'offset': offset})
 
-    next, previous = None, None
-    if data.data['meta']['next']:
-        next_offset = int(offset) + 20
-        next = reverse('samples') + '?' + 'offset={0}'.format(next_offset)
-    if data.data['meta']['previous']:
-        prev_offset = int(offset) - 20
-        previous = reverse('samples') + '?' + 'offset={0}'.format(prev_offset)
-
-    total_count = data.data['meta']['total_count']
-    last = reverse('samples') + '?' + 'offset={0}'.format(total_count -
-                                                          total_count%20)
+    next, previous, last, total_count = paginate_model('samples', data, 20)
 
     samplelist =[]
     for sample in data.data['objects']:
@@ -183,15 +173,27 @@ def subsample(request, subsample_id):
         return HttpResponse("Subsample does not Exist")
 
 
+
 def chemical_analyses(request):
     #TODO: Authenticate logged-in users against the API
-    api = MetPet(None, None)
-    data = api.getAllChemicalAnalysis()
+    api = MetPet(None, None).api
+    offset = request.GET.get('offset', 0)
+    data = api.chemical_analysis.get(params={'offset': offset})
+
+    next, previous, last, total_count = paginate_model('chemical_analyses',
+                                                        data, 20)
+
     chemicallist =[]
     for chemical in data.data['objects']:
         chemicallist.append([chemical['chemical_analysis_id'],
                             chemical['where_done']] )
-    return render(request,'chemical_analyses.html', {'chemicals':chemicallist})
+    return render(request,'chemical_analyses.html',
+                 {'chemicals':chemicallist,
+                  'nextURL': next,
+                  'prevURL': previous,
+                  'total': total_count,
+                  'firstPage': reverse('chemical_analyses'),
+                  'lastPage': last})
 
 
 def chemical_analysis(request, chemical_analysis_id):

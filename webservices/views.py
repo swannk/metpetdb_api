@@ -79,13 +79,10 @@ def samples(request):
 
     next, previous, last, total_count = paginate_model('samples', data, filters)
 
-    samplelist =[]
-
     samples = data.data['objects']
     for sample in samples:
         mineral_names = [mineral['name'] for mineral in sample['minerals']]
         sample['mineral_list'] = (', ').join(mineral_names)
-        samplelist.append([sample['sample_id'],sample['number']] )
 
     first_page_filters = filters
     del first_page_filters['offset']
@@ -106,7 +103,6 @@ def sample(request, sample_id):
     #TODO: Authenticate logged-in users against the API
     api = MetPet(None, None).api
     sample = api.sample.get(sample_id).data
-    user = api.user.get(sample['user'].split("/")[-2]).data
 
     location = sample['location'].split(" ")
     longtitude = location[1].replace("(","")
@@ -129,7 +125,6 @@ def sample(request, sample_id):
     if sample:
         return render(request, 'sample.html',
                      {'sample':sample,
-                      'user':user,
                       'location': loc,
                       'minerals': (', ').join(minerals),
                       'regions': (', ').join(regions),
@@ -161,7 +156,6 @@ def subsample(request, subsample_id):
     filter = {"subsample__subsample_id": subsample['subsample_id'],
               "limit": "0"}
     chemical_analyses = api.chemical_analysis.get(params=filter).data['objects']
-    print(chemical_analyses)
 
     if subsample:
         return render(request, 'subsample.html',
@@ -184,17 +178,13 @@ def chemical_analyses(request):
 
     next, previous, last, total_count = paginate_model('chemical_analyses',
                                                         data, filters)
-
-    chemicallist =[]
-    for chemical in data.data['objects']:
-        chemicallist.append([chemical['chemical_analysis_id'],
-                            chemical['where_done']] )
+    chemical_analyses = data.data['objects']
 
     first_page_filters = filters
     del first_page_filters['offset']
 
     return render(request,'chemical_analyses.html',
-                 {'chemicals':chemicallist,
+                 {'chemical_analyses': chemical_analyses,
                   'nextURL': next,
                   'prevURL': previous,
                   'total': total_count,

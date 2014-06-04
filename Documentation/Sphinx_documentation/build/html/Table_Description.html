@@ -1,0 +1,1623 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Table Description &mdash; mpdbdoc 1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mpdbdoc 1 documentation" href="index.html" />
+    <link rel="next" title="Notes" href="Notes.html" />
+    <link rel="prev" title="Introduction" href="Introduction.html" /> 
+  </head>
+  <body>
+
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
+<a href="index.html"><img src="_static/MPDBlogo-orig.png" border="0" alt="py4sci"/></a>
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="Notes.html" title="Notes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Introduction.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">home</a>|&nbsp;</li>
+        <li><a href="search.html">search</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Table Description</a><ul>
+<li><a class="reference internal" href="#list-of-tables">List of Tables</a><ul>
+<li><a class="reference internal" href="#samples">Samples</a></li>
+<li><a class="reference internal" href="#subsamples">subsamples</a></li>
+<li><a class="reference internal" href="#chemical-analyses">chemical_analyses</a></li>
+<li><a class="reference internal" href="#users">users</a></li>
+<li><a class="reference internal" href="#roles">roles</a></li>
+<li><a class="reference internal" href="#sample-aliases">sample_aliases</a></li>
+<li><a class="reference internal" href="#sample-comments">sample_comments</a></li>
+<li><a class="reference internal" href="#rock-type">rock_type</a></li>
+<li><a class="reference internal" href="#subsample-type">subsample_type</a></li>
+<li><a class="reference internal" href="#chemical-analysis-elements">chemical_analysis_elements</a></li>
+<li><a class="reference internal" href="#minerals">minerals</a></li>
+<li><a class="reference internal" href="#mineral-relationships">mineral_relationships</a></li>
+<li><a class="reference internal" href="#element-mineral-types">element_mineral_types</a></li>
+<li><a class="reference internal" href="#oxide-mineral-types">oxide_mineral_types</a></li>
+<li><a class="reference internal" href="#elements">elements</a></li>
+<li><a class="reference internal" href="#chemical-analysis-oxides">chemical_analysis_oxides</a></li>
+<li><a class="reference internal" href="#oxides">oxides</a></li>
+<li><a class="reference internal" href="#images">images</a></li>
+<li><a class="reference internal" href="#image-format">image_format</a></li>
+<li><a class="reference internal" href="#image-type">image_type</a></li>
+<li><a class="reference internal" href="#regions">regions</a></li>
+<li><a class="reference internal" href="#sample-regions">sample_regions</a></li>
+<li><a class="reference internal" href="#metamorphic-regions">metamorphic_regions</a></li>
+<li><a class="reference internal" href="#sample-metamorphic-regions">sample_metamorphic_regions</a></li>
+<li><a class="reference internal" href="#metamorphic-grades">metamorphic_grades</a></li>
+<li><a class="reference internal" href="#sample-metamorphic-grades">sample_metamorphic_grades</a></li>
+<li><a class="reference internal" href="#georeference">georeference</a></li>
+<li><a class="reference internal" href="#sample-georeference">sample_georeference</a></li>
+<li><a class="reference internal" href="#reference">reference</a></li>
+<li><a class="reference internal" href="#sample-reference">sample_reference</a></li>
+<li><a class="reference internal" href="#projects">projects</a></li>
+<li><a class="reference internal" href="#project-members">project_members</a></li>
+<li><a class="reference internal" href="#project-invites">project_invites</a></li>
+<li><a class="reference internal" href="#project-samples">project_samples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Introduction.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Notes.html"
+                        title="next chapter">Notes</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/Table_Description.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="table-description">
+<span id="id1"></span><h1>Table Description<a class="headerlink" href="#table-description" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="list-of-tables">
+<span id="installing-docdir"></span><h2>List of Tables<a class="headerlink" href="#list-of-tables" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="samples">
+<h3>Samples<a class="headerlink" href="#samples" title="Permalink to this headline">¶</a></h3>
+<p>Stores information regarding the sample through a unique sample id, rock type id , latitude and
+longitude. More information regarding the sample object and its attributes can be found at <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/SampleObject">http://wiki.cs.rpi.edu/trac/metpetdb/wiki/SampleObject</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="14%" />
+<col width="76%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>sample_id</td>
+<td>Required(PK)</td>
+<td>Unique id for the sample for that particular owner</td>
+</tr>
+<tr class="row-odd"><td>version</td>
+<td>Required</td>
+<td>It is the number of times that specific tuple has been modified(used
+for concurrency issues).You read a tuple with its version info. You
+read a tuple with its version info. When trying to save it, you check
+whether the version has not changed since you read it. If not, you
+can write the new update. Otherwise, the update can fail. More
+information <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Versioning">here</a></td>
+</tr>
+<tr class="row-even"><td>sesar_number</td>
+<td>Optional</td>
+<td>Unique identifiers created by SESAR. Sample will have a sesar_number if
+it is registered here (System for Earth SAmple Registration -
+<a class="reference external" href="http://www.geosamples.org/">http://www.geosamples.org/</a></td>
+</tr>
+<tr class="row-odd"><td>public_data</td>
+<td>Required</td>
+<td>Y/N depending on if the sample is public /
+private/project</td>
+</tr>
+<tr class="row-even"><td>collection_date</td>
+<td>Optional</td>
+<td>Must be the date when sample was collected in MM-DD-YYYY, YYYY-MM-DD
+or a shortened version</td>
+</tr>
+<tr class="row-odd"><td>date_precision</td>
+<td>Optional</td>
+<td>Date could be a specific day and time (0), a specific day (1), a month
+and year (31), or a year (365). Currently stored values
+are 0 1 31 365</td>
+</tr>
+<tr class="row-even"><td>number</td>
+<td>Required</td>
+<td>Alternate sample number. Generally the number given by the person.</td>
+</tr>
+<tr class="row-odd"><td>rock_type_id</td>
+<td>Required(FK)</td>
+<td>References the rock_type_id from the table rock_type. Every sample in the
+database must be one of the rock types as described <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/RockType">here</a></td>
+</tr>
+<tr class="row-even"><td>user_id</td>
+<td>Required(FK)</td>
+<td>References the users table  which stores all the user information.</td>
+</tr>
+<tr class="row-odd"><td>location_error</td>
+<td>Optional</td>
+<td>Error in meters from the actual location of the samples.
+(latitude/longitude errors)</td>
+</tr>
+<tr class="row-even"><td>country</td>
+<td>Optional</td>
+<td>Country where the sample was collected</td>
+</tr>
+<tr class="row-odd"><td>description</td>
+<td>Optional</td>
+<td>Text data about the sample.</td>
+</tr>
+<tr class="row-even"><td>collector</td>
+<td>Optional</td>
+<td>Name of the person who collected the sample in the Lastname, Firstname format.</td>
+</tr>
+<tr class="row-odd"><td>metamor</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>phic_region_id</td>
+<td>Optional</td>
+<td>Should have been a FK as the metamorphic_regions table stores the
+metamorphic_region_id as a required field.</td>
+</tr>
+<tr class="row-odd"><td>collector_id</td>
+<td>FK</td>
+<td>References the users for the user_id. Collector_id same as user_id?</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="subsamples">
+<h3>subsamples<a class="headerlink" href="#subsamples" title="Permalink to this headline">¶</a></h3>
+<p>A thin subsection of the sample is called a subsample. subsamples table stores the details of the sub samples for a particular sample. Sub sample description can be found <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Subsample">here</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="17%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>subsample_id</td>
+<td>Required (PK)</td>
+<td>Unique id for the subsample</td>
+</tr>
+<tr class="row-odd"><td>version</td>
+<td>Required</td>
+<td>It is the number of times that specific tuple has been modified(used
+for concurrency issues).You read a tuple with its version info.
+When trying to save it, you check whether the version has not changed
+since you read it. If not, you can write the new update.
+Otherwise, the update can fail. More
+information <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Versioning">here</a></td>
+</tr>
+<tr class="row-even"><td>public_data</td>
+<td>Required</td>
+<td>Y/N depending on if the subsample is public / private/published</td>
+</tr>
+<tr class="row-odd"><td>sample_id</td>
+<td>Required (FK)</td>
+<td>References samples table to get the corresponding sample_id.</td>
+</tr>
+<tr class="row-even"><td>user_id</td>
+<td>Required</td>
+<td>References the users table  which stores all information regarding
+the users</td>
+</tr>
+<tr class="row-odd"><td>grid_id</td>
+<td>Optional</td>
+<td>This information is stored if there is an image map associated
+with the subsample. This information is shown depending on if the
+subsample is private/public.</td>
+</tr>
+<tr class="row-even"><td>name</td>
+<td>Required</td>
+<td>There are 4 types of subsamples. This stores the name of the subsample.</td>
+</tr>
+<tr class="row-odd"><td>subsample_type_id</td>
+<td>Required</td>
+<td>Subsample type id is stored here.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="chemical-analyses">
+<h3>chemical_analyses<a class="headerlink" href="#chemical-analyses" title="Permalink to this headline">¶</a></h3>
+<p>Stores the chemical information for a particular subsample and associated with one sample. Hence, references subsamples and samples table through Foreign Key. The attributes can be seen in detail <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/ChemicalAnalysisObject">here</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="14%" />
+<col width="71%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>chemical_analysis_id</td>
+<td>Required (PK)</td>
+<td>Unique id for the chemical analysis of a subsample.</td>
+</tr>
+<tr class="row-odd"><td>version</td>
+<td>Required</td>
+<td>It is the number of times that specific tuple has been modified
+(used for concurrency issues). You read a tuple with its version info.
+When trying to save it, you check whether the version has not changed
+since you read it. If not, you can write the new update. Otherwise,
+the update can fail. More information <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Versioning">here</a></td>
+</tr>
+<tr class="row-even"><td>spot_id</td>
+<td>Required</td>
+<td>&#8220;Spot_id&#8221; is the unique identifier for a chemical analysis.
+It corresponds to the point number in an electron microprobe
+analytical session. t is user specified and required to be unique
+for a subsample</td>
+</tr>
+<tr class="row-odd"><td>subsample_id</td>
+<td>Required (FK)</td>
+<td>References the subsamples table for the subsample it is
+associated with.</td>
+</tr>
+<tr class="row-even"><td>public_data</td>
+<td>Required</td>
+<td>Y/N depending on if the chemical_analysis is
+public / private/project</td>
+</tr>
+<tr class="row-odd"><td>reference_x</td>
+<td>Optional</td>
+<td>The x coordinate location of the analysis on the reference image,
+measured in percent of total image width (in original orientaion).
+The origin is assumed to be at bottom left of image.</td>
+</tr>
+<tr class="row-even"><td>reference_y</td>
+<td>Optional</td>
+<td>The y coordinate location of the analysis on the reference image,
+measured in percent of total image height (in original orientaion).
+The origin is assumed to be at bottom left of image.</td>
+</tr>
+<tr class="row-odd"><td>stage_x</td>
+<td>Optional</td>
+<td>The stage X-coordinate recorded by a microscope or microprobe.
+These are in microns.</td>
+</tr>
+<tr class="row-even"><td>stage_y</td>
+<td>Optional</td>
+<td>The stage Y-coordinate recorded by a microscope or microprobe.
+These are in microns.</td>
+</tr>
+<tr class="row-odd"><td>image_id</td>
+<td>Optional (FK)</td>
+<td>The id of the image on which the analysis location is referenced.</td>
+</tr>
+<tr class="row-even"><td>analysis_method</td>
+<td>Optional</td>
+<td>Method of analysis from the accepted <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Methods">method code</a></td>
+</tr>
+<tr class="row-odd"><td>where_done</td>
+<td>Optional</td>
+<td>The analytical facility where analysis was performed</td>
+</tr>
+<tr class="row-even"><td>analyst</td>
+<td>Optional</td>
+<td>Name of the person who analysed the sample. Generally as Lastname,
+Firstname.</td>
+</tr>
+<tr class="row-odd"><td>analysis_date</td>
+<td>Optional</td>
+<td>Date on which the analysis was performed.</td>
+</tr>
+<tr class="row-even"><td>date_precision</td>
+<td>Optional</td>
+<td>Date could be a specific day and time (0), a specific day (1),
+a month  and year (31), or a year (365). Currently stored values are:
+0, 1, 31, 365</td>
+</tr>
+<tr class="row-odd"><td>reference_id</td>
+<td>Optional (FK)</td>
+<td>reference_id from reference table related to this chemical analysis.</td>
+</tr>
+<tr class="row-even"><td>description</td>
+<td>Optional</td>
+<td>Text description of the analytical strategy.</td>
+</tr>
+<tr class="row-odd"><td>mineral_id</td>
+<td>Optional (FK)</td>
+<td>The id for the minerals listed for that particular sample for
+which the chemical analysis is being performed.
+References the minerals table.</td>
+</tr>
+<tr class="row-even"><td>user_id</td>
+<td>Required (FK)</td>
+<td>References the users table to obtain the owner of the data.</td>
+</tr>
+<tr class="row-odd"><td>large_rock</td>
+<td>Required</td>
+<td>Y/N. ‘Y’ for bulk_rock analysis, ‘N’ for spot analysis.</td>
+</tr>
+<tr class="row-even"><td>total</td>
+<td>Optional</td>
+<td>The total weight percent of measured elements/species for this point.
+This indicates the completeness of the analysis to a user.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="users">
+<h3>users<a class="headerlink" href="#users" title="Permalink to this headline">¶</a></h3>
+<p>Stores the information of the users through a unique user_id (primary key) and  email (this may be changed later on) and references the roles table for role_id as users can have many roles.
+Refer <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/UserTypes">http://wiki.cs.rpi.edu/trac/metpetdb/wiki/UserTypes</a> for information on roles/user types.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="14%" />
+<col width="71%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>user_id</td>
+<td>Required (PK)</td>
+<td>Unique id for each user.</td>
+</tr>
+<tr class="row-odd"><td>version</td>
+<td>Required</td>
+<td>It is the number of times that specific tuple has been modified
+(used for concurrency issues). You read a tuple with its version info.
+When trying to save it, you check whether the version has not changed
+since you read it. If not, you can write the new update. Otherwise,
+the update can fail. More information <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Versioning">here</a></td>
+</tr>
+<tr class="row-even"><td>name</td>
+<td>Required</td>
+<td>Name of the user</td>
+</tr>
+<tr class="row-odd"><td>email</td>
+<td>Required (unique)</td>
+<td>Email id which is used as a login</td>
+</tr>
+<tr class="row-even"><td>password</td>
+<td>Required</td>
+<td>Password chosen by users</td>
+</tr>
+<tr class="row-odd"><td>address</td>
+<td>Optional</td>
+<td>Optional information</td>
+</tr>
+<tr class="row-even"><td>city</td>
+<td>Optional</td>
+<td>Optional information</td>
+</tr>
+<tr class="row-odd"><td>province</td>
+<td>Optional</td>
+<td>Optional information</td>
+</tr>
+<tr class="row-even"><td>country</td>
+<td>Optional</td>
+<td>Optional information</td>
+</tr>
+<tr class="row-odd"><td>postal_code</td>
+<td>Optional</td>
+<td>Optional information</td>
+</tr>
+<tr class="row-even"><td>institution</td>
+<td>Optional</td>
+<td>Optional information</td>
+</tr>
+<tr class="row-odd"><td>reference_email</td>
+<td>Optional</td>
+<td>Optional information</td>
+</tr>
+<tr class="row-even"><td>confirmation_code</td>
+<td>Optional</td>
+<td>Not sure, may be no confirmation code for users who are just
+regular users (i.e. no upload privileges) or it could  optional
+due to legacy reasons.</td>
+</tr>
+<tr class="row-odd"><td>enabled</td>
+<td>Required</td>
+<td>Single character for enabled/disabled status.</td>
+</tr>
+<tr class="row-even"><td>role_id</td>
+<td>Required (FK)</td>
+<td>References the roles table for the role_id of the user.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="roles">
+<h3>roles<a class="headerlink" href="#roles" title="Permalink to this headline">¶</a></h3>
+<p>Stores the role information for the user through the following attributes. This table may be subsumed by Drupal as a new user must be created for multiple roles for a user. The various roles of a user can be found <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/UserTypes">here</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>role_id</td>
+<td>Required (PK)</td>
+<td>Unique id for a particular role</td>
+</tr>
+<tr class="row-odd"><td>rank</td>
+<td>Required (unique)</td>
+<td>Rank of the role ; for eg: 0 -&gt; Member, 1-&gt; contributor etc.</td>
+</tr>
+<tr class="row-even"><td>role_name</td>
+<td>Required</td>
+<td>Name of the role. Eg: Member, contributor, fellow etc.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="sample-aliases">
+<h3>sample_aliases<a class="headerlink" href="#sample-aliases" title="Permalink to this headline">¶</a></h3>
+<p>A sample can have multiple aliases and it is stored in the sample_aliases table with  sample_id and alias name together being unique. (i.e same sample is referred by different numbers sometimes)
+(even in the presence of a unique constraint it is possible to store duplicate rows that contain a null value in at least one of the constrained columns)</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>sample_alias_id</td>
+<td>Required(PK)</td>
+<td>Alias id is the alternate sample number</td>
+</tr>
+<tr class="row-odd"><td>sample_id</td>
+<td>Required, FK(unique)</td>
+<td>The actual sample_id whose alias is being recorded.</td>
+</tr>
+<tr class="row-even"><td>alias</td>
+<td>Required (unique)</td>
+<td>Name of the alias.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="sample-comments">
+<h3>sample_comments<a class="headerlink" href="#sample-comments" title="Permalink to this headline">¶</a></h3>
+<p>This table stores the comments associated with a sample by referencing the sample_id from the samples table. It also shows the owner of the comment by referencing the user_id from the users table.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>comment_id</td>
+<td>Required (PK)</td>
+<td>Id of the comment (integer)</td>
+</tr>
+<tr class="row-odd"><td>sample_id</td>
+<td>Required (FK)</td>
+<td>Referenced from samples table</td>
+</tr>
+<tr class="row-even"><td>user_id</td>
+<td>Required (FK)</td>
+<td>Owner of the comment referenced from the users table</td>
+</tr>
+<tr class="row-odd"><td>comment_text</td>
+<td>Required</td>
+<td>Comment text</td>
+</tr>
+<tr class="row-even"><td>date_added</td>
+<td>Optional</td>
+<td>Date on which the comment was added.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="rock-type">
+<h3>rock_type<a class="headerlink" href="#rock-type" title="Permalink to this headline">¶</a></h3>
+<p>This table stores the information regarding the rock type through the rock_type_id which is a primary key and the name of the type of rock through the attribute rock_type.
+The trac wiki <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/RockType">http://wiki.cs.rpi.edu/trac/metpetdb/wiki/RockType</a> lists the various rock types.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>rock_type_id</td>
+<td>Required(PK)</td>
+<td>Unique id of the type of rock from the above list</td>
+</tr>
+<tr class="row-odd"><td>rock_type</td>
+<td>Required (unique)</td>
+<td>Name of the rock type from the above list</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="subsample-type">
+<h3>subsample_type<a class="headerlink" href="#subsample-type" title="Permalink to this headline">¶</a></h3>
+<p>This table stores the information regarding the type of subsample through subsample_type_id and subsample_type(name of subsample). The list of subsample types can be found in the subsample wiki
+<a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Subsample">http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Subsample</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>subsample_type_id</td>
+<td>Required (PK)</td>
+<td>Unique id of the subsample type</td>
+</tr>
+<tr class="row-odd"><td>subsample_type</td>
+<td>Required (unique)</td>
+<td>Name of the subsample type</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="chemical-analysis-elements">
+<h3>chemical_analysis_elements<a class="headerlink" href="#chemical-analysis-elements" title="Permalink to this headline">¶</a></h3>
+<p>This table stores the details of the elements in the chemical analysis of a particular sample. It references the chemical_analyses and elements table to obtain the chemical_analysis_id and the element_id. It also stores the precision of the measured value through the “precision” attribute.</p>
+<p>(it is a correlation of chemical_analyses of a sample/subsample with the elements)
+Details of chemical_analyses can be found <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/ChemicalAnalysisObject">here</a></p>
+<p>List of elements can be found <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Element">here</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>chemical_analysis_id</td>
+<td>Required (PK, FK)</td>
+<td>The unique id by referencing the chemical_analyses table</td>
+</tr>
+<tr class="row-odd"><td>element_id</td>
+<td>Required (PK, FK)</td>
+<td>The unique id for the element by referencing the elements table.</td>
+</tr>
+<tr class="row-even"><td>amount</td>
+<td>Required</td>
+<td>Amount of the element present</td>
+</tr>
+<tr class="row-odd"><td>precision</td>
+<td>Optional</td>
+<td>Indicates the precision of the value measured</td>
+</tr>
+<tr class="row-even"><td>precision_type</td>
+<td>Optional</td>
+<td>Type of precision in terms of absolute or relative. (‘ABS’, ‘REL’)</td>
+</tr>
+<tr class="row-odd"><td>measurement_unit</td>
+<td>Optional</td>
+<td>Unit used to measure the amount of element for a particular
+chemical_analyses_id. (4 characters)</td>
+</tr>
+<tr class="row-even"><td>min_amount</td>
+<td>Optional</td>
+<td>When &#8220;precision&#8221; is specified AND &#8220;precision_type&#8221;= REL, then
+&#8220;min_amount&#8221;= &#8220;amount&#8221; - &#8220;precision&#8221; X &#8220;amount&#8221; and
+&#8220;max_amount&#8221; = &#8220;amount&#8221; + &#8220;precision&#8221; X &#8220;amount&#8221;.</td>
+</tr>
+<tr class="row-odd"><td>max_amount</td>
+<td>Optional</td>
+<td>when &#8220;precision&#8221; is specified AND &#8220;precision_type&#8221;= ABS, then
+&#8220;min_amount&#8221;= &#8220;amount&#8221; - &#8220;precision&#8221;  and
+&#8220;max_amount&#8221; = &#8220;amount&#8221; + &#8220;precision&#8221;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="minerals">
+<h3>minerals<a class="headerlink" href="#minerals" title="Permalink to this headline">¶</a></h3>
+<p>This table stores the mineral_id and name of the mineral. It also stores the real_mineral_id which is the default for alternative minerals.
+The trac wiki lists the minerals <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Mineral">http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Mineral</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>mineral_id</td>
+<td>Required (PK)</td>
+<td>Unique id for the mineral</td>
+</tr>
+<tr class="row-odd"><td>real_mineral_id</td>
+<td>Required (FK)</td>
+<td>for alternative minerals this is the default id, else it is
+mineral_id. References minerals table itself.</td>
+</tr>
+<tr class="row-even"><td>name</td>
+<td>Required (unique)</td>
+<td>Name of the mineral corresponding to
+mineral_id</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mineral-relationships">
+<h3>mineral_relationships<a class="headerlink" href="#mineral-relationships" title="Permalink to this headline">¶</a></h3>
+<p>This table stores the relationship between minerals. Parent mineral, child mineral etc. The mineral ids are stored by referencing the “minerals” table.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>parent_mineral_id</td>
+<td>Required (PK, FK)</td>
+<td>Id of the parent mineral by referencing the minerals Table</td>
+</tr>
+<tr class="row-odd"><td>child_mineral_id</td>
+<td>Required(PK, FK)</td>
+<td>Id of the child mineral by referencing the minerals table.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="element-mineral-types">
+<h3>element_mineral_types<a class="headerlink" href="#element-mineral-types" title="Permalink to this headline">¶</a></h3>
+<p>Chemical analyses of the minerals is at the core of quantitative metamorphic geochemistry and minerals consist of elements.
+This table correlates elements and minerals.
+List of elements -  <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Element">http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Element</a></p>
+<p>list of Minerals - <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Mineral">http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Mineral</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>element_id</td>
+<td>Required (PK, FK)</td>
+<td>References elements table</td>
+</tr>
+<tr class="row-odd"><td>mineral_type_id</td>
+<td>Required (PK, FK)</td>
+<td>References minerals table</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="oxide-mineral-types">
+<h3>oxide_mineral_types<a class="headerlink" href="#oxide-mineral-types" title="Permalink to this headline">¶</a></h3>
+<p>This table stores the oxides for a particular mineral.  Hence both the mineral_type_id and oxide_id are Primary keys. Hence, neither of them can be NULL and they are together unique.</p>
+<p>The list of oxides <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Oxide">http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Oxide</a></p>
+<p>The list of Minerals <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Mineral">http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Mineral</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>oxide_id</td>
+<td>Required (PK, FK)</td>
+<td>References oxides table</td>
+</tr>
+<tr class="row-odd"><td>mineral_type_id</td>
+<td>Required (PK, FK)</td>
+<td>References minerals table</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="elements">
+<h3>elements<a class="headerlink" href="#elements" title="Permalink to this headline">¶</a></h3>
+<p>This table stores the information of the elements in the chemical data of the sample.
+The list of elements can be found here in the trac wiki <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Element">http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Element</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>element_id</td>
+<td>Required (PK)</td>
+<td>Unique id for the element in the list of elements</td>
+</tr>
+<tr class="row-odd"><td>name</td>
+<td>Required (unique)</td>
+<td>Name of the element – upto 100 characters allowed</td>
+</tr>
+<tr class="row-even"><td>alternate_name</td>
+<td>Required</td>
+<td>Alternate name – upto 100 characters</td>
+</tr>
+<tr class="row-odd"><td>symbol</td>
+<td>Required (unique)</td>
+<td>Symbol upto 4 character length</td>
+</tr>
+<tr class="row-even"><td>atomic_number</td>
+<td>Required</td>
+<td>Is an integer</td>
+</tr>
+<tr class="row-odd"><td>weight</td>
+<td>Optional</td>
+<td>Atomic weight</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="chemical-analysis-oxides">
+<h3>chemical_analysis_oxides<a class="headerlink" href="#chemical-analysis-oxides" title="Permalink to this headline">¶</a></h3>
+<p>This table stores the oxide information for a chemical_analysis_id. i.e both oxide_id and chemical_analysis_id are together unique (Primary Keys). It references the tables chemical_analyses and oxides. (correlation of chemical_analyses of a sample/subsample with the oxide)</p>
+<p>List of oxides can be found <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Oxide">here</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>chemical_analysis_id</td>
+<td>Required (PK, FK)</td>
+<td>The unique id by referencing the chemical_analyses table</td>
+</tr>
+<tr class="row-odd"><td>oxide_id</td>
+<td>Required (PK, FK)</td>
+<td>The unique id for the oxide by referencing the oxide table.</td>
+</tr>
+<tr class="row-even"><td>amount</td>
+<td>Required</td>
+<td>Amount of the oxide present</td>
+</tr>
+<tr class="row-odd"><td>precision</td>
+<td>Optional</td>
+<td>Indicates the precision of the value measured</td>
+</tr>
+<tr class="row-even"><td>precision_type</td>
+<td>Optional</td>
+<td>Type of precision in terms of absolute or relative. (‘ABS’, ‘REL’)</td>
+</tr>
+<tr class="row-odd"><td>measurement_unit</td>
+<td>Optional</td>
+<td>Unit used to measure the amount of oxidet for a particular
+chemical_analyses_id. (4 characters)</td>
+</tr>
+<tr class="row-even"><td>min_amount</td>
+<td>Optional</td>
+<td>When &#8220;precision&#8221; is specified AND &#8220;precision_type&#8221;= REL, then
+&#8220;min_amount&#8221;= &#8220;amount&#8221; - &#8220;precision&#8221; X &#8220;amount&#8221; and
+&#8220;max_amount&#8221; = &#8220;amount&#8221; + &#8220;precision&#8221; X &#8220;amount&#8221;.</td>
+</tr>
+<tr class="row-odd"><td>max_amount</td>
+<td>Optional</td>
+<td>when &#8220;precision&#8221; is specified AND &#8220;precision_type&#8221;= ABS, then
+&#8220;min_amount&#8221;= &#8220;amount&#8221; - &#8220;precision&#8221;  and
+&#8220;max_amount&#8221; = &#8220;amount&#8221; + &#8220;precision&#8221;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="oxides">
+<h3>oxides<a class="headerlink" href="#oxides" title="Permalink to this headline">¶</a></h3>
+<p>This table stores the oxide information (oxide_id) for each element_id, which is referenced from the elements table.
+The list of oxides can be found in the trac wiki <cite>&lt;http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Oxide&gt;</cite></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="63%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>oxide_id</td>
+<td>Required (PK)</td>
+<td>Unique id of the oxide obtained by referencing the oxides table</td>
+</tr>
+<tr class="row-odd"><td>element_id</td>
+<td>Required (FK)</td>
+<td>The element_id from the list of elements corresponding to the oxide</td>
+</tr>
+<tr class="row-even"><td>oxidation_state</td>
+<td>Optional</td>
+<td>Is an integer representing the oxidation state of the atom of the oxide</td>
+</tr>
+<tr class="row-odd"><td>species</td>
+<td>Unique</td>
+<td>Group of elements are a part of a species. Species name, list:
+Ce2O3, Al2O3, etc..</td>
+</tr>
+<tr class="row-even"><td>weight</td>
+<td>Optional</td>
+<td>Molecular weight</td>
+</tr>
+<tr class="row-odd"><td>cations_per_oxide</td>
+<td>Optional</td>
+<td>Number of cations per oxide stored as an integer.</td>
+</tr>
+<tr class="row-even"><td>conversion_factor</td>
+<td>Required</td>
+<td>This is the factor used to convert from element atomic weight
+(&#8220;weight&#8221; in the element table) to a cation unit oxide weight
+(&#8220;weight&#8221; in the oxide table divided by &#8220;cations_per_oxide&#8221; in
+the oxide table)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="images">
+<h3>images<a class="headerlink" href="#images" title="Permalink to this headline">¶</a></h3>
+<p>This table stores the image details along with rock descriptions and chemical_analyses. Every image is associated with one or more samples and one or more sub samples. Hence, it references the tables samples for sample_id and subsamples for subsample_id.
+The details about the image object can be obtained from the following wiki
+<a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/ImageObject">http://wiki.cs.rpi.edu/trac/metpetdb/wiki/ImageObject</a></p>
+<p>inorder to allow searching for images with the sample_id or subsample_id , a unique index is created on these columns.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="17%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>image_id</td>
+<td>Required (PK)</td>
+<td>Every image in the system must have an image_id (INT)</td>
+</tr>
+<tr class="row-odd"><td>checksum</td>
+<td>Required</td>
+<td>Checksum for the image has a 50 character limit.</td>
+</tr>
+<tr class="row-even"><td>version</td>
+<td>Required</td>
+<td>Version of the image.
+More information <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Versioning">http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Versioning</a></td>
+</tr>
+<tr class="row-odd"><td>sample_alias_id</td>
+<td>Optional (unique
+index, FK)</td>
+<td>References samples table to associate a unique sample with the image</td>
+</tr>
+<tr class="row-even"><td>subsample_id</td>
+<td>Optional (unique
+index, FK)</td>
+<td>References subsamples table to associate a unique subsample with the image</td>
+</tr>
+<tr class="row-odd"><td>image_format_id</td>
+<td>Optional (FK)</td>
+<td>References image_format table which specifies the format of
+image (.jpg, .png etc)</td>
+</tr>
+<tr class="row-even"><td>image_type_id</td>
+<td>Required (FK)</td>
+<td>References image_type table. List of image formats can be seen
+<a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Image#Types">here</a></td>
+</tr>
+<tr class="row-odd"><td>width</td>
+<td>Required</td>
+<td>Width of the image must be &gt;0</td>
+</tr>
+<tr class="row-even"><td>height</td>
+<td>Required</td>
+<td>Height of the image must be &gt;0</td>
+</tr>
+<tr class="row-odd"><td>collector</td>
+<td>Optional</td>
+<td>The name of the collector of the image</td>
+</tr>
+<tr class="row-even"><td>description</td>
+<td>Optional</td>
+<td>Text description limited to 1024 characters regarding the image</td>
+</tr>
+<tr class="row-odd"><td>scale</td>
+<td>Optional</td>
+<td>This is mm measured along the rock surface shown in the image,
+corresponding to the width of the image</td>
+</tr>
+<tr class="row-even"><td>user_id</td>
+<td>Required (FK)</td>
+<td>References users table for the owner of the image</td>
+</tr>
+<tr class="row-odd"><td>public_data</td>
+<td>Required</td>
+<td>Y/N – single character depending on whether the image is public/private.</td>
+</tr>
+<tr class="row-even"><td>checksum_64x64</td>
+<td>Required</td>
+<td>Checksums are actually file addresses for each image. When an image
+is loaded, it is saved on the file system in three size in three files.
+Mobile one is the one shown on iphone</td>
+</tr>
+<tr class="row-odd"><td>checksum_half</td>
+<td>Required</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>checksum_mobile</td>
+<td>Optional</td>
+<td>Checksum for the image in the mobile app.</td>
+</tr>
+<tr class="row-odd"><td>filename</td>
+<td>Required</td>
+<td>Name of the image file.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="image-format">
+<h3>image_format<a class="headerlink" href="#image-format" title="Permalink to this headline">¶</a></h3>
+<p>Stores the type of image (TIFF, GIF, JPEG, BMP, PNG,) through the image_format_id.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>image_format_id</td>
+<td>Required (PK)</td>
+<td>Type of image</td>
+</tr>
+<tr class="row-odd"><td>name</td>
+<td>Required (unique)</td>
+<td>Name of the image format – mime type image/x</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="image-type">
+<h3>image_type<a class="headerlink" href="#image-type" title="Permalink to this headline">¶</a></h3>
+<p>Stores the type of image from the list of acceptable image types. The list of acceptable image types in the various image formats are specified <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Image">here</a> (check Types)</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>image_type_id</td>
+<td>Required (PK)</td>
+<td>Unique id for the type of image from the list of image types</td>
+</tr>
+<tr class="row-odd"><td>image_type</td>
+<td>Required</td>
+<td>Name of the image type</td>
+</tr>
+<tr class="row-even"><td>abbreviation</td>
+<td>Optional (unique)</td>
+<td>Unique abbreviation for the image type</td>
+</tr>
+<tr class="row-odd"><td>comments</td>
+<td>Optional</td>
+<td>Comments for the image type</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="regions">
+<h3>regions<a class="headerlink" href="#regions" title="Permalink to this headline">¶</a></h3>
+<p>This table stores the region_id and name where samples have been found. This is referenced by sample_regions to correlate the region_id and sample_id. This is done to facilitate search of samples based on regions. More information can be found
+<a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Region">here</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>region_id</td>
+<td>Required (PK)</td>
+<td>Unique id for the region from the list of regions</td>
+</tr>
+<tr class="row-odd"><td>name</td>
+<td>Required (unique)</td>
+<td>Name of the region</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="sample-regions">
+<h3>sample_regions<a class="headerlink" href="#sample-regions" title="Permalink to this headline">¶</a></h3>
+<p>This table correlates the sample_id (for the samples found in a particular region) with region_id from the regions table. There can be many samples in a particular region or the same sample could be found in different regions.</p>
+<p>Sample table attributes can be found <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/SampleObject">here</a></p>
+<p>List of regions can be found <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Region">here</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>region_id</td>
+<td>Required (PK, FK)</td>
+<td>Unique id for the region obtained by referencing the regions table</td>
+</tr>
+<tr class="row-odd"><td>name</td>
+<td>Required (PK, FK)</td>
+<td>Name of the region as in the list of regions.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="metamorphic-regions">
+<h3>metamorphic_regions<a class="headerlink" href="#metamorphic-regions" title="Permalink to this headline">¶</a></h3>
+<p>Metamorphic regions are the polygons defined by the MetPetDB team and are different from Regions.
+The same Region may be named differently by different people whereas metamorphic_regions are unique in that respect.
+The id is unique to each table.
+This table also stores the shape of the gis polygon as an additional column.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>metamorphic_region_id</td>
+<td>Required (PK)</td>
+<td>Unique id of the metamorphic region</td>
+</tr>
+<tr class="row-odd"><td>name</td>
+<td>Required (unique)</td>
+<td>Name of the metamorphic region</td>
+</tr>
+<tr class="row-even"><td>description</td>
+<td>Optional</td>
+<td>Textual description of the metamorphic region</td>
+</tr>
+<tr class="row-odd"><td>shape</td>
+<td>Optional</td>
+<td>Column of gis polygon is added be calling the function
+AddGeometrycolumn. i.e polygon of the location.</td>
+</tr>
+<tr class="row-even"><td>label_location</td>
+<td>Optional</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="sample-metamorphic-regions">
+<h3>sample_metamorphic_regions<a class="headerlink" href="#sample-metamorphic-regions" title="Permalink to this headline">¶</a></h3>
+<p>This table correlates the samples with the metamorphic regions by referencing the samples (for sample_id) and metamorphic_regions (for metamorphic_region_id). The 2 attributes are together unique.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>sample_id</td>
+<td>Required (PK, FK)</td>
+<td>Unique sample id from the samples table</td>
+</tr>
+<tr class="row-odd"><td>metamorphic_region_id</td>
+<td>Required (PK, FK)</td>
+<td>Corresponding unique metamorphic region id from the
+metamorphic_regions table.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="metamorphic-grades">
+<h3>metamorphic_grades<a class="headerlink" href="#metamorphic-grades" title="Permalink to this headline">¶</a></h3>
+<p>Metamorphic grades are one of the sample object attributes and this table stores the metamorphic_grade_id and name from the list of metamorphic grades <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/MetamorphicGrade">http://wiki.cs.rpi.edu/trac/metpetdb/wiki/MetamorphicGrade</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>metamorphic_grade_id</td>
+<td>Required (PK)</td>
+<td>Unique id for the metamorphic grades from the list of metamorphic
+grades</td>
+</tr>
+<tr class="row-odd"><td>name</td>
+<td>Required (unique)</td>
+<td>Name of the metamorphic grade.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="sample-metamorphic-grades">
+<h3>sample_metamorphic_grades<a class="headerlink" href="#sample-metamorphic-grades" title="Permalink to this headline">¶</a></h3>
+<p>This table correlates the samples with their metamorphic grades.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>sample_id</td>
+<td>Required (PK, FK)</td>
+<td>Unique sample id from the samples table</td>
+</tr>
+<tr class="row-odd"><td>metamorphic_grade_id</td>
+<td>Required (PK, FK)</td>
+<td>Corresponding unique metamorphic grade id from the
+metamorphic_grades table.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="georeference">
+<h3>georeference<a class="headerlink" href="#georeference" title="Permalink to this headline">¶</a></h3>
+<p>georeference describes detailed info (author, etc.) about a reference. But does not require that the reference be already stored in the reference table.  This way, detailed reference info can be stored in the db even if no sample references it yet.
+This is important because people may upload (geo)references first and then the samples, or samples first and then georeferences.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>georef_id</td>
+<td>Required (PK)</td>
+<td>Unique id for the file being referred</td>
+</tr>
+<tr class="row-odd"><td>title</td>
+<td>Required</td>
+<td>Title of the file being referred to</td>
+</tr>
+<tr class="row-even"><td>first_author</td>
+<td>Required</td>
+<td>Name of the first author</td>
+</tr>
+<tr class="row-odd"><td>second_authors</td>
+<td>Required</td>
+<td>Name of the second author</td>
+</tr>
+<tr class="row-even"><td>journal_name</td>
+<td>Required</td>
+<td>Name of the journal in which the reference appears</td>
+</tr>
+<tr class="row-odd"><td>full_text</td>
+<td>Required</td>
+<td>I suppose this stores the entire content of the reference?</td>
+</tr>
+<tr class="row-even"><td>reference_number</td>
+<td>Optional</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="sample-georeference">
+<h3>sample_georeference<a class="headerlink" href="#sample-georeference" title="Permalink to this headline">¶</a></h3>
+<p>sample_georeference is a by product of a join between sample_reference, reference and georeference. Whenever the georeference table is updated, this table is repopulated.. The text files are referenced via the reference_number.</p>
+</div>
+<div class="section" id="reference">
+<h3>reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h3>
+<p>This table stores the reference_id of the reference and the “name” of the file referenced.
+A reference is a known unique value (also called geo-reference in outside world.)
+A reference is added only when someone adds a reference for a sample.</p>
+<p>You can have a reference even if you do not have any details about that reference in the db. You just list the info. And it is stored in reference table, and the association between reference and samples is stored in the sample_reference table (a sample can have multiple references).</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>reference_id</td>
+<td>Required (PK)</td>
+<td>Unique id of the reference</td>
+</tr>
+<tr class="row-odd"><td>name</td>
+<td>Required</td>
+<td>Generally the title of the file being referenced.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="sample-reference">
+<h3>sample_reference<a class="headerlink" href="#sample-reference" title="Permalink to this headline">¶</a></h3>
+<p>This table correlates the sample_id from the samples table with the reference_id from the reference table which stores “name” of the referenced file.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>sample_id</td>
+<td>Required (PK, FK)</td>
+<td>References sample_id from the samples table.</td>
+</tr>
+<tr class="row-odd"><td>reference_id</td>
+<td>Required (PK, FK)</td>
+<td>References the corresponding reference_id from the reference table.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="projects">
+<h3>projects<a class="headerlink" href="#projects" title="Permalink to this headline">¶</a></h3>
+<p>Users can share private data by starting projects, inviting members etc and to organize suites of public, private and published data. This table stores information about all the projects along with version.</p>
+<p>More information about the Projects table can be found <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Projects">here</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="14%" />
+<col width="71%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>project_id</td>
+<td>Required (PK)</td>
+<td>Unique id of the project</td>
+</tr>
+<tr class="row-odd"><td>version</td>
+<td>Required</td>
+<td>It is the number of times that specific tuple has been modified
+(used for concurrency issues). You read a tuple with its version info.
+When trying to save it, you check whether the version has not changed
+since you read it. If not, you can write the new update. Otherwise,
+the update can fail. More information <a class="reference external" href="http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Versioning">here</a></td>
+</tr>
+<tr class="row-even"><td>user_id</td>
+<td>Required(FK, unique)</td>
+<td>References the users table for the owner of the
+project</td>
+</tr>
+<tr class="row-odd"><td>name</td>
+<td>Required (unique)</td>
+<td>Name of the project</td>
+</tr>
+<tr class="row-even"><td>description</td>
+<td>Required</td>
+<td>A textual description of the project. (upto 300 characters)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="project-members">
+<h3>project_members<a class="headerlink" href="#project-members" title="Permalink to this headline">¶</a></h3>
+<p>This table correlates the user_id and the project. (i.e project_id)
+A user can be part of many projects.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>project_id</td>
+<td>Required (PK, FK)</td>
+<td>Referenced from the projects table.</td>
+</tr>
+<tr class="row-odd"><td>user_id</td>
+<td>Required (PK, FK)</td>
+<td>Corresponding user_id referenced from the users table.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="project-invites">
+<h3>project_invites<a class="headerlink" href="#project-invites" title="Permalink to this headline">¶</a></h3>
+<p>This table stores the invites(invite_id, I suppose this gives the number of users associated with a project) for a particular project.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>invite_id</td>
+<td>Required (PK)</td>
+<td>Unique id of the invite to be a part of the project</td>
+</tr>
+<tr class="row-odd"><td>project_id</td>
+<td>Required (FK)</td>
+<td>Id of the project referenced from the projects table</td>
+</tr>
+<tr class="row-even"><td>user_id</td>
+<td>Required (FK)</td>
+<td>ID of the project owner</td>
+</tr>
+<tr class="row-odd"><td>action_timestamp</td>
+<td>Required</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>status</td>
+<td>Optional</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="project-samples">
+<h3>project_samples<a class="headerlink" href="#project-samples" title="Permalink to this headline">¶</a></h3>
+<p>This table correlates the project a sample is associated with by referencing the samples (sample_id) and the projects( project_id) tables. (no primary key)</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attributes</th>
+<th class="head">Type</th>
+<th class="head">Explanation</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>project_id</td>
+<td>Required (FK)</td>
+<td>Referenced from the projects table</td>
+</tr>
+<tr class="row-odd"><td>sample_id</td>
+<td>Required (FK)</td>
+<td>Referenced from the samples table</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="Notes.html" title="Notes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Introduction.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="index.html">home</a>|&nbsp;</li>
+        <li><a href="search.html">search</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, tej.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

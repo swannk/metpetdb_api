@@ -1,0 +1,211 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>MetPetDB Image Map &mdash; mpdbdoc 1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mpdbdoc 1 documentation" href="index.html" />
+    <link rel="next" title="End Notes" href="Notes.html" />
+    <link rel="prev" title="Table Description" href="Table_Description.html" /> 
+  </head>
+  <body>
+
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
+<a href="index.html"><img src="_static/MPDBlogo-orig.png" border="0" alt="py4sci"/></a>
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="Notes.html" title="End Notes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Table_Description.html" title="Table Description"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">home</a>|&nbsp;</li>
+        <li><a href="search.html">search</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">MetPetDB Image Map</a><ul>
+<li><a class="reference internal" href="#key-terms">Key Terms</a></li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+<li><a class="reference internal" href="#data-model">Data Model</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Table_Description.html"
+                        title="previous chapter">Table Description</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Notes.html"
+                        title="next chapter">End Notes</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/imagemap.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="metpetdb-image-map">
+<h1>MetPetDB Image Map<a class="headerlink" href="#metpetdb-image-map" title="Permalink to this headline">¶</a></h1>
+<p>The MetPetDB Image Map is used to display petrologic image samples with slice and data overlays. It is built on the OpenLayers framework.</p>
+<div class="section" id="key-terms">
+<h2>Key Terms<a class="headerlink" href="#key-terms" title="Permalink to this headline">¶</a></h2>
+<img alt="http://micmoo.org/uiexample.jpg" src="http://micmoo.org/uiexample.jpg" />
+<dl class="docutils">
+<dt>Map</dt>
+<dd>The main canvas that the images are displayed on. Contains the BaseLayer.</dd>
+<dt>ImageLayer</dt>
+<dd>Contains Individual Images. Properties: opacity, z-index, bounds, size, name, scale, data, zoomLevels</dd>
+<dt>BaseLayer</dt>
+<dd>Main image that all other images are displayed relative to. Of type ImageLayer</dd>
+<dt>ZoomLevel</dt>
+<dd>Maximum zooms. It is possible for the BaseLayer can have a different number than other Images.</dd>
+<dt>Opacity</dt>
+<dd>(float) 0.0 (not visible) to 1.0 (fully visible).</dd>
+<dt>Z-index</dt>
+<dd>(int) Stacking order. The ImageLayer with the highest z-index is displayed on top.</dd>
+<dt>Bounds/Extent</dt>
+<dd>(float left, float bottom, float right, float left) Distance from the origin. Bounds is dependent on the BaseLayer size. The bounds of the BaseLayer are (-0.5 * width, -0.5 * height, 0.5 * width, 0.5 * height)</dd>
+<dt>Size</dt>
+<dd>(float width, float height) Size of image when all the way zoomed out.</dd>
+<dt>Scale</dt>
+<dd>(float) Real-world size of image. Displayed in the scale marker on bottom left.</dd>
+<dt>Lon/Lat</dt>
+<dd>Position Left/Bottom on the BaseLayer</dd>
+<dt>Data</dt>
+<dd>Data about a specified image. Includes notes/descriptions etc</dd>
+<dt>LayerSwitcher</dt>
+<dd>Turn on and off specific layers. Drag layers up and down to change z-index. Also can be used to adjust opacity</dd>
+<dt>Feature</dt>
+<dd>Instead of preloading and displaying a grouping of images that would be too small to see at the current zoom level and feature can be used instead. It is the equivalent of a thumbnail for a layer or group of layers. When clicked, the map loads and zooms directly to the images. The feature is then removed and the layers are added to the layerSwitcher</dd>
+<dt>Marker</dt>
+<dd>The user clicks on a point on the map and is able to mark it with a point to store data about that point. Position is stored as bounds. Of type Feature.</dd>
+<dt>Polygon</dt>
+<dd>User drawable polygon. Used to associate data with a particular region of the Map. Of type feature.</dd>
+</dl>
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Pan/Zoom</dt>
+<dd>The default action is to pan across the map by clicking and dragging. A double click zooms in. Scroll Wheel and the bottoms on the top left can also be used to zoom.</dd>
+<dt>Add Image</dt>
+<dd>To add an image, the user first selects the add image tool and then draws a shape on the Map. They are then prompted to upload an image or supply a URL along with a name for the layer. Optional parameters include opacity, z-index, data, scale.</dd>
+<dt>Delete Image</dt>
+<dd>Deletes Image from map. Users must select the delete tool.</dd>
+<dt>Move</dt>
+<dd>Allows user to move and drag images, shapes and data points freely on the map.</dd>
+<dt>Add Feature</dt>
+<dd>First click on the add feature tool. Then chooses a shape for the feature. The user is then prompted to upload a thumbnail and it is placed at the specified location. When the user adds an image, as long as he is within the bounds of the feature, he is given the option to “add to feature” and choose the feature from the list. When the user clicks the feature, he is then brought to the maximum zoom level that can accommodate all of the images in the feature. Note the following example:User Bob has three high resolution samples of a very small portion of the very large BaseImage. They are too small to be seen at the default zoom level and he does not want them to be loaded every time the ImageMap is loaded. He therefore draws a box around the small area that the sample is taken from and uploads a thumbnail. He then zooms as far as he desires into this box and uses the Add Image tool to upload a photo. Since he is in the feature bounds, he is prompted to add the image to the feature. If he chooses yes, the image will not be loaded until the feature is clicked on. Once the feature is clicked on the map zooms directly to the sample and the sample is added to the LayerSwitcher.Right</dd>
+<dt>Click</dt>
+<dd>Opacity, z-index and Data editing. Brings up popup to change layer settings. Right click works on ImageLayers, Features, Data Points and Polygons.</dd>
+<dt>LayerSwitcher</dt>
+<dd>Turn on and off specific layers. Drag layers up and down to change z-index. Also can be used to adjust opacity.</dd>
+<dt>Save</dt>
+<dd>Saves ImageMap state either locally or to the database.</dd>
+</dl>
+</div>
+<div class="section" id="data-model">
+<h2>Data Model<a class="headerlink" href="#data-model" title="Permalink to this headline">¶</a></h2>
+<p>The data is saved in GeoJSON format. This allows easy handling via Javascript and easy storage in a database as well as simple state restoring.</p>
+<dl class="docutils">
+<dt>ImageLayer</dt>
+<dd><tt class="docutils literal"><span class="pre">{&quot;type&quot;:&quot;Image&quot;,&quot;zIndex&quot;:4,&quot;visibility&quot;:true,&quot;name&quot;:&quot;moo&quot;,&quot;opacity&quot;:0.9,&quot;metadata&quot;:{&quot;data1&quot;:&quot;mydata&quot;},&quot;isBaseLayer&quot;:false,&quot;extent&quot;:{&quot;left&quot;:90,&quot;bottom&quot;:-104,&quot;right&quot;:224,&quot;top&quot;:10},&quot;size&quot;:{&quot;w&quot;:134,&quot;h&quot;:114},&quot;numZoomLevels&quot;:16}</span></tt></dd>
+</dl>
+<p>If isBaseLayer = true, then this is the BaseLayer. Thus the extent stored here is the extent of the whole map.</p>
+<dl class="docutils">
+<dt>Feature</dt>
+<dd><tt class="docutils literal"><span class="pre">{&quot;type&quot;:&quot;Feature&quot;,&quot;properties&quot;:{&quot;data&quot;:&quot;awesomeData&quot;,&quot;data2&quot;:&quot;awesomerdata&quot;,&quot;sublayers&quot;:[&quot;a&quot;,&quot;b&quot;,&quot;c&quot;],&quot;externalGraphic&quot;:&quot;img/small.jpg&quot;,&quot;graphicHeight&quot;:21,&quot;graphicWidth&quot;:16},&quot;geometry&quot;:{&quot;type&quot;:&quot;Point&quot;,&quot;coordinates&quot;:[0,0]},&quot;crs&quot;:{&quot;type&quot;:&quot;name&quot;,&quot;properties&quot;:{&quot;name&quot;:&quot;urn:ogc:def:crs:OGC:1.3:CRS84&quot;}}}</span></tt></dd>
+</dl>
+<p>This allows custom data fields, which are specified in the first “properties” field. Included in this is the name of the sublayers that will be loaded when the feature is clicked. The coordinates are the lon/lat of the image. The externalGraphic is a link to the thumbnail, along with it’s size.</p>
+<dl class="docutils">
+<dt><strong>Data Point</strong></dt>
+<dd><tt class="docutils literal"><span class="pre">{&quot;type&quot;:&quot;Feature&quot;,&quot;properties&quot;:{&quot;data&quot;:&quot;somedata&quot;},&quot;geometry&quot;:{&quot;type&quot;:&quot;Point&quot;,&quot;coordinates&quot;:[17,-64]},&quot;crs&quot;:{&quot;type&quot;:&quot;name&quot;,&quot;&quot;:{&quot;name&quot;:&quot;urn:ogc:def:crs:OGC:1.3:CRS84&quot;}}}</span></tt></dd>
+<dt>Polygon</dt>
+<dd><tt class="docutils literal"><span class="pre">{“type&quot;:&quot;Feature&quot;,&quot;properties&quot;:{&quot;data&quot;:&quot;somedata&quot;},&quot;geometry&quot;:{&quot;type&quot;:&quot;Polygon&quot;,&quot;coordinates&quot;:[[[77,86],[-72,-3],[105,-64],[248,32],[77,86]]]},&quot;crs&quot;:{&quot;type&quot;:&quot;name&quot;,&quot;properties&quot;:{&quot;name&quot;:&quot;urn:ogc:def:crs:OGC:1.3:CRS84&quot;}}}</span></tt></dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="Notes.html" title="End Notes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Table_Description.html" title="Table Description"
+             >previous</a> |</li>
+        <li><a href="index.html">home</a>|&nbsp;</li>
+        <li><a href="search.html">search</a>|&nbsp;</li>
+ 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, tej.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

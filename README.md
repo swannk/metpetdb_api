@@ -193,6 +193,26 @@ Codebase setup
     cd database/setup_sql/
     cat all.sql | psql -U metpetdb -dmetpetdb
 
+####Settings File
+
+Create a file named api_variables.env just outside your project directory, and update it with database and email server settings. Here is a sample file:
+
+    HOST_NAME=http://localhost:8000
+
+    # Email server settings
+    EMAIL_USE_TLS=True
+    EMAIL_HOST=smtp.gmail.com
+    EMAIL_HOST_USER=username@gmail.com
+    EMAIL_HOST_PASSWORD=password
+    EMAIL_PORT=587
+
+    # Database settings
+    DB_NAME=metpetdb
+    DB_USERNAME=metpetdb
+    DB_PASSWORD=metpetdb
+    DB_HOST=localhost
+    TEST_DB_NAME=metpetdb_test
+
 ####Transition scipt
 
 The transition script does two things:

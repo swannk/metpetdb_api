@@ -35,7 +35,7 @@ urlpatterns = patterns('',
   url(r'^api/', include(api_v1.urls)),
 
   url(r'^register/$', 'tastyapi.views.register'),
-  url(r'^login/$', 'tastyapi.views.login', name="login"),
+  url(r'^authenticate/$', 'tastyapi.views.authenticate', name="authenticate"),
   url(r'^logout/$', 'tastyapi.views.logout', name="logout"),
 
   url(r'^confirm/([a-zA-Z0-9]*)/$', 'tastyapi.views.confirm'),
@@ -44,21 +44,8 @@ urlpatterns = patterns('',
   url(r'^grant_contributor_access/([a-zA-Z0-9]*)/$',
       'tastyapi.views.grant_contributor_access'),
 
-  url(r'^$', 'webservices.views.index', name='index'),
-  url(r'^search/$', 'webservices.views.search', name='search'),
-
-  url(r'^samples/$', 'webservices.views.samples', name='samples'),
-  url(r'^sample/(\d+)/$','webservices.views.sample', name='sample'),
-
-  url(r'^subsamples/$', 'webservices.views.subsamples', name="subsamples"),
-  url(r'^subsample/(\d+)/$','webservices.views.subsample', name='subsample'),
-
-  url(r'^chemical_analyses/$', 'webservices.views.chemical_analyses',
-                                name="chemical_analyses"),
   url(r'^chemical_analysis/(\d+)/$', 'webservices.views.chemical_analysis',
                                       name='chemical_analysis'),
-
-  url(r'^user/(\d+)/$','webservices.views.user', name='user'),
 
   url(r'^api/metpetdb/$','webservices.views.metpetdb'),
 

@@ -1,206 +1,23 @@
-from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
-import urllib
-import ast
+from django.http import HttpResponse
 import json
 import sys
-from django.shortcuts import render
 from django.db import connection as con
-from django.template import RequestContext
 from webservices.SampleQuery import *
 from webservices.utility import *
 from webservices.sample import SampleObject, SampleImagesObject
 from webservices.subsample import SubsampleObject, SubsampleTableObject, SubsampleImagesTableObject
 from webservices.chemicalanalysis import ChemicalAnalysisObject, ChemicalAnalysisTableObject
 from webservices.db import MetPet
-from tastyapi.models import Region, Sample, Reference, MetamorphicRegion
-from tastyapi.models import ChemicalAnalyses
-from getenv import env
 
 
 #direct stdout to stderr so that it is logged by the webserver
 sys.stdout = sys.stderr
 
-#Main interface view
-def index(request):
-    return render(request, 'homepage.html')
-
-#Request to serve search.html
-def search(request):
-    filters = dict(request.GET.iterlists())
-    filter_dictionary = {}
-
-    for key in filters:
-        if filters[key][0]:
-          if key != "resource":
-            filter_dictionary[key] = ",".join(filters[key])
-
-    if request.GET.get('resource') == 'sample':
-        url = reverse('samples') + '?' + urllib.urlencode(filter_dictionary)
-        return HttpResponseRedirect(url)
-    elif request.GET.get('resource') == 'chemicalanalysis':
-        url = reverse('chemical_analyses') + '?' + urllib.urlencode(filter_dictionary)
-        return HttpResponseRedirect(url)
-
-    region_list = []
-    collector_list = []
-    reference_list = []
-    metamorphic_region_list = []
-    all_regions = Region.objects.all().order_by("name")
-    all_samples = Sample.objects.all().order_by("collector")
-    all_references = Reference.objects.all().order_by("name")
-    all_metamorphic_regions = MetamorphicRegion.objects.all().order_by("name")
-
-    for region in all_regions:
-        region_list.append(region.name)
-    for sample in all_samples:
-        if sample.collector and sample.collector not in collector_list:
-            collector_list.append(unicode(sample.collector))
-    for ref in all_references:
-        reference_list.append(ref.name)
-    for mmr in all_metamorphic_regions:
-        metamorphic_region_list.append(mmr.name)
-
-    return render(request, 'search_form.html',
-        {'samples': [], 'query': '', 'regions':region_list,
-         'provenenances': collector_list, "references": reference_list,
-          "mmrs": metamorphic_region_list})
-
-
-def samples(request):
-    email = request.COOKIES.get('email', None)
-    api_key = request.COOKIES.get('api_key', None)
-    api = MetPet(email, api_key).api
-
-    filters = ast.literal_eval(json.dumps(request.GET))
-    offset = request.GET.get('offset', 0)
-    filters['offset'] = offset
-    data = api.sample.get(params=filters)
-
-    next, previous, last, total_count = paginate_model('samples', data, filters)
-
-    samples = data.data['objects']
-    for sample in samples:
-        mineral_names = [mineral['name'] for mineral in sample['minerals']]
-        sample['mineral_list'] = (', ').join(mineral_names)
-
-    first_page_filters = filters
-    del first_page_filters['offset']
-
-    return render(request,
-                 'samples.html',
-                 {
-                      'samples': samples,
-                      'nextURL': next,
-                      'prevURL': previous,
-                      'total': total_count,
-                      'firstPage': reverse('samples') + '?' + urllib.urlencode(first_page_filters),
-                      'lastPage': last
-                 })
-
-
-def sample(request, sample_id):
-    email = request.COOKIES.get('email', None)
-    api_key = request.COOKIES.get('api_key', None)
-    api = MetPet(email, api_key).api
-    sample = api.sample.get(sample_id).data
-
-    location = sample['location'].split(" ")
-    longtitude = location[1].replace("(","")
-    latitude = location[2].replace(")","")
-    loc = [longtitude, latitude]
-
-    filter = {"sample__sample_id": sample['sample_id'], "limit": "0"}
-
-    subsamples = api.subsample.get(params=filter).data['objects']
-
-    aliases = api.sample_alias.get(params=filter).data['objects']
-    aliases_str = [alias['alias'] for alias in aliases]
-
-    regions = [region['name'] for region in sample['regions']]
-    metamorphic_regions = [metamorphic_region['name'] for metamorphic_region in sample['metamorphic_regions']]
-    metamorphic_grades = [metamorphic_grade['name'] for metamorphic_grade in sample['metamorphic_grades']]
-    references = [reference['name'] for reference in sample['references']]
-    minerals = [mineral['name'] for mineral in sample['minerals']]
-
-    if sample:
-        return render(request, 'sample.html',
-                     {'sample':sample,
-                      'location': loc,
-                      'minerals': (', ').join(minerals),
-                      'regions': (', ').join(regions),
-                      'references': (', ').join(references),
-                      'metamorphic_grades': (', ').join(metamorphic_grades),
-                      'metamorphic_regions': (', ').join(metamorphic_regions),
-                      'aliases': (', ').join(aliases_str),
-                      'subsamples': subsamples})
-    else:
-        return HttpResponse("Sample does not Exist")
-
-
-def subsamples(request):
-    email = request.COOKIES.get('email', None)
-    api_key = request.COOKIES.get('api_key', None)
-    api = MetPet(email, api_key).api
-    data = api.getAllSubSamples()
-    subsamplelist =[]
-    for subsample in data.data['objects']:
-        subsamplelist.append([subsample['subsample_id'],subsample['name']] )
-    return render(request,'subsamples.html', {'subsamples':subsamplelist})
-
-
-def subsample(request, subsample_id):
-    email = request.COOKIES.get('email', None)
-    api_key = request.COOKIES.get('api_key', None)
-    api = MetPet(email, api_key).api
-    subsample = api.subsample.get(subsample_id).data
-    user = api.user.get(subsample['user']['user_id']).data
-
-    filter = {"subsample__subsample_id": subsample['subsample_id'],
-              "limit": "0"}
-    chemical_analyses = api.chemical_analysis.get(params=filter).data['objects']
-
-    if subsample:
-        return render(request, 'subsample.html',
-                      {'subsample': subsample,
-                       'user':user,
-                       'chemical_analyses': chemical_analyses,
-                       'sample_id': subsample['sample'].split('/')[-2]})
-    else:
-        return HttpResponse("Subsample does not Exist")
-
-
-
-def chemical_analyses(request):
-    email = request.COOKIES.get('email', None)
-    api_key = request.COOKIES.get('api_key', None)
-    api = MetPet(email, api_key).api
-
-    filters = ast.literal_eval(json.dumps(request.GET))
-    offset = request.GET.get('offset', 0)
-    filters['offset'] = offset
-
-    data = api.chemical_analysis.get(params=filters)
-    next, previous, last, total_count = paginate_model('chemical_analyses',
-                                                        data, filters)
-    chemical_analyses = data.data['objects']
-
-    first_page_filters = filters
-    del first_page_filters['offset']
-
-    return render(request,'chemical_analyses.html',
-                 {'chemical_analyses': chemical_analyses,
-                  'nextURL': next,
-                  'prevURL': previous,
-                  'total': total_count,
-                  'firstPage': reverse('chemical_analyses') + '?' + urllib.urlencode(first_page_filters),
-                  'lastPage': last})
-
 
 def chemical_analysis(request, chemical_analysis_id):
-    # email = request.COOKIES.get('email', None)
-    # api_key = request.COOKIES.get('api_key', None)
-    api = MetPet(None, None).api
+    email = request.GET.get('email', None)
+    api_key = request.GET.get('api_key', None)
+    api = MetPet(email, api_key).api
 
     chem_analysis =ChemicalAnalysisObject(chemical_analysis_id)
     chem_analysis_obj = api.chemical_analysis.get(chemical_analysis_id).data
@@ -208,29 +25,15 @@ def chemical_analysis(request, chemical_analysis_id):
     subsample = api.subsample.get_by_uri(chem_analysis_obj['subsample']).data
 
     if chem_analysis:
-        # return render(request, 'chemical_analysis.html',
-        #               {'chemicalanalysis':chem_analysis,
-        #                'subsample_id': subsample['subsample_id'],
-        #                'sample_id': subsample['sample'].split('/')[-2]})
         del chem_analysis.attributes['analysis_date']
-        print(chem_analysis.attributes)
         data = {
             'chemical_analysis': chem_analysis.attributes,
             'subsample_id': subsample['subsample_id'],
             'sample_id': subsample['sample'].split('/')[-2]
         }
-        return HttpResponse(json.dumps(data), mimetype='application/json')
+        return HttpResponse(json.dumps(data), content_type='application/json')
     else:
         return HttpResponse("Chemical Analysis does not exist")
-
-
-def user(request, user_id):
-    api = MetPet(None, None).api
-    user = api.user.get(user_id).data
-    if sample:
-        return render(request, 'user.html', { 'user': user })
-    else:
-        return HttpResponse("User does not Exist")
 
 
 def sample_images(request, sample_id):

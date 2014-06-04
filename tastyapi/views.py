@@ -28,7 +28,7 @@ def register(request):
             'message': 'email is already taken'
         }
         return HttpResponseForbidden(json.dumps(data),
-                                     mimetype='application/json')
+                                     content_type='application/json')
     except:
         allowed_params = ["name", "email", "address", "city", "password",
                           "province", "country", "postal_code"]
@@ -52,30 +52,33 @@ def register(request):
         'email': user.email,
         'api_key': user.django_user.api_key.key
     }
-    return HttpResponse(json.dumps(data), mimetype='application/json')
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
-def login(request):
-    if request.method == "GET":
-        return render(request, 'login.html')
-
-    if request.method == "POST":
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-
-        try:
-            user = User.objects.get(email=email)
-        except:
-            return HttpResponseRedirect(reverse('login'))
-
-        if user.django_user.check_password(password):
-            response = HttpResponseRedirect(reverse('search'))
-            response.set_cookie('email', value=user.email,
-                                 expires=datetime.date.today() +
-                                         datetime.timedelta(days=1))
-            response.set_cookie('api_key', value=user.django_user.api_key.key)
-            return response
-        else:
-            return HttpResponseRedirect(reverse('login'))
+@csrf_exempt
+def authenticate(request):
+    try:
+        user = User.objects.get(email=request.POST.get('email'))
+    except:
+        data = {
+            'result': 'failed',
+            'message': 'invalid email address'
+        }
+        return HttpResponseForbidden(json.dumps(data),
+                                     content_type='application/json')
+    if user.django_user.check_password(request.POST.get('password')):
+        data = {
+            'result': 'success',
+            'email': user.email,
+            'api_key': user.django_user.api_key.key
+        }
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    else:
+        data = {
+            'status': 'failed',
+            'message': 'authentication failed'
+        }
+        return HttpResponseForbidden(json.dumps(data),
+                                     content_type='application/json')
 
 def logout(request):
     response = HttpResponseRedirect(reverse('search'))

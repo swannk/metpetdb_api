@@ -1,7 +1,7 @@
 import base64
 import logging
 import dotenv
-dotenv.read_dotenv('../../env_variables.env')
+dotenv.read_dotenv('../../api_variables.env')
 logger = logging.getLogger(__name__)
 
 from django.contrib.contenttypes.models import ContentType

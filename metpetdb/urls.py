@@ -36,7 +36,8 @@ urlpatterns = patterns('',
 
   url(r'^register/$', 'tastyapi.views.register'),
   url(r'^authenticate/$', 'tastyapi.views.authenticate', name="authenticate"),
-  url(r'^logout/$', 'tastyapi.views.logout', name="logout"),
+  url(r'^reset-password/$', 'tastyapi.views.reset_password', name="reset_password"),
+  url(r'^reset-password/(?P<token>[^/]+)/$', 'tastyapi.views.reset_password', name="reset_password"),
 
   url(r'^confirm/([a-zA-Z0-9]*)/$', 'tastyapi.views.confirm'),
   url(r'^request_contributor_access/$',
@@ -48,6 +49,9 @@ urlpatterns = patterns('',
                                       name='chemical_analysis'),
 
   url(r'^api/metpetdb/$','webservices.views.metpetdb'),
+
+  url(r'^webservices/samples$', 'webservices.views.samples'),
+  url(r'^webservices/chemicalanalyses$', 'webservices.views.chemical_analyses'),
 
   # Uncomment the admin/doc line below to enable admin documentation:
   # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

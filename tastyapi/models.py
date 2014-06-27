@@ -439,6 +439,15 @@ class Mineral(models.Model):
         db_table = u'minerals'
 
 
+class MineralRelationship(models.Model):
+    parent_mineral = models.ForeignKey('Mineral', related_name='parent_minerals')
+    child_mineral = models.ForeignKey('Mineral', related_name='child_minerals')
+
+    class Meta:
+        db_table = 'mineral_relationships'
+        unique_together = (('parent_mineral', 'child_mineral'),)
+
+
 class Reference(models.Model):
     reference_id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=100, unique=True)

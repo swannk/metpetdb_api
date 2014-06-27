@@ -14,7 +14,8 @@ from .models import User, Sample, MetamorphicGrade, MetamorphicRegion, Region,\
                     RockType, Subsample, SubsampleType, Mineral, Reference, \
                     ChemicalAnalyses, SampleRegion, SampleReference, \
                     SampleMineral, SampleMetamorphicGrade, SampleAliase, \
-                    SampleMetamorphicRegion, Oxide, ChemicalAnalysisOxide
+                    SampleMetamorphicRegion, Oxide, ChemicalAnalysisOxide, \
+                    MineralRelationship
 from . import auth
 from . import utils
 import logging
@@ -31,6 +32,7 @@ CLASS_MAPPING = {'regions': SampleRegion,
                  'minerals': SampleMineral,
                  'metamorphic_grades': SampleMetamorphicGrade,
                  'metamorphic_regions': SampleMetamorphicRegion}
+
 
 class BaseResource(ModelResource):
     @transaction.commit_manually
@@ -49,6 +51,7 @@ class BaseResource(ModelResource):
                 transaction.rollback()
             return response
 
+
 class VersionedResource(BaseResource):
     def hydrate_version(self, bundle):
         if 'version' in bundle.data:
@@ -56,6 +59,7 @@ class VersionedResource(BaseResource):
         else:
             bundle.data['version'] = 1
         return bundle
+
 
 class VersionValidation(Validation):
     def __init__(self, queryset, pk_field):
@@ -114,6 +118,7 @@ def _check_perm_closure(permission_lambda):
                                .format(bundle.request.user, permission))
     return closure
 
+
 class ObjectAuthorization(Authorization):
     """Tastypie custom Authorization class.
 
@@ -164,6 +169,7 @@ class ObjectAuthorization(Authorization):
     delete_list = _filter_by_permission_closure(lambda self: self.change_perm)
     delete_detail = _check_perm_closure(lambda self: self.change_perm)
 
+
 class CustomApiKeyAuth(ApiKeyAuthentication):
     """Disable API key authentication for GET requests
 
@@ -185,6 +191,7 @@ class CustomApiKeyAuth(ApiKeyAuthentication):
         else:
             return super(CustomApiKeyAuth, self).is_authenticated(request,
                          **kwargs)
+
 
 class FirstOrderResource(ModelResource):
     """Resource that can only be filtered with "first-order" filters.
@@ -335,7 +342,15 @@ class FirstOrderResource(ModelResource):
                 # For ToOne fields: value was a singleton, and now it's empty,
                 # so null out the corresponding entry in bundle.data
                 bundle.data[field_name] = None
+
+
+            """Add image URLs to the response for samples and chemical analyses"""
+            if type(self) in [SampleResource, ChemicalAnalysisResource]:
+                print(bundle)
+
+
         return bundle
+
 
 class UserResource(BaseResource):
     class Meta:
@@ -473,6 +488,7 @@ class RegionResource(BaseResource):
         filtering = { 'region': ALL,
                       'name': ALL }
 
+
 class RockTypeResource(BaseResource):
     class Meta:
         queryset = RockType.objects.all()
@@ -482,6 +498,7 @@ class RockTypeResource(BaseResource):
         ordering = ['rock_type']
         allowed_methods = ['get']
         filtering = { 'rock_type': ALL }
+
 
 class MineralResource(BaseResource):
     real_mineral = fields.ToOneField('tastyapi.resources.MineralResource',
@@ -496,6 +513,30 @@ class MineralResource(BaseResource):
                 'real_mineral': ALL_WITH_RELATIONS,
                 }
 
+
+class MineralRelationshipResource(BaseResource):
+    parent_mineral = fields.ToOneField('tastyapi.resources.MineralResource',
+                                          'parent_mineral', full=True)
+    child_mineral = fields.ToOneField('tastyapi.resources.MineralResource',
+                                         'child_mineral', full=True)
+
+    class Meta:
+        resource_name = 'mineral_relationship'
+        queryset = MineralRelationship.objects.all()
+        allowed_methods = ['get']
+
+
+class RegionResource(BaseResource):
+    class Meta:
+        queryset = Region.objects.all()
+        authentication = CustomApiKeyAuth()
+        ordering = ['name']
+        allowed_methods = ['get']
+        resource_name = "region"
+        filtering = { 'region': ALL,
+                      'name': ALL }
+
+
 class MetamorphicGradeResource(BaseResource):
     class Meta:
         resource_name = "metamorphic_grade"
@@ -504,6 +545,7 @@ class MetamorphicGradeResource(BaseResource):
         ordering = ['name']
         allowed_methods = ['get']
         filtering = { 'name': ALL }
+
 
 class MetamorphicRegionResource(BaseResource):
     class Meta:
@@ -514,6 +556,7 @@ class MetamorphicRegionResource(BaseResource):
         allowed_methods = ['get']
         filtering = { 'name': ALL }
 
+
 class SubsampleTypeResource(BaseResource):
     class Meta:
         resource_name = 'subsample_type'
@@ -521,6 +564,7 @@ class SubsampleTypeResource(BaseResource):
         queryset = SubsampleType.objects.all().distinct('subsample_type_id')
         authentication = CustomApiKeyAuth()
         filtering = {'subsample_type': ALL}
+
 
 class SubsampleResource(VersionedResource, FirstOrderResource):
     user = fields.ToOneField("tastyapi.resources.UserResource", "user",
@@ -555,6 +599,7 @@ class ReferenceResource(BaseResource):
         ordering = ['name']
         # authorization = ObjectAuthorization('tastyapi', 'reference')
         filtering = {'name': ALL}
+
 
 class ChemicalAnalysisResource(VersionedResource, FirstOrderResource):
     user = fields.ToOneField("tastyapi.resources.UserResource", "user")

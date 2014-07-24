@@ -16,6 +16,8 @@ from .models import User, Sample, MetamorphicGrade, MetamorphicRegion, Region,\
                     SampleMineral, SampleMetamorphicGrade, SampleAliase, \
                     SampleMetamorphicRegion, Oxide, ChemicalAnalysisOxide, \
                     MineralRelationship
+
+from .specified_fields import SpecifiedFields
 from . import auth
 from . import utils
 import logging
@@ -34,12 +36,12 @@ CLASS_MAPPING = {'regions': SampleRegion,
                  'metamorphic_regions': SampleMetamorphicRegion}
 
 
-class BaseResource(ModelResource):
+class BaseResource(SpecifiedFields):
     @transaction.commit_manually
     def dispatch(self, *args, **kwargs):
         # Transaction begins immediately, before we get here
         try:
-            response = super(ModelResource, self).dispatch(*args, **kwargs)
+            response = super(SpecifiedFields, self).dispatch(*args, **kwargs)
             keep = (200 <= response.status_code < 400)
         except:
             transaction.rollback()
@@ -193,7 +195,7 @@ class CustomApiKeyAuth(ApiKeyAuthentication):
                          **kwargs)
 
 
-class FirstOrderResource(ModelResource):
+class FirstOrderResource(SpecifiedFields):
     """Resource that can only be filtered with "first-order" filters.
 
     This prevents users from chaining filters through many relationship fields.
@@ -303,6 +305,8 @@ class FirstOrderResource(ModelResource):
         return result()
     def dehydrate(self, bundle):
         """Remove references to inaccessible objects."""
+        bundle = super(FirstOrderResource, self).dehydrate(bundle)
+
         for field_name in bundle.data:
             # For every field
             if field_name not in self.fields:
@@ -346,7 +350,8 @@ class FirstOrderResource(ModelResource):
 
             """Add image URLs to the response for samples and chemical analyses"""
             if type(self) in [SampleResource, ChemicalAnalysisResource]:
-                print(bundle)
+                # print(bundle)
+                pass
 
 
         return bundle
@@ -399,7 +404,9 @@ class SampleResource(VersionedResource, FirstOrderResource):
                 'collector': ALL,
                 'number': ALL,
                 'references': ALL_WITH_RELATIONS,
-                'sample_id': ALL
+                'sample_id': ALL,
+                'user': ALL,
+                'country': ALL
                 }
         validation = VersionValidation(queryset, 'sample_id')
 
@@ -418,7 +425,7 @@ class SampleResource(VersionedResource, FirstOrderResource):
         """
         free_text_fields = {'regions': bundle.data.pop('regions'),
                            'references': bundle.data.pop('references')}
-        super(SampleResource, self).objMetP_create(bundle, **kwargs)
+        super(SampleResource, self).obj_create(bundle, **kwargs)
         sample = Sample.objects.get(pk=bundle.obj.sample_id)
 
         for field_name, entries in free_text_fields.iteritems():

@@ -1,6 +1,7 @@
 from django.db import transaction, IntegrityError
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Q
+from django.contrib.gis.geos.polygon import Polygon
 from django.core.exceptions import ObjectDoesNotExist
 from tastypie.resources import ModelResource
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
@@ -353,7 +354,6 @@ class FirstOrderResource(SpecifiedFields):
                 # print(bundle)
                 pass
 
-
         return bundle
 
 
@@ -365,6 +365,7 @@ class UserResource(BaseResource):
         authorization = Authorization()
         authentication = CustomApiKeyAuth()
         excludes = ['password', 'confirmation_code']
+
 
 class SampleResource(VersionedResource, FirstOrderResource):
     user = fields.ToOneField("tastyapi.resources.UserResource", "user", full=True)
@@ -406,7 +407,8 @@ class SampleResource(VersionedResource, FirstOrderResource):
                 'references': ALL_WITH_RELATIONS,
                 'sample_id': ALL,
                 'user': ALL,
-                'country': ALL
+                'country': ALL,
+                'location': ALL
                 }
         validation = VersionValidation(queryset, 'sample_id')
 
@@ -470,6 +472,33 @@ class SampleResource(VersionedResource, FirstOrderResource):
 
                 try: CLASS_MAPPING[field_name].objects.get_or_create(**obj_args)
                 except IntegrityError: continue
+
+    def build_filters(self, filters=None):
+        """Build additional filters"""
+        if not filters:
+            filters = {}
+
+        orm_filters = super(SampleResource, self).build_filters(filters)
+
+        """
+        Coordinates are supposed to be in the format:
+        top_lat, top_long, bot_lat, bot_long
+        """
+        if 'location__contained' in filters:
+            points = filters['location__contained']
+            points = [float(p.strip()) for p in points.split(',')]
+            orm_filters['location__contained'] = points
+
+        return orm_filters
+
+    def apply_filters(self, request, applicable_filters):
+        """Apply the filters"""
+        if 'location__contained' in applicable_filters:
+            area = applicable_filters.pop('location__contained')
+            poly = Polygon.from_bbox(area)
+            applicable_filters['location__contained'] = poly
+
+        return super(SampleResource, self).apply_filters(request, applicable_filters)
 
 
 class SampleAliasResource(BaseResource):

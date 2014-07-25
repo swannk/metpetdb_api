@@ -475,8 +475,6 @@ class SampleResource(VersionedResource, FirstOrderResource):
 
     def build_filters(self, filters=None):
         """Build additional filters"""
-        if not filters:
-            filters = {}
 
         orm_filters = super(SampleResource, self).build_filters(filters)
 

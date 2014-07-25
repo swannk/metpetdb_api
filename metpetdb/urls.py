@@ -42,11 +42,13 @@ urlpatterns = patterns('',
   url(r'^reset-password/(?P<token>[^/]+)/$', 'tastyapi.views.reset_password', name="reset_password"),
 
   url(r'^confirm/([a-zA-Z0-9]*)/$', 'tastyapi.views.confirm'),
+
   url(r'^request_contributor_access/$',
       'tastyapi.views.request_contributor_access'),
   url(r'^grant_contributor_access/([a-zA-Z0-9]*)/$',
       'tastyapi.views.grant_contributor_access'),
 
+  url(r'^get-chem-analyses-given-sample-filters/$', 'tastyapi.views.chem_analyses_given_sample_filters'),
   url(r'^chemical_analysis/(\d+)/$', 'webservices.views.chemical_analysis',
                                       name='chemical_analysis'),
 

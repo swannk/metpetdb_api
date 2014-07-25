@@ -1,7 +1,10 @@
 from django.core.urlresolvers import reverse
+import urllib
+import ast
 import json
 import base64
 import datetime
+from itertools import chain
 from itsdangerous import URLSafeTimedSerializer
 
 from getenv import env
@@ -13,17 +16,71 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password
 
 from .models import User, generate_confirmation_code
+from .api import MetpetAPI
 from metpetdb import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.template import Context
 
 
+def chem_analyses_given_sample_filters(request):
+    """View function to retrieve a list of chemical analysis IDs of samples
+    which match the given sample search filters. This endpoint will be used by
+    the search page when the user is searching for chemical analyses by selecting
+    sample filters.
+    """
+    standard_filters = {'format': 'json', 'limit': 0}
+    given_filters = dict(ast.literal_eval(json.dumps(request.GET)))
+
+    email = given_filters.pop('email', None)
+    api_key = given_filters.pop('api_key', None)
+    api = MetpetAPI(email, api_key).api
+
+    # Get samples which match the given filters
+    sample_filters = given_filters
+    sample_filters['fields'] = 'sample_id'
+
+    samples = api.sample.get(params=dict(chain(sample_filters.items(),
+                                               standard_filters.items())))
+    sample_ids = []
+    for sample in samples.data['objects']:
+        sample_ids.append(sample['sample_id'])
+
+    # Get subsamples of samples which match the given filters
+    subsample_filters = {}
+    subsample_filters['sample__sample_id__in'] = ','.join(map(str, sample_ids))
+    subsample_filters['fields'] = 'subsample_id'
+
+    subsamples = api.subsample.get(params=dict(chain(subsample_filters.items(),
+                                                     standard_filters.items())))
+
+    subsample_ids = []
+    for subsample in subsamples.data['objects']:
+        subsample_ids.append(subsample['subsample_id'])
+
+    # Get chemical analyses with subsamples which the ones we retrieved earler
+    subsample_chem_filters = {}
+    subsample_chem_filters['fields'] = 'chemical_analysis_id'
+    subsample_chem_filters['subsample__subsample_id__in'] = ','.join(map(str, subsample_ids))
+
+    subsample_chemical_analyses = api.chemical_analysis.get(\
+                                  params= dict(chain(subsample_chem_filters.items(),
+                                                     standard_filters.items())))
+
+    chemical_analysis_ids = []
+    for analysis in subsample_chemical_analyses.data['objects']:
+        chemical_analysis_ids.append(analysis['chemical_analysis_id'])
+
+    results = {}
+    results['chemical_analysis_ids'] = ','.join(map(str, chemical_analysis_ids))
+
+    return HttpResponse(json.dumps(results), content_type='application/json')
+
+
 @csrf_exempt
 @transaction.commit_on_success
 def register(request):
     json_data = json.loads(request.body)
-    print(json_data)
 
     try:
         User.objects.get(email=json_data['email'])

@@ -32,8 +32,8 @@ def chem_analyses_given_sample_filters(request):
     standard_filters = {'format': 'json', 'limit': 0}
     given_filters = dict(ast.literal_eval(json.dumps(request.GET)))
 
-    email = given_filters.pop('email', None)
-    api_key = given_filters.pop('api_key', None)
+    email = request.META.get('email', None)
+    api_key = request.META.get('api_key', None)
     api = MetpetAPI(email, api_key).api
 
     # Get samples which match the given filters
@@ -42,15 +42,14 @@ def chem_analyses_given_sample_filters(request):
 
     samples = api.sample.get(params=dict(chain(sample_filters.items(),
                                                standard_filters.items())))
+
     sample_ids = []
     for sample in samples.data['objects']:
         sample_ids.append(sample['sample_id'])
 
     # Get subsamples of samples which match the given filters
-    subsample_filters = {}
-    subsample_filters['sample__sample_id__in'] = ','.join(map(str, sample_ids))
-    subsample_filters['fields'] = 'subsample_id'
-
+    subsample_filters = {'sample__sample_id__in': ','.join(map(str, sample_ids)),
+                         'fields': 'subsample_id'}
     subsamples = api.subsample.get(params=dict(chain(subsample_filters.items(),
                                                      standard_filters.items())))
 
@@ -59,10 +58,9 @@ def chem_analyses_given_sample_filters(request):
         subsample_ids.append(subsample['subsample_id'])
 
     # Get chemical analyses with subsamples which the ones we retrieved earler
-    subsample_chem_filters = {}
-    subsample_chem_filters['fields'] = 'chemical_analysis_id'
-    subsample_chem_filters['subsample__subsample_id__in'] = ','.join(map(str, subsample_ids))
-
+    subsample_chem_filters = {'subsample__subsample_id__in':
+                                ','.join(map(str, subsample_ids)),
+                               'fields': 'chemical_analysis_id'}
     subsample_chemical_analyses = api.chemical_analysis.get(\
                                   params= dict(chain(subsample_chem_filters.items(),
                                                      standard_filters.items())))

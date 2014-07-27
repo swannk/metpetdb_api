@@ -652,6 +652,7 @@ class ChemicalAnalysisResource(VersionedResource, FirstOrderResource):
         authorization = ObjectAuthorization('tastyapi', 'chemicalanalyses')
         authentication = CustomApiKeyAuth()
         filtering = {
+                'chemical_analysis_id': ALL,
                 'subsample': ALL_WITH_RELATIONS,
                 'reference': ALL_WITH_RELATIONS,
                 'public_data': ALL,

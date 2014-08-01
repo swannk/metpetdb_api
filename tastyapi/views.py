@@ -30,14 +30,13 @@ def chem_analyses_given_sample_filters(request):
     sample filters.
     """
     standard_filters = {'format': 'json', 'limit': 0}
-    given_filters = dict(ast.literal_eval(json.dumps(request.GET)))
 
     email = request.META.get('email', None)
     api_key = request.META.get('api_key', None)
     api = MetpetAPI(email, api_key).api
 
     # Get samples which match the given filters
-    sample_filters = given_filters
+    sample_filters = dict(ast.literal_eval(json.dumps(request.GET)))
     sample_filters['fields'] = 'sample_id'
 
     samples = api.sample.get(params=dict(chain(sample_filters.items(),

@@ -15,7 +15,8 @@ from tastyapi.resources import SampleResource, RockTypeResource, \
                                MineralResource, UserResource, RegionResource, \
                                MetamorphicGradeResource, SampleAliasResource, \
                                MetamorphicRegionResource, \
-                               MineralRelationshipResource
+                               MineralRelationshipResource, OxideResource, \
+                               ElementResource
 from tastypie.api import Api
 
 api_v1 = Api(api_name='v1')
@@ -27,6 +28,8 @@ api_v1.register(SubsampleResource())
 api_v1.register(SubsampleTypeResource())
 api_v1.register(ReferenceResource())
 api_v1.register(ChemicalAnalysisResource())
+api_v1.register(OxideResource())
+api_v1.register(ElementResource())
 api_v1.register(MineralResource())
 api_v1.register(RegionResource())
 api_v1.register(MetamorphicGradeResource())

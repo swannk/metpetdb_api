@@ -16,7 +16,7 @@ from .models import User, Sample, MetamorphicGrade, MetamorphicRegion, Region,\
                     ChemicalAnalyses, SampleRegion, SampleReference, \
                     SampleMineral, SampleMetamorphicGrade, SampleAliase, \
                     SampleMetamorphicRegion, Oxide, ChemicalAnalysisOxide, \
-                    MineralRelationship
+                    MineralRelationship, Element
 
 from .specified_fields import SpecifiedFields
 from . import auth
@@ -629,19 +629,48 @@ class ReferenceResource(BaseResource):
         resource_name = 'reference'
         queryset = Reference.objects.all()
         allowed_methods = ['get']
+        authorization = Authorization()
         authentication = CustomApiKeyAuth()
         ordering = ['name']
-        # authorization = ObjectAuthorization('tastyapi', 'reference')
         filtering = {'name': ALL}
 
 
-class ChemicalAnalysisResource(VersionedResource, FirstOrderResource):
+class OxideResource(BaseResource):
+    class Meta:
+        queryset = Oxide.objects.all()
+        resource_name = "oxide"
+        authorization = Authorization()
+        authentication = CustomApiKeyAuth()
+        allowed_methods = ['get']
+        filtering = {
+            'oxide_id': ALL
+        }
+
+
+class ElementResource(BaseResource):
+    class Meta:
+        queryset = Element.objects.all()
+        resource_name = "oxide"
+        authorization = Authorization()
+        authentication = CustomApiKeyAuth()
+        allowed_methods = ['get']
+        filtering = {
+            'element_id': ALL
+        }
+
+
+class ChemicalAnalysisResource(VersionedResource):
     user = fields.ToOneField("tastyapi.resources.UserResource", "user")
     subsample = fields.ToOneField(SubsampleResource, "subsample")
     reference = fields.ToOneField(ReferenceResource, "reference", null=True)
     mineral = fields.ToOneField(MineralResource, "mineral", null=True, full=True)
-    # oxides = fields.ToManyField("tastyapi.resources.OxideResource",
-    #                              "oxides", null=True, full=True)
+    oxides = fields.ToManyField("tastyapi.resources.OxideResource",
+                                 "oxides", null=True)
+    elements = fields.ToManyField("tastyapi.resources.ElementResource",
+                                 "elements", null=True)
+    # oxides = fields.ToManyField(ChemicalAnalysisOxideResource,
+    #     attribute = lambda bundle: bundle.obj.oxides.through.objects.filter(
+    #         chemical_analysis=bundle.obj) or bundle.obj.oxides, full=True)
 
     class Meta:
         queryset = ChemicalAnalyses.objects.all().distinct('chemical_analysis_id')
@@ -666,20 +695,7 @@ class ChemicalAnalysisResource(VersionedResource, FirstOrderResource):
                 'analysis_date': ALL,
                 'large_rock': ALL,
                 'total': ALL,
+                'oxides': ALL_WITH_RELATIONS,
+                'elements': ALL_WITH_RELATIONS
                 }
         validation = VersionValidation(queryset, 'chemical_analysis_id')
-
-# class OxideResource(BaseResource):
-#     class Meta:
-#         queryset = Oxide.objects.all()
-#         resource_name = "oxide"
-#         authorization = Authorization()
-#         authentication = CustomApiKeyAuth()
-#         allowed_methods = ['get']
-#         filtering = {}
-
-# class ChemicalAnalysisOxideResource(BaseResource):
-#     oxide = fields.ToOneField(OxideResource, 'oxide', full=True)
-#     class Meta:
-#         queryset = ChemicalAnalysisOxide.objects.all()
-#         resource_name = 'chemical_analysis_oxide'

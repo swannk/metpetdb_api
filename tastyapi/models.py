@@ -261,7 +261,7 @@ class User(models.Model):
         super(User, self).save(**kwargs)
 
     def __unicode__(self):
-        return str(self.user_id) + ' ' + self.name + ' ' + str(self.django_user)
+        return self.name
 
     def auto_verify(self, confirmation_code):
         """Called to perform email verification.

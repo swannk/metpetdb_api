@@ -1,6 +1,6 @@
 from django.db import transaction
 import dotenv
-dotenv.read_dotenv('../../env_variables.env')
+dotenv.read_dotenv('../../api_variables.env')
 from tastyapi.models import Sample, Subsample, ChemicalAnalyses, Image
 
 @transaction.atomic

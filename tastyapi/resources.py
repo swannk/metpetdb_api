@@ -348,15 +348,10 @@ class FirstOrderResource(SpecifiedFields):
                 # so null out the corresponding entry in bundle.data
                 bundle.data[field_name] = None
 
-
-            """Add image URLs to the response for samples and chemical analyses"""
-            if type(self) in [SampleResource, ChemicalAnalysisResource]:
-                # print(bundle)
-                pass
-
         return bundle
 
 
+# TODO: Finalize authorization settings for the User resource
 class UserResource(BaseResource):
     class Meta:
         resource_name = 'user'
@@ -364,6 +359,9 @@ class UserResource(BaseResource):
         queryset = User.objects.all()
         authorization = Authorization()
         authentication = CustomApiKeyAuth()
+        filtering = {
+            'email': ALL
+        }
         excludes = ['password', 'confirmation_code']
 
 

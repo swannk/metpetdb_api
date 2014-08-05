@@ -63,7 +63,7 @@ class ResourceOptions(object):
     list_allowed_methods = None
     detail_allowed_methods = None
     limit = getattr(settings, 'API_LIMIT_PER_PAGE', 20)
-    max_limit = 1000
+    max_limit = 100000
     api_name = None
     resource_name = None
     urlconf_namespace = None

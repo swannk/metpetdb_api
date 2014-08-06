@@ -1,6 +1,7 @@
 from django.db import transaction, IntegrityError
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Q
+from django.contrib.gis.geos.polygon import Polygon
 from django.core.exceptions import ObjectDoesNotExist
 from tastypie.resources import ModelResource
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
@@ -14,7 +15,10 @@ from .models import User, Sample, MetamorphicGrade, MetamorphicRegion, Region,\
                     RockType, Subsample, SubsampleType, Mineral, Reference, \
                     ChemicalAnalyses, SampleRegion, SampleReference, \
                     SampleMineral, SampleMetamorphicGrade, SampleAliase, \
-                    SampleMetamorphicRegion, Oxide, ChemicalAnalysisOxide
+                    SampleMetamorphicRegion, Oxide, ChemicalAnalysisOxide, \
+                    MineralRelationship, Element
+
+from .specified_fields import SpecifiedFields
 from . import auth
 from . import utils
 import logging
@@ -32,12 +36,13 @@ CLASS_MAPPING = {'regions': SampleRegion,
                  'metamorphic_grades': SampleMetamorphicGrade,
                  'metamorphic_regions': SampleMetamorphicRegion}
 
-class BaseResource(ModelResource):
+
+class BaseResource(SpecifiedFields):
     @transaction.commit_manually
     def dispatch(self, *args, **kwargs):
         # Transaction begins immediately, before we get here
         try:
-            response = super(ModelResource, self).dispatch(*args, **kwargs)
+            response = super(SpecifiedFields, self).dispatch(*args, **kwargs)
             keep = (200 <= response.status_code < 400)
         except:
             transaction.rollback()
@@ -49,6 +54,7 @@ class BaseResource(ModelResource):
                 transaction.rollback()
             return response
 
+
 class VersionedResource(BaseResource):
     def hydrate_version(self, bundle):
         if 'version' in bundle.data:
@@ -56,6 +62,7 @@ class VersionedResource(BaseResource):
         else:
             bundle.data['version'] = 1
         return bundle
+
 
 class VersionValidation(Validation):
     def __init__(self, queryset, pk_field):
@@ -114,6 +121,7 @@ def _check_perm_closure(permission_lambda):
                                .format(bundle.request.user, permission))
     return closure
 
+
 class ObjectAuthorization(Authorization):
     """Tastypie custom Authorization class.
 
@@ -164,6 +172,7 @@ class ObjectAuthorization(Authorization):
     delete_list = _filter_by_permission_closure(lambda self: self.change_perm)
     delete_detail = _check_perm_closure(lambda self: self.change_perm)
 
+
 class CustomApiKeyAuth(ApiKeyAuthentication):
     """Disable API key authentication for GET requests
 
@@ -186,7 +195,8 @@ class CustomApiKeyAuth(ApiKeyAuthentication):
             return super(CustomApiKeyAuth, self).is_authenticated(request,
                          **kwargs)
 
-class FirstOrderResource(ModelResource):
+
+class FirstOrderResource(SpecifiedFields):
     """Resource that can only be filtered with "first-order" filters.
 
     This prevents users from chaining filters through many relationship fields.
@@ -296,6 +306,8 @@ class FirstOrderResource(ModelResource):
         return result()
     def dehydrate(self, bundle):
         """Remove references to inaccessible objects."""
+        bundle = super(FirstOrderResource, self).dehydrate(bundle)
+
         for field_name in bundle.data:
             # For every field
             if field_name not in self.fields:
@@ -335,8 +347,11 @@ class FirstOrderResource(ModelResource):
                 # For ToOne fields: value was a singleton, and now it's empty,
                 # so null out the corresponding entry in bundle.data
                 bundle.data[field_name] = None
+
         return bundle
 
+
+# TODO: Finalize authorization settings for the User resource
 class UserResource(BaseResource):
     class Meta:
         resource_name = 'user'
@@ -344,7 +359,11 @@ class UserResource(BaseResource):
         queryset = User.objects.all()
         authorization = Authorization()
         authentication = CustomApiKeyAuth()
+        filtering = {
+            'email': ALL
+        }
         excludes = ['password', 'confirmation_code']
+
 
 class SampleResource(VersionedResource, FirstOrderResource):
     user = fields.ToOneField("tastyapi.resources.UserResource", "user", full=True)
@@ -384,7 +403,10 @@ class SampleResource(VersionedResource, FirstOrderResource):
                 'collector': ALL,
                 'number': ALL,
                 'references': ALL_WITH_RELATIONS,
-                'sample_id': ALL
+                'sample_id': ALL,
+                'user': ALL,
+                'country': ALL,
+                'location': ALL
                 }
         validation = VersionValidation(queryset, 'sample_id')
 
@@ -403,7 +425,7 @@ class SampleResource(VersionedResource, FirstOrderResource):
         """
         free_text_fields = {'regions': bundle.data.pop('regions'),
                            'references': bundle.data.pop('references')}
-        super(SampleResource, self).objMetP_create(bundle, **kwargs)
+        super(SampleResource, self).obj_create(bundle, **kwargs)
         sample = Sample.objects.get(pk=bundle.obj.sample_id)
 
         for field_name, entries in free_text_fields.iteritems():
@@ -449,6 +471,31 @@ class SampleResource(VersionedResource, FirstOrderResource):
                 try: CLASS_MAPPING[field_name].objects.get_or_create(**obj_args)
                 except IntegrityError: continue
 
+    def build_filters(self, filters=None):
+        """Build additional filters"""
+
+        orm_filters = super(SampleResource, self).build_filters(filters)
+
+        """
+        Coordinates are supposed to be in the format:
+        top_lat, top_long, bot_lat, bot_long
+        """
+        if 'location__contained' in filters:
+            points = filters['location__contained']
+            points = [float(p.strip()) for p in points.split(',')]
+            orm_filters['location__contained'] = points
+
+        return orm_filters
+
+    def apply_filters(self, request, applicable_filters):
+        """Apply the filters"""
+        if 'location__contained' in applicable_filters:
+            area = applicable_filters.pop('location__contained')
+            poly = Polygon.from_bbox(area)
+            applicable_filters['location__contained'] = poly
+
+        return super(SampleResource, self).apply_filters(request, applicable_filters)
+
 
 class SampleAliasResource(BaseResource):
     sample = fields.ToOneField("tastyapi.resources.SampleResource",
@@ -473,6 +520,7 @@ class RegionResource(BaseResource):
         filtering = { 'region': ALL,
                       'name': ALL }
 
+
 class RockTypeResource(BaseResource):
     class Meta:
         queryset = RockType.objects.all()
@@ -482,6 +530,7 @@ class RockTypeResource(BaseResource):
         ordering = ['rock_type']
         allowed_methods = ['get']
         filtering = { 'rock_type': ALL }
+
 
 class MineralResource(BaseResource):
     real_mineral = fields.ToOneField('tastyapi.resources.MineralResource',
@@ -496,6 +545,30 @@ class MineralResource(BaseResource):
                 'real_mineral': ALL_WITH_RELATIONS,
                 }
 
+
+class MineralRelationshipResource(BaseResource):
+    parent_mineral = fields.ToOneField('tastyapi.resources.MineralResource',
+                                          'parent_mineral', full=True)
+    child_mineral = fields.ToOneField('tastyapi.resources.MineralResource',
+                                         'child_mineral', full=True)
+
+    class Meta:
+        resource_name = 'mineral_relationship'
+        queryset = MineralRelationship.objects.all()
+        allowed_methods = ['get']
+
+
+class RegionResource(BaseResource):
+    class Meta:
+        queryset = Region.objects.all()
+        authentication = CustomApiKeyAuth()
+        ordering = ['name']
+        allowed_methods = ['get']
+        resource_name = "region"
+        filtering = { 'region': ALL,
+                      'name': ALL }
+
+
 class MetamorphicGradeResource(BaseResource):
     class Meta:
         resource_name = "metamorphic_grade"
@@ -504,6 +577,7 @@ class MetamorphicGradeResource(BaseResource):
         ordering = ['name']
         allowed_methods = ['get']
         filtering = { 'name': ALL }
+
 
 class MetamorphicRegionResource(BaseResource):
     class Meta:
@@ -514,6 +588,7 @@ class MetamorphicRegionResource(BaseResource):
         allowed_methods = ['get']
         filtering = { 'name': ALL }
 
+
 class SubsampleTypeResource(BaseResource):
     class Meta:
         resource_name = 'subsample_type'
@@ -521,6 +596,7 @@ class SubsampleTypeResource(BaseResource):
         queryset = SubsampleType.objects.all().distinct('subsample_type_id')
         authentication = CustomApiKeyAuth()
         filtering = {'subsample_type': ALL}
+
 
 class SubsampleResource(VersionedResource, FirstOrderResource):
     user = fields.ToOneField("tastyapi.resources.UserResource", "user",
@@ -551,18 +627,48 @@ class ReferenceResource(BaseResource):
         resource_name = 'reference'
         queryset = Reference.objects.all()
         allowed_methods = ['get']
+        authorization = Authorization()
         authentication = CustomApiKeyAuth()
         ordering = ['name']
-        # authorization = ObjectAuthorization('tastyapi', 'reference')
         filtering = {'name': ALL}
 
-class ChemicalAnalysisResource(VersionedResource, FirstOrderResource):
+
+class OxideResource(BaseResource):
+    class Meta:
+        queryset = Oxide.objects.all()
+        resource_name = "oxide"
+        authorization = Authorization()
+        authentication = CustomApiKeyAuth()
+        allowed_methods = ['get']
+        filtering = {
+            'oxide_id': ALL
+        }
+
+
+class ElementResource(BaseResource):
+    class Meta:
+        queryset = Element.objects.all()
+        resource_name = "oxide"
+        authorization = Authorization()
+        authentication = CustomApiKeyAuth()
+        allowed_methods = ['get']
+        filtering = {
+            'element_id': ALL
+        }
+
+
+class ChemicalAnalysisResource(VersionedResource):
     user = fields.ToOneField("tastyapi.resources.UserResource", "user")
     subsample = fields.ToOneField(SubsampleResource, "subsample")
     reference = fields.ToOneField(ReferenceResource, "reference", null=True)
     mineral = fields.ToOneField(MineralResource, "mineral", null=True, full=True)
-    # oxides = fields.ToManyField("tastyapi.resources.OxideResource",
-    #                              "oxides", null=True, full=True)
+    oxides = fields.ToManyField("tastyapi.resources.OxideResource",
+                                 "oxides", null=True)
+    elements = fields.ToManyField("tastyapi.resources.ElementResource",
+                                 "elements", null=True)
+    # oxides = fields.ToManyField(ChemicalAnalysisOxideResource,
+    #     attribute = lambda bundle: bundle.obj.oxides.through.objects.filter(
+    #         chemical_analysis=bundle.obj) or bundle.obj.oxides, full=True)
 
     class Meta:
         queryset = ChemicalAnalyses.objects.all().distinct('chemical_analysis_id')
@@ -573,6 +679,7 @@ class ChemicalAnalysisResource(VersionedResource, FirstOrderResource):
         authorization = ObjectAuthorization('tastyapi', 'chemicalanalyses')
         authentication = CustomApiKeyAuth()
         filtering = {
+                'chemical_analysis_id': ALL,
                 'subsample': ALL_WITH_RELATIONS,
                 'reference': ALL_WITH_RELATIONS,
                 'public_data': ALL,
@@ -586,20 +693,7 @@ class ChemicalAnalysisResource(VersionedResource, FirstOrderResource):
                 'analysis_date': ALL,
                 'large_rock': ALL,
                 'total': ALL,
+                'oxides': ALL_WITH_RELATIONS,
+                'elements': ALL_WITH_RELATIONS
                 }
         validation = VersionValidation(queryset, 'chemical_analysis_id')
-
-# class OxideResource(BaseResource):
-#     class Meta:
-#         queryset = Oxide.objects.all()
-#         resource_name = "oxide"
-#         authorization = Authorization()
-#         authentication = CustomApiKeyAuth()
-#         allowed_methods = ['get']
-#         filtering = {}
-
-# class ChemicalAnalysisOxideResource(BaseResource):
-#     oxide = fields.ToOneField(OxideResource, 'oxide', full=True)
-#     class Meta:
-#         queryset = ChemicalAnalysisOxide.objects.all()
-#         resource_name = 'chemical_analysis_oxide'

@@ -14,7 +14,9 @@ from tastyapi.resources import SampleResource, RockTypeResource, \
                                ReferenceResource, ChemicalAnalysisResource, \
                                MineralResource, UserResource, RegionResource, \
                                MetamorphicGradeResource, SampleAliasResource, \
-                               MetamorphicRegionResource
+                               MetamorphicRegionResource, \
+                               MineralRelationshipResource, OxideResource, \
+                               ElementResource
 from tastypie.api import Api
 
 api_v1 = Api(api_name='v1')
@@ -26,28 +28,37 @@ api_v1.register(SubsampleResource())
 api_v1.register(SubsampleTypeResource())
 api_v1.register(ReferenceResource())
 api_v1.register(ChemicalAnalysisResource())
+api_v1.register(OxideResource())
+api_v1.register(ElementResource())
 api_v1.register(MineralResource())
 api_v1.register(RegionResource())
 api_v1.register(MetamorphicGradeResource())
 api_v1.register(MetamorphicRegionResource())
+api_v1.register(MineralRelationshipResource())
 
 urlpatterns = patterns('',
   url(r'^api/', include(api_v1.urls)),
 
   url(r'^register/$', 'tastyapi.views.register'),
   url(r'^authenticate/$', 'tastyapi.views.authenticate', name="authenticate"),
-  url(r'^logout/$', 'tastyapi.views.logout', name="logout"),
+  url(r'^reset-password/$', 'tastyapi.views.reset_password', name="reset_password"),
+  url(r'^reset-password/(?P<token>[^/]+)/$', 'tastyapi.views.reset_password', name="reset_password"),
 
   url(r'^confirm/([a-zA-Z0-9]*)/$', 'tastyapi.views.confirm'),
+
   url(r'^request_contributor_access/$',
       'tastyapi.views.request_contributor_access'),
   url(r'^grant_contributor_access/([a-zA-Z0-9]*)/$',
       'tastyapi.views.grant_contributor_access'),
 
+  url(r'^get-chem-analyses-given-sample-filters/$', 'tastyapi.views.chem_analyses_given_sample_filters'),
   url(r'^chemical_analysis/(\d+)/$', 'webservices.views.chemical_analysis',
                                       name='chemical_analysis'),
 
   url(r'^api/metpetdb/$','webservices.views.metpetdb'),
+
+  url(r'^webservices/samples$', 'webservices.views.samples'),
+  url(r'^webservices/chemicalanalyses$', 'webservices.views.chemical_analyses'),
 
   # Uncomment the admin/doc line below to enable admin documentation:
   # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

@@ -261,7 +261,7 @@ class User(models.Model):
         super(User, self).save(**kwargs)
 
     def __unicode__(self):
-        return str(self.user_id) + ' ' + self.name + ' ' + str(self.django_user)
+        return self.name
 
     def auto_verify(self, confirmation_code):
         """Called to perform email verification.
@@ -437,6 +437,15 @@ class Mineral(models.Model):
     class Meta:
         # managed = False
         db_table = u'minerals'
+
+
+class MineralRelationship(models.Model):
+    parent_mineral = models.ForeignKey('Mineral', related_name='parent_minerals')
+    child_mineral = models.ForeignKey('Mineral', related_name='child_minerals')
+
+    class Meta:
+        db_table = 'mineral_relationships'
+        unique_together = (('parent_mineral', 'child_mineral'),)
 
 
 class Reference(models.Model):
@@ -747,6 +756,7 @@ class ChemicalAnalyses(models.Model):
     total = models.FloatField(null=True, blank=True)
     spot_id = models.BigIntegerField()
     oxides = ManyToManyField(Oxide, through='ChemicalAnalysisOxide')
+    elements = ManyToManyField(Element, through='ChemicalAnalysisElement')
     group_access = generic.GenericRelation(GroupAccess)
     def __unicode__(self):
         return u'ChemicalAnalysis #' + unicode(self.chemical_analysis_id)

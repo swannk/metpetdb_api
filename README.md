@@ -1,3 +1,5 @@
+
+
 metpetdb-py
 ===========
 
@@ -15,6 +17,10 @@ Python and virtualenv setup
 If there is no Python 2.7.x on your system, install it
 
     sudo apt-get install python2.7
+
+Install a few other required packages
+
+    sudo apt-get install python-dev libpq-dev libxml2-dev libproj-dev libgeos-dev libgdal-dev
 
 ####Virtual environment setup
 
@@ -59,7 +65,7 @@ Postgres installation
 
 Install postgresql (ver 9.1.x)
 
-    sudo apt-get install postgresql
+    sudo apt-get install postgresql postgresql-server-dev-9.3
 
 Update 'pg_hba.conf' file to authenticate connections
 
@@ -131,15 +137,17 @@ Before we begin, you uninstall any existing PostGIS packages:
 
 ####Build GEOS 3.4.x
 
-    wget http://download.osgeo.org/postgis/source/postgis-2.1.2.tar.gz
-    tar xfz postgis-2.1.2.tar.gz
-    cd postgis-2.1.2
+    wget http://download.osgeo.org/geos/geos-3.4.2.tar.bz2
+    tar xfz geos-3.4.2.tar.bz2
+    cd geos-3.4.2
+    ./configure  &&  make  &&  sudo make install
+    sudo ldconfig
 
 ####Build PostGIS
     wget http://download.osgeo.org/postgis/source/postgis-2.1.2.tar.gz
     tar xfz postgis-2.1.2.tar.gz
-    cd postgis-2.1.2
 
+    cd postgis-2.1.2
     ./configure
     make
     sudo make install
@@ -213,11 +221,21 @@ Create a file named api_variables.env just outside your project directory, and u
     DB_HOST=localhost
     TEST_DB_NAME=metpetdb_test
 
-####Transition scipt
+    # Reset password secret key and salt
+    RESET_PWD_KEY=hs0\x85I8\x94\xaais})\x03\x1d\xf0\xf5\xb7\x94G1y\xfb\xca
+    RESET_PWD_SALT=pe\xbfc\x03\r\x16\x9da\x8dnk\xf73\xac9jm\xa0L~\xcfwd
 
-The transition script does two things:
+    # Superuser settings: the person who can grant contributor access
+    SUPERUSER_NAME=Some Person
+    SUPERUSER_EMAIL=someperson@gmail.com
+
+####Transition scipts
+
+The first transition script (transition1.py) does two things:
 * Transition user data from the old database to a Django-compatible format.
 * Create appropriate database records for samples, subsamples, chemical analyses, images, and grids so that they can be accessed through the application's access control system.
+
+And the second script (transition2.py) updates related resource counts on the Sample model
 
 First, copy the following function into `~/.bashrc`:
 ```bash
@@ -237,13 +255,14 @@ function setdsm() {
 }
 ```
 
-And then run the script
+And then run the scripts
 
     source ~/.bashrc
     cd metpetdb/
     setdsm
     cd ../tastyapi
-    python transition.py
+    python transition1.py
+    python transition2.py
 
 If you are developing locally, you can now fire up the server and start hacking:
 
@@ -309,33 +328,3 @@ Paste the following lines in ~/code/apache/wsgi.py
 ```sudo service apache2 restart```
 
 You can now start interacting with the API at `http://hostname/api/vi/`
-
-***
-
-
-
-Server setup instructions end here, what follows are legacy instructions and will eventually either be edited/deleted.
-
-if interested check out the existing webservices for faceted sapache/wsgi.pyearch from Git
-https://github.com/metpetdb/metpetdb-py
- documentation regarding this is here https://github.com/metpetdb/metpetdb-py/tree/master/docs
-
-if you want to have them running, so an svn checkout or Git pull
- you may have to set up svn repository (refer: https://help.ubuntu.com/community/Subversion)
-write models or generate with
-python mysite/manage.py inspectdb > mysite/myapp/models.py
-
-update models
-- rearrange classes
-- add related_names (if required)
-
-check SQL and validate
-python manage.py sql webservices
-python manage.py validate
-
-create views
-set urls inside metpetdb/urls.py
-
-Run the webservices on your development server with the following command:
-python manage.py runserver
-

@@ -648,7 +648,7 @@ class OxideResource(BaseResource):
 class ElementResource(BaseResource):
     class Meta:
         queryset = Element.objects.all()
-        resource_name = "oxide"
+        resource_name = "element"
         authorization = Authorization()
         authentication = CustomApiKeyAuth()
         allowed_methods = ['get']

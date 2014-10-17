@@ -661,7 +661,7 @@ class ChemicalAnalysisResource(VersionedResource):
     user = fields.ToOneField("tastyapi.resources.UserResource", "user")
     subsample = fields.ToOneField(SubsampleResource, "subsample")
     reference = fields.ToOneField(ReferenceResource, "reference", null=True)
-    mineral = fields.ToOneField(MineralResource, "mineral", null=True, full=True)
+    minerals = fields.ToOneField(MineralResource, "mineral", null=True, full=True)
     oxides = fields.ToManyField("tastyapi.resources.OxideResource",
                                  "oxides", null=True)
     elements = fields.ToManyField("tastyapi.resources.ElementResource",
@@ -694,6 +694,7 @@ class ChemicalAnalysisResource(VersionedResource):
                 'large_rock': ALL,
                 'total': ALL,
                 'oxides': ALL_WITH_RELATIONS,
+                'minerals': ALL_WITH_RELATIONS,
                 'elements': ALL_WITH_RELATIONS
                 }
         validation = VersionValidation(queryset, 'chemical_analysis_id')

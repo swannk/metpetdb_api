@@ -9,6 +9,7 @@ from django.contrib.auth.models import User as AuthUser
 from django.contrib.auth.models import Group
 from django.db import transaction
 
+from tastyapi.models import ApiKey
 from tastyapi.models import get_public_groups
 from tastyapi.models import User as MetpetUser
 from tastyapi.models import Group, GroupExtra, GroupAccess

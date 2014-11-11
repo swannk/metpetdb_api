@@ -73,7 +73,8 @@ class VersionValidation(Validation):
             return {'__all__': 'No data.'}
         if self.pk_field in bundle.data:
             try:
-                previous = (self.queryset.select_for_update().
+                # Verify if using select_for_update() is important below
+                previous = (self.queryset.
                             get(pk=bundle.data[self.pk_field]))
             except ObjectDoesNotExist:
                 previous = None

@@ -123,25 +123,26 @@ def update_resource_counts(sender, instance, created, **kwargs):
 
 @receiver(post_save)
 def create_group_access(sender, instance, created, **kwargs):
-    if sender in [Sample, Subsample, ChemicalAnalyses]:
-        ctype = ContentType.objects.get_for_model(instance)
-        group_id = instance.user.django_user.groups.filter(
-                      name__endswith=instance.user.django_user.username)[0].id
+    if created:
+        if sender in [Sample, Subsample, ChemicalAnalyses]:
+            ctype = ContentType.objects.get_for_model(instance)
+            group_id = instance.user.django_user.groups.filter(
+                          name__endswith=instance.user.django_user.username)[0].id
 
-        # Create a group access only if one doesn't already exists.
-        # This will be true when we are updating an existing sample.
-        try:
-            group_access = GroupAccess.objects.get(group_id=group_id,
-                                                   content_type=ctype,
-                                                   object_id=instance.pk)
-        except GroupAccess.DoesNotExist:
-            GroupAccess.objects.create(
-                id = utils.get_next_id(GroupAccess),
-                group_id = group_id,
-                read_access = True,
-                write_access = True,
-                content_type = ctype,
-                object_id = instance.pk)
+            # Create a group access only if one doesn't already exists.
+            # This will be true when we are updating an existing sample.
+            try:
+                group_access = GroupAccess.objects.get(group_id=group_id,
+                                                       content_type=ctype,
+                                                       object_id=instance.pk)
+            except GroupAccess.DoesNotExist:
+                GroupAccess.objects.create(
+                    id = utils.get_next_id(GroupAccess),
+                    group_id = group_id,
+                    read_access = True,
+                    write_access = True,
+                    content_type = ctype,
+                    object_id = instance.pk)
 
 
 @receiver(post_save)
